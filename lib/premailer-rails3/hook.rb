@@ -1,7 +1,7 @@
 module PremailerRails
   class Hook
     def self.delivering_email(message)
-      premailer = Premailer.new(message)
+      premailer = Premailer.new(message.body)
 
       message.html_part do
         content_type message.content_type
