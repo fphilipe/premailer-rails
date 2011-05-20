@@ -8,7 +8,6 @@ module PremailerRails
 
       message.html_part do
         content_type "text/html; charset=utf-8"
-        debugger
         body premailer.to_inline_css
       end
 
