@@ -9,7 +9,7 @@ module PremailerRails
 
       super(html, :with_html_string => true,
                   :adapter => :hpricot,
-                  :css => css_file)
+                  :css => [css_file])
     end
 
     def load_html(string)
