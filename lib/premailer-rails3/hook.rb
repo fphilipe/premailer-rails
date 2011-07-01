@@ -4,11 +4,17 @@ module PremailerRails
       options = {}
 
       # Grab the html part, if there is one, and grab all css file references
-      unless (html_part = message.html_part).blank?
-        options[:css] = (Hpricot(html_part)/'link[@type="text/css"]').colect { |css_file| css_file.attributes['href'] }
+      html_part = message.html_part
+
+      options[:css] = Hpricot(html_part.body.to_s).search('link[@type="text/css"]').collect do |css_file| 
+        if css_file.attributes['href'].include?('?')
+          css_file.attributes['href'][0..(css_file.attributes['href'].index('?') - 1)]
+        else
+          css_file.attributes['href']
+        end
       end
 
-      premailer = Premailer.new(message.body.to_s, options)
+      premailer = Premailer.new(html_part.body.to_s, options)
 
       # reset the body and add two new bodies with appropriate types
       message.body = nil
