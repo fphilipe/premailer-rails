@@ -11,7 +11,6 @@ module PremailerRails
       super(html, options)
     end
 
-    # HTML can be accessed by attr_accessor doc
     def load_html(string)
       @doc ||= Hpricot(string)
     end
@@ -36,8 +35,8 @@ module PremailerRails
         @@_css_cache[:default] =
           if defined? Hassle and Rails.configuration.middleware.include? Hassle
             File.read("#{Rails.root}/tmp/hassle/stylesheets/email.css")
-          elsif Rails.configuration.assets.try(:enabled)
-            Rails.application.assets.find_asset('email.css').body
+          # elsif Rails.configuration.assets.try(:enabled)
+          #   Rails.application.assets.find_asset('email.css').body
           else
             File.read("#{Rails.root}/public/stylesheets/email.css")
           end
@@ -51,7 +50,7 @@ module PremailerRails
     # Scan the HTML mailer template for CSS files, specifically link tags with
     # types of text/css (other ways of including CSS are not supported).
     def linked_css_files
-      @_linked_css_files ||= doc.search('link[@type="text/css"]').collect do |l|
+      @_linked_css_files ||= @doc.search('link[@type="text/css"]').collect do |l|
         href = l.attributes['href']
         if href.include? '?'
           href[0..(href.index('?') - 1)]
