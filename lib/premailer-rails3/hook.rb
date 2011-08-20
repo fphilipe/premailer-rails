@@ -5,7 +5,7 @@ module PremailerRails
         message.content_type =~ /text\/html/ and
         html_part = message.body
       )
-        premailer = Premailer.new(html_part.to_s)
+        premailer = Premailer.new(html_part.body.to_s)
 
         # reset the body and add two new bodies with appropriate types
         message.body = nil
