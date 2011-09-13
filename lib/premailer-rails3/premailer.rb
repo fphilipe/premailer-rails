@@ -36,7 +36,7 @@ module PremailerRails
         @@_css_cache[:default] =
           if defined? Hassle and Rails.configuration.middleware.include? Hassle
             File.read("#{Rails.root}/tmp/hassle/stylesheets/email.css")
-          elsif Rails.configuration.assets.try(:enabled)
+          elsif Rails.configuration.try(:assets).try(:enabled)
             Rails.application.assets.find_asset('email.css').body
           else
             File.read("#{Rails.root}/public/stylesheets/email.css")
