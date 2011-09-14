@@ -1,17 +1,19 @@
 module PremailerRails
   class Hook
     def self.delivering_email(message)
-      if html_part = message.html_part or (
-        message.content_type =~ /text\/html/ and
-        html_part = message.body
-      )
-        premailer = Premailer.new(html_part.body.to_s)
-        plain_text = message.text_part.try(:body).try(:to_s)
-
-        # reset the body and add two new bodies with appropriate types
+      # If the mail only has one part, it may be stored in message.body. In that
+      # case, if the mail content type is text/html, the body part will be the
+      # html body.
+      if message.html_part
+        html_body = message.html_part.body.to_s
+      elsif message.content_type =~ /text\/html/
+        html_body = message.body.to_s
         message.body = nil
+      end
 
-        charset = message.charset
+      if html_body
+        premailer = Premailer.new(html_body)
+        charset   = message.charset
 
         message.html_part do
           content_type "text/html; charset=#{charset}"
@@ -21,7 +23,7 @@ module PremailerRails
         message.text_part do
           content_type "text/plain; charset=#{charset}"
           body premailer.to_plain_text
-        end if plain_text.blank?
+        end unless text_part
       end
     end
   end
