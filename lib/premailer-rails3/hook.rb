@@ -23,7 +23,7 @@ module PremailerRails
         message.text_part do
           content_type "text/plain; charset=#{charset}"
           body premailer.to_plain_text
-        end unless text_part
+        end unless message.text_part
       end
     end
   end
