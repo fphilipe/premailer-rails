@@ -6,14 +6,8 @@ module PremailerRails
       load_html(html)
       options = {
         :with_html_string => true,
-        :adapter          => :hpricot
       }.merge css_options
       super(html, options)
-    end
-
-    def load_html(string)
-      # @doc is also used by ::Premailer
-      @doc ||= Hpricot(string)
     end
 
     protected
