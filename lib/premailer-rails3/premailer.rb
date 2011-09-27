@@ -17,7 +17,7 @@ module PremailerRails
     def load_css_from_default_file!
       # TODO and what if there are no rules and it's normal?
       if @css_parser.to_s == ''
-        load_css_from_string(default_css_file)
+        load_css_from_string(default_css_file || '')
       end
     end
 
