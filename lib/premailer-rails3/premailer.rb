@@ -3,25 +3,22 @@ module PremailerRails
     @@_css_cache = {}
 
     def initialize(html)
-      load_html(html)
       options = {
-        :with_html_string => true,
-      }.merge css_options
+        :with_html_string => true
+      }
+
       super(html, options)
+
+      load_css_from_default_file!
     end
 
     protected
 
-    def css_options
-      options = {
-        :css => linked_css_files
-      }
-
-      if linked_css_files.empty?
-        options[:css_string] = default_css_file
+    def load_css_from_default_file!
+      # TODO and what if there are no rules and it's normal?
+      if @css_parser.to_s == ''
+        load_css_from_string(default_css_file)
       end
-
-      options
     end
 
     def default_css_file
@@ -40,19 +37,6 @@ module PremailerRails
     rescue => ex
       puts ex.message
       @@_css_cache[:default] = nil
-    end
-
-    # Scan the HTML mailer template for CSS files, specifically link tags with
-    # types of text/css (other ways of including CSS are not supported).
-    def linked_css_files
-      @_linked_css_files ||= @doc.search('link[@type="text/css"]').collect do |l|
-        href = l.attributes['href']
-        if href.include? '?'
-          href[0..(href.index('?') - 1)]
-        else
-          href
-        end
-      end
     end
   end
 end
