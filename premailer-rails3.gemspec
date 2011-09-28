@@ -23,5 +23,4 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency("premailer", ["~> 1.7"])
-  s.add_dependency("hpricot", ["~> 0.8"])
 end
