@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PremailerRails::CSSHelper do
   # Reset the CSS cache
-  after { PremailerRails::CSSHelper.class_variable_set('@@css_cache', {}) }
+  after { PremailerRails::CSSHelper.send(:class_variable_set, '@@css_cache', {}) }
 
   def load_css_at_path(path)
     PremailerRails::CSSHelper.send(:load_css_at_path, path)
@@ -34,7 +34,7 @@ describe PremailerRails::CSSHelper do
     end
 
     context 'when HTML contains no linked CSS file' do
-      let(:files) { nil }
+      let(:files) { [] }
 
       it 'should return the content of the default file' do
         PremailerRails::CSSHelper \
@@ -58,7 +58,7 @@ describe PremailerRails::CSSHelper do
 
     context 'when file is cached' do
       it 'should return the cached value' do
-        cache = PremailerRails::CSSHelper.class_variable_get('@@css_cache')
+        cache = PremailerRails::CSSHelper.send(:class_variable_get, '@@css_cache')
         cache['/stylesheets/base.css'] = 'content of base.css'
 
         load_css_at_path('http://example.com/stylesheets/base.css') \
@@ -68,7 +68,7 @@ describe PremailerRails::CSSHelper do
 
     context 'when in development mode' do
       it 'should not return cached values' do
-        cache = PremailerRails::CSSHelper.class_variable_get('@@css_cache')
+        cache = PremailerRails::CSSHelper.send(:class_variable_get, '@@css_cache')
         cache['/stylesheets/base.css'] = 'cached content of base.css'
         File.expects(:read) \
             .with('RAILS_ROOT/public/stylesheets/base.css') \
