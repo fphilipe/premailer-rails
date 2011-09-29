@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe PremailerRails::Hook do
   describe '.delivering_email' do
+    before { File.stubs(:read).returns('') }
     def run_hook(message)
       PremailerRails::Hook.delivering_email(message)
     end
