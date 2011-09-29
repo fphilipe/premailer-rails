@@ -1,5 +1,5 @@
-module Dummy
+class Dummy
   def method_missing(m, *args)
-    self
+    self.class.new
   end
 end
