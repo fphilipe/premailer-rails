@@ -27,18 +27,22 @@ module PremailerRails
       if Rails.env.development? or not @@css_cache.include? path
         @@css_cache[path] =
           if defined? Hassle and Rails.configuration.middleware.include? Hassle
-            file = path == :default ? 'stylesheets/email.css' : path
-            File.read("#{Rails.root}/tmp/hassle/#{file}")
+            file = path == :default ? '/stylesheets/email.css' : path
+            File.read("#{Rails.root}/tmp/hassle#{file}")
           elsif Rails.configuration.try(:assets).try(:enabled)
             file = if path == :default
                      'email.css'
                    else
                      path.sub("#{Rails.configuration.assets.prefix}/", '')
                    end
-            Rails.application.assets.find_asset(file).body
+            if asset = Rails.application.assets.find_asset(file)
+              asset.body
+            else
+              raise "Couldn't find asset #{file} for premailer-rails3."
+            end
           else
-            file = path == :default ? 'stylesheets/email.css' : path
-            File.read("#{Rails.root}/public/#{file}")
+            file = path == :default ? '/stylesheets/email.css' : path
+            File.read("#{Rails.root}/public#{file}")
           end
       end
 
