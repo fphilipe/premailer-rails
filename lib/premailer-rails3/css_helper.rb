@@ -29,7 +29,7 @@ module PremailerRails
           if defined? Hassle and Rails.configuration.middleware.include? Hassle
             file = path == :default ? '/stylesheets/email.css' : path
             File.read("#{Rails.root}/tmp/hassle#{file}")
-          elsif Rails.configuration.try(:assets).try(:enabled)
+          elsif assets_enabled?
             file = if path == :default
                      'email.css'
                    else
@@ -51,6 +51,11 @@ module PremailerRails
       # Print an error and store empty string as the CSS.
       puts ex.message
       @@css_cache[path] = ''
+    end
+
+    def assets_enabled?
+      return false unless Rails.configuration.respond_to?(:assets)
+      Rails.configuration.try(:assets).try(:enabled)
     end
   end
 end
