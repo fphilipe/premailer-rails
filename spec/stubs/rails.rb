@@ -14,20 +14,8 @@ module Rails
       end
     end
 
-    module Assets
-      extend self
-
-      def prefix
-        '/assets'
-      end
-    end
-
     def middleware
       Middleware
-    end
-
-    def assets
-      Assets
     end
   end
 

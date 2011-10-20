@@ -104,7 +104,14 @@ describe PremailerRails::CSSHelper do
     end
 
     context 'when Rails asset pipeline is used' do
-      before { Rails.configuration.assets.stubs(:enabled).returns(true) }
+      before {
+        Rails.configuration.stubs(:assets).returns(
+          stub(
+            :enabled => true,
+            :prefix  => '/assets'
+          )
+        )
+      }
 
       it 'should load email.css when the default CSS is requested' do
         Rails.application.assets.expects(:find_asset) \
