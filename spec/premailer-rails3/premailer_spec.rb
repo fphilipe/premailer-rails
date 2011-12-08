@@ -31,5 +31,10 @@ describe PremailerRails::Premailer do
       PremailerRails::CSSHelper.expects(:css_for_doc)
       PremailerRails::Premailer.new('some html')
     end
+    it 'should set custom options when they exist' do
+      PremailerRails::Options.stubs(:custom).returns({:preserve_styles => true})
+      premailer = PremailerRails::Premailer.new(html)
+      premailer.to_inline_css.should include "link rel='stylesheet' type='text/css'"
+    end
   end
 end
