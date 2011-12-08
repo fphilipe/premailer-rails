@@ -33,8 +33,9 @@ describe PremailerRails::Premailer do
     end
     it 'should set custom options when they exist' do
       PremailerRails::Options.stubs(:custom).returns({:preserve_styles => true})
+      html = Fixtures::HTML.with_css_links('stylesheets/base.css')
       premailer = PremailerRails::Premailer.new(html)
-      premailer.to_inline_css.should include "link rel='stylesheet' type='text/css'"
+      premailer.to_inline_css.should include "<link rel='stylesheet' type='text/css' href='http://example.com/stylesheets/base.css' />"
     end
   end
 end
