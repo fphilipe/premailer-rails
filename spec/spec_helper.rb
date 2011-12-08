@@ -1,6 +1,7 @@
 require 'stubs/action_mailer'
 require 'stubs/rails'
 require 'stubs/hassle'
+require 'stubs/initializer'
 require 'fixtures/message'
 require 'fixtures/html'
 
