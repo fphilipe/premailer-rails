@@ -15,6 +15,11 @@ module PremailerRails
         :with_html_string => true,
         :css_string       => CSSHelper.css_for_doc(doc)
       }
+
+      if defined? PremailerRails::Options.custom
+        options.merge!(PremailerRails::Options.custom)
+      end
+
       super(html, options)
     end
   end
