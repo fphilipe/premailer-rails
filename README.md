@@ -36,6 +36,15 @@ Simply add the gem to your Gemfile in your Rails project:
 
     gem 'premailer-rails3'
 
+premailer-rails3 requires either nokogiri or hpricot. It doesn't list them as a
+dependency so you can choose which one to use.
+
+    gem 'nokogiri'
+    # or
+    gem 'hpricot'
+
+If both are loaded for some reason, premailer chooses hpricot.
+
 That's it!
 
 ## Configuration
