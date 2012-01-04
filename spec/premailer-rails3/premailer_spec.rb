@@ -31,5 +31,11 @@ describe PremailerRails::Premailer do
       PremailerRails::CSSHelper.expects(:css_for_doc)
       PremailerRails::Premailer.new('some html')
     end
+
+    it 'should pass on the configs' do
+      PremailerRails3.config = { :foo => :bar }
+      premailer = PremailerRails::Premailer.new('some html')
+      premailer.instance_variable_get(:'@options')[:foo].should == :bar
+    end
   end
 end

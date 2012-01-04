@@ -11,10 +11,10 @@ module PremailerRails
       ::Premailer.send(:include, Adapter.find(Adapter.use))
       doc = load_html(html)
 
-      options = {
+      options = PremailerRails3.config.merge(
         :with_html_string => true,
         :css_string       => CSSHelper.css_for_doc(doc)
-      }
+      )
       super(html, options)
     end
   end
