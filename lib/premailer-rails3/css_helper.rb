@@ -36,7 +36,7 @@ module PremailerRails
                      path.sub("#{Rails.configuration.assets.prefix}/", '')
                    end
             if asset = Rails.application.assets.find_asset(file)
-              asset.body
+              asset.respond_to?(:source) ? asset.source : asset.to_s
             else
               raise "Couldn't find asset #{file} for premailer-rails3."
             end
