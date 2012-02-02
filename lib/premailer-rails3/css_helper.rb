@@ -33,7 +33,8 @@ module PremailerRails
             file = if path == :default
                      'email.css'
                    else
-                     path.sub("#{Rails.configuration.assets.prefix}/", '')
+                     path.sub("#{Rails.configuration.assets.prefix}/", '') \
+                         .sub(/-.*\.css$/, '.css')
                    end
             if asset = Rails.application.assets.find_asset(file)
               asset.to_s
