@@ -54,8 +54,7 @@ module PremailerRails
     end
 
     def assets_enabled?
-      return false unless Rails.configuration.respond_to?(:assets)
-      Rails.configuration.assets.enabled
+      Rails.configuration.assets.enabled rescue false
     end
   end
 end
