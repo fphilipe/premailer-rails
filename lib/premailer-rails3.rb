@@ -3,7 +3,7 @@ require 'premailer-rails3/css_helper'
 require 'premailer-rails3/premailer'
 require 'premailer-rails3/hook'
 
-module PremailerRails3
+module PremailerRails
   @config = {}
   class << self
     attr_accessor :config

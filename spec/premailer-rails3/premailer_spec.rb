@@ -33,7 +33,7 @@ describe PremailerRails::Premailer do
     end
 
     it 'should pass on the configs' do
-      PremailerRails3.config = { :foo => :bar }
+      PremailerRails.config = { :foo => :bar }
       premailer = PremailerRails::Premailer.new('some html')
       premailer.instance_variable_get(:'@options')[:foo].should == :bar
     end
