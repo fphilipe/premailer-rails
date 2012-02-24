@@ -116,7 +116,7 @@ describe PremailerRails::CSSHelper do
       it 'should load email.css when the default CSS is requested' do
         Rails.application.assets.expects(:find_asset) \
                                 .with('email.css') \
-                                .returns(mock(:body => 'content of default css'))
+                                .returns(mock(:to_s => 'content of default css'))
 
         load_css_at_path(:default).should == 'content of default css'
       end
@@ -124,7 +124,7 @@ describe PremailerRails::CSSHelper do
       it 'should return the content of the file compiled by Rails' do
         Rails.application.assets.expects(:find_asset) \
                                 .with('base.css') \
-                                .returns(mock(:body => 'content of base.css'))
+                                .returns(mock(:to_s => 'content of base.css'))
 
         load_css_at_path('http://example.com/assets/base.css') \
           .should == 'content of base.css'
