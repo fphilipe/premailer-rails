@@ -1,3 +1,6 @@
+require 'open-uri'
+require 'zlib'
+
 module PremailerRails
   module CSSHelper
     extend self
@@ -39,7 +42,7 @@ module PremailerRails
             if asset = Rails.application.assets.find_asset(file)
               asset.to_s
             else
-              raise "Couldn't find asset #{file} for premailer-rails3."
+              request_and_unzip(file)
             end
           else
             file = path == :default ? '/stylesheets/email.css' : path
@@ -56,6 +59,21 @@ module PremailerRails
 
     def assets_enabled?
       Rails.configuration.assets.enabled rescue false
+    end
+
+    def request_and_unzip(file)
+      url = [
+        Rails.configuration.action_controller.asset_host,
+        Rails.configuration.assets.prefix.sub(/^\//, ''),
+        Rails.configuration.assets.digests[file]
+      ].join('/')
+      response = Kernel.open(url)
+      begin
+        Zlib::GzipReader.new(response).read
+      rescue Zlib::GzipFile::Error
+        response.rewind
+        response.read
+      end
     end
   end
 end
