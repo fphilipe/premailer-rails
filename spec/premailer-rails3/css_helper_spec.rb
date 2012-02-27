@@ -129,6 +129,17 @@ describe PremailerRails::CSSHelper do
         load_css_at_path('http://example.com/assets/base.css') \
           .should == 'content of base.css'
       end
+
+      it 'should return same file when path contains file fingerprint' do
+        Rails.application.assets \
+                         .expects(:find_asset) \
+                         .with('base.css') \
+                         .returns(mock(:to_s => 'content of base.css'))
+
+        load_css_at_path(
+          'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
+        ).should == 'content of base.css'
+      end
     end
 
     context 'when static stylesheets are used' do
