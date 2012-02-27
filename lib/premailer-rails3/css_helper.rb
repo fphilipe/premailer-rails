@@ -23,7 +23,7 @@ module PremailerRails
         # Remove everything after ? including ?
         path = path[0..(path.index('?') - 1)] if path.include? '?'
         # Remove the host
-        path = path.gsub(/^https?\:\/\/[^\/]*/, '') if path.index('http') == 0
+        path = path.sub(/^https?\:\/\/[^\/]*/, '') if path.index('http') == 0
       end
 
       # Don't cache in development.
