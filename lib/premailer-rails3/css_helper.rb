@@ -52,9 +52,9 @@ module PremailerRails
 
       @@css_cache[path]
     rescue => ex
-      # Print an error and store empty string as the CSS.
+      # Print an error and return empty css:
       puts ex.message
-      @@css_cache[path] = ''
+      ''
     end
 
     def assets_enabled?
