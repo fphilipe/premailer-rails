@@ -1,3 +1,6 @@
+require 'open-uri'
+require 'zlib'
+
 module PremailerRails
   module CSSHelper
     extend self
@@ -20,7 +23,7 @@ module PremailerRails
         # Remove everything after ? including ?
         path = path[0..(path.index('?') - 1)] if path.include? '?'
         # Remove the host
-        path = path.gsub(/^https?\:\/\/[^\/]*/, '') if path.index('http') == 0
+        path = path.sub(/^https?\:\/\/[^\/]*/, '') if path.index('http') == 0
       end
 
       # Don't cache in development.
@@ -39,7 +42,7 @@ module PremailerRails
             if asset = Rails.application.assets.find_asset(file)
               asset.to_s
             else
-              raise "Couldn't find asset #{file} for premailer-rails3."
+              request_and_unzip(file)
             end
           else
             file = path == :default ? '/stylesheets/email.css' : path
@@ -49,13 +52,28 @@ module PremailerRails
 
       @@css_cache[path]
     rescue => ex
-      # Print an error and store empty string as the CSS.
+      # Print an error and return empty css:
       puts ex.message
-      @@css_cache[path] = ''
+      ''
     end
 
     def assets_enabled?
       Rails.configuration.assets.enabled rescue false
+    end
+
+    def request_and_unzip(file)
+      url = [
+        Rails.configuration.action_controller.asset_host,
+        Rails.configuration.assets.prefix.sub(/^\//, ''),
+        Rails.configuration.assets.digests[file]
+      ].join('/')
+      response = Kernel.open(url)
+      begin
+        Zlib::GzipReader.new(response).read
+      rescue Zlib::GzipFile::Error
+        response.rewind
+        response.read
+      end
     end
   end
 end
