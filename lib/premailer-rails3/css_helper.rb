@@ -6,7 +6,7 @@ module PremailerRails
 
     def css_for_doc(doc)
       css = doc.search('link[@type="text/css"]').map { |link|
-              url = link.attributes['href']
+              url = link.attributes['href'].to_s
               load_css_at_path(url) unless url.blank?
             }.reject(&:blank?).join("\n")
       css = load_css_at_path(:default) if css.blank?
