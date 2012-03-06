@@ -15,17 +15,10 @@ module PremailerRails
         premailer = Premailer.new(html_body)
         charset   = message.charset
 
-        # IMPRTANT: Plain text part must be generated before CSS is inlined.
-        # Not doing so results in CSS declarations visible in the plain text
-        # part.
-        message.text_part do
-          content_type "text/plain; charset=#{charset}"
-          body premailer.to_plain_text
-        end unless message.text_part
-
-        message.html_part do
-          content_type "text/html; charset=#{charset}"
-          body premailer.to_inline_css
+        if message.html_part
+          message.html_part.body = premailer.to_inline_css
+        else
+          message.body = premailer.to_inline_css
         end
       end
     end

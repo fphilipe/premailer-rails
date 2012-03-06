@@ -10,15 +10,24 @@ describe PremailerRails::Hook do
     context 'when message contains html part' do
       let(:message) { Fixtures::Message.with_parts :html }
 
-      it 'should create a text part from the html part' do
-        PremailerRails::Premailer.any_instance.expects(:to_plain_text)
+      it 'should not create a text part from the html part' do
+        PremailerRails::Premailer.any_instance.expects(:to_plain_text).never
         run_hook(message)
-        message.text_part.should be_a Mail::Part
       end
 
       it 'should inline the css in the html part' do
         PremailerRails::Premailer.any_instance.expects(:to_inline_css)
         run_hook(message)
+      end
+    end
+
+    context 'when message contains html part and content-type is set to "multipart/mixed"' do
+      let(:message) { Fixtures::Message.with_mixed_parts :html }
+
+      it 'should not change content-type' do
+        PremailerRails::Premailer.any_instance.expects(:to_inline_css)
+        run_hook(message)
+        message.content_type.should == 'multipart/mixed'
       end
     end
 
@@ -41,23 +50,24 @@ describe PremailerRails::Hook do
       end
 
       it 'should inline the css in the html part' do
-        PremailerRails::Premailer.any_instance.expects(:to_inline_css)
+        PremailerRails::Premailer.any_instance.expects(:to_inline_css).returns("<html>body</html>")
         run_hook(message)
+        message.html_part.body.should == "<html>body</html>"
       end
     end
 
     context 'when message contains html body' do
       let(:message) { Fixtures::Message.with_body :html }
 
-      it 'should create a text part from the html part' do
-        PremailerRails::Premailer.any_instance.expects(:to_plain_text)
+      it 'should not create a text part from the html part' do
+        PremailerRails::Premailer.any_instance.expects(:to_plain_text).never
         run_hook(message)
       end
 
-      it 'should create a html part and inline the css' do
-        PremailerRails::Premailer.any_instance.expects(:to_inline_css)
+      it 'should update message body and inline the css' do
+        PremailerRails::Premailer.any_instance.expects(:to_inline_css).returns("<html>body</html>")
         run_hook(message)
-        message.html_part.should be_a Mail::Part
+        message.body.should == "<html>body</html>"
       end
     end
 

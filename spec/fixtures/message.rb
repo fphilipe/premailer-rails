@@ -41,6 +41,13 @@ nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
       message
     end
 
+    def with_mixed_parts(*part_types)
+      message = with_parts(*part_types)
+      message.content_type = 'multipart/mixed'
+
+      message
+    end
+
     def with_body(body_type)
       message = base_message
 
