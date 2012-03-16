@@ -4,6 +4,8 @@ require 'premailer-rails3/css_helper'
 require 'premailer-rails3/premailer'
 require 'premailer-rails3/hook'
 
+require 'overrides/premailer/adapter/nokogiri'
+
 module PremailerRails
   @config = {
     :input_encoding     => 'UTF-8',
