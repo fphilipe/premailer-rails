@@ -46,7 +46,8 @@ module PremailerRails
             end
           else
             file = path == :default ? '/stylesheets/email.css' : path
-            File.read("#{Rails.root}/public#{file}")
+            css_file = "#{Rails.root}/public#{file}"
+            File.exist?(css_file) ? File.read(css_file) : ""
           end
       end
 
