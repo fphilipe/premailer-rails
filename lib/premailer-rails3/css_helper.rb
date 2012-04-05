@@ -53,7 +53,7 @@ module PremailerRails
       @@css_cache[path]
     rescue => ex
       # Print an error and return empty css:
-      puts ex.message
+      Rails.logger.warn(ex.message) if defined? Rails.logger
       ''
     end
 
