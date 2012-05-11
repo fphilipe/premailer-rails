@@ -18,7 +18,7 @@ module PremailerRails
         charset   = message.charset
 
         if multipart
-          # IMPRTANT: Plain text part must be generated before CSS is inlined.
+          # IMPORTANT: Plain text part must be generated before CSS is inlined.
           # Not doing so results in CSS declarations visible in the plain text
           # part.
           message.text_part do
