@@ -54,7 +54,7 @@ pass these options on to the underlying premailer instance, specify them in an
 initializer:
 
 ```ruby
-PremailerRails3.config = {
+PremailerRails.config = {
   :preserve_styles => true,
   :remove_ids      => true
 }
