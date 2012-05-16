@@ -11,7 +11,9 @@ module PremailerRails
       ::Premailer.send(:include, Adapter.find(Adapter.use))
       doc = load_html(html)
 
-      options = PremailerRails.config.merge(
+      options = PremailerRails.config.reject do |key, _|
+        key == :generate_text_part
+      end.merge(
         :with_html_string => true,
         :css_string       => CSSHelper.css_for_doc(doc)
       )

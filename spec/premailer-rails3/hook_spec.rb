@@ -7,6 +7,33 @@ describe PremailerRails::Hook do
       PremailerRails::Hook.delivering_email(message)
     end
 
+    context 'when :generate_text_part => false' do
+      before do
+        @old_config = PremailerRails.config
+        PremailerRails.config = {:generate_text_part => false}
+      end
+
+      after do
+        PremailerRails.config = @old_config
+      end
+
+      context 'with an html message with no text part' do
+        let(:message) { Fixtures::Message.with_body :html }
+
+        it 'should not create a text part' do
+          PremailerRails::Premailer.any_instance.expects(:to_plain_text).never
+          run_hook(message)
+          message.text_part.should be_nil
+        end
+
+        it "should preserve the message's content type" do
+          message.content_type.should =~ /text\/html/
+          run_hook(message)
+          message.content_type.should =~ /text\/html/
+        end
+      end
+    end
+
     context 'when message contains html part' do
       let(:message) { Fixtures::Message.with_parts :html }
 

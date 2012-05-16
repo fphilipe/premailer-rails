@@ -37,5 +37,11 @@ describe PremailerRails::Premailer do
       premailer = PremailerRails::Premailer.new('some html')
       premailer.instance_variable_get(:'@options')[:foo].should == :bar
     end
+
+    it 'should not pass on config[:generate_text_part]' do
+      PremailerRails.config = { :generate_text_part => true }
+      premailer = PremailerRails::Premailer.new('some html')
+      premailer.instance_variable_get(:'@options').should_not include :generate_text_part
+    end
   end
 end

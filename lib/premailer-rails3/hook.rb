@@ -1,3 +1,5 @@
+require 'premailer-rails3/config'
+
 module PremailerRails
   class Hook
     def self.delivering_email(message)
@@ -15,17 +17,21 @@ module PremailerRails
         premailer = Premailer.new(html_body)
         charset   = message.charset
 
-        # IMPRTANT: Plain text part must be generated before CSS is inlined.
-        # Not doing so results in CSS declarations visible in the plain text
-        # part.
-        message.text_part do
-          content_type "text/plain; charset=#{charset}"
-          body premailer.to_plain_text
-        end unless message.text_part
+        if PremailerRails.config[:generate_text_part]
+          # IMPORTANT: Plain text part must be generated before CSS is inlined.
+          # Not doing so results in CSS declarations visible in the plain text
+          # part.
+          message.text_part do
+            content_type "text/plain; charset=#{charset}"
+            body premailer.to_plain_text
+          end unless message.text_part
 
-        message.html_part do
-          content_type "text/html; charset=#{charset}"
-          body premailer.to_inline_css
+          message.html_part do
+            content_type "text/html; charset=#{charset}"
+            body premailer.to_inline_css
+          end
+        else
+          message.body = premailer.to_inline_css
         end
       end
     end
