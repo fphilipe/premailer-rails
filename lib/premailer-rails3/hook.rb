@@ -23,6 +23,9 @@ module PremailerRails
           body premailer.to_plain_text
         end unless message.text_part
 
+        # Delete existing html part without inline CSS before adding html part with CSS inlined
+        message.parts.delete_if { |p| p.mime_type == "text/html"}
+
         message.html_part do
           content_type "text/html; charset=#{charset}"
           body premailer.to_inline_css
