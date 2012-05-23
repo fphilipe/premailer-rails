@@ -26,7 +26,7 @@ module PremailerRails
         message.html_part do
           content_type "text/html; charset=#{charset}"
           body premailer.to_inline_css
-        end
+        end unless message.html_part
       end
     end
   end
