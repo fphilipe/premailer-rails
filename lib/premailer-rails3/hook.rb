@@ -24,7 +24,7 @@ module PremailerRails
         end unless message.text_part
 
         # Delete existing html part without inline CSS before adding html part with CSS inlined
-        message.parts.delete_if { |p| p.mime_type == "text/html"}
+        message.parts.delete_if { |p| p.mime_type == "text/html" }
 
         message.html_part do
           content_type "text/html; charset=#{charset}"
