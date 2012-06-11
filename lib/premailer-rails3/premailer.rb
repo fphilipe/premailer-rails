@@ -7,7 +7,7 @@ module PremailerRails
       # suitable adaptor (Nokogiri or Hpricot). To make load_html work, an
       # adaptor needs to be included and @options[:with_html_string] needs to be
       # set. For further information, refer to ::Premailer#initialize.
-      @options = { :with_html_string => true }
+      @options = { :with_html_string => true, :input_encoding => 'ASCII-8BIT' }
       ::Premailer.send(:include, Adapter.find(Adapter.use))
       doc = load_html(html)
 
