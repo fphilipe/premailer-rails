@@ -29,6 +29,11 @@ describe PremailerRails::Hook do
         message.text_part.should be_nil
         message.html_part.should be_a Mail::Part
       end
+
+      it 'should not create an additional html part' do
+        run_hook(message)
+        message.parts.count { |i| i.content_type =~ /text\/html/ }.should == 1
+      end
     end
 
     context 'when message contains text part' do

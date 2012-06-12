@@ -7,6 +7,7 @@ module PremailerRails
       if message.html_part
         html_body       = message.html_part.body.to_s
         needs_multipart = true
+        message.parts.delete(message.html_part)
       elsif message.content_type =~ /text\/html/
         html_body       = message.body.to_s
         message.body    = nil
