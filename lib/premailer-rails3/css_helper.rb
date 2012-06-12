@@ -51,7 +51,7 @@ module PremailerRails
       end
 
       @@css_cache[path]
-    rescue => ex
+    rescue NoMethodError => ex
       # Log an error and return empty css:
       Rails.logger.try(:warn, ex.message)
       ''
