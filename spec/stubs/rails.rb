@@ -1,5 +1,11 @@
 require 'stubs/dummy'
 
+module Logger
+  extend self
+
+  def try(*args); end
+end
+
 module Rails
   extend self
 
@@ -30,7 +36,13 @@ module Rails
   module Application
     extend self
 
-    def assets; end
+    module Assets
+      extend self
+    end
+
+    def assets
+      Assets
+    end
   end
 
   def env
@@ -39,6 +51,10 @@ module Rails
 
   def configuration
     Configuration
+  end
+
+  def logger
+    Logger
   end
 
   def root
