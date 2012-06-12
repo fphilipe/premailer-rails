@@ -37,5 +37,12 @@ describe PremailerRails::Premailer do
       premailer = PremailerRails::Premailer.new('some html')
       premailer.instance_variable_get(:'@options')[:foo].should == :bar
     end
+
+    it 'should not allow to override default configs' do
+      PremailerRails.config = { :input_encoding => 'ASCII-8BIT' }
+      premailer = PremailerRails::Premailer.new('some html')
+      options = premailer.instance_variable_get(:'@options')
+      options[:input_encoding].should == 'UTF-8'
+    end
   end
 end
