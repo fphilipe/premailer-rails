@@ -5,7 +5,8 @@ require 'premailer-rails3/hook'
 
 module PremailerRails
   @config = {
-    :input_encoding => 'UTF-8'
+    :input_encoding     => 'UTF-8',
+    :generate_text_part => true
   }
   class << self
     attr_accessor :config

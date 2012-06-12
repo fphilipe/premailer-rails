@@ -20,6 +20,15 @@ describe PremailerRails::Hook do
         PremailerRails::Premailer.any_instance.expects(:to_inline_css)
         run_hook(message)
       end
+
+      it 'should not create a text part if disabled' do
+        PremailerRails::Premailer.any_instance.expects(:to_plain_text).never
+        PremailerRails.config[:generate_text_part] = false
+        run_hook(message)
+        PremailerRails.config[:generate_text_part] = true
+        message.text_part.should be_nil
+        message.html_part.should be_a Mail::Part
+      end
     end
 
     context 'when message contains text part' do
@@ -58,6 +67,16 @@ describe PremailerRails::Hook do
         PremailerRails::Premailer.any_instance.expects(:to_inline_css)
         run_hook(message)
         message.html_part.should be_a Mail::Part
+      end
+
+      it 'should not create a text part if disabled' do
+        PremailerRails::Premailer.any_instance.expects(:to_plain_text).never
+        PremailerRails.config[:generate_text_part] = false
+        run_hook(message)
+        PremailerRails.config[:generate_text_part] = true
+        message.text_part.should be_nil
+        message.html_part.should be_nil
+        message.body.should_not be_empty
       end
     end
 

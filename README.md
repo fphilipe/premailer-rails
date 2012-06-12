@@ -54,13 +54,23 @@ pass these options on to the underlying premailer instance, specify them in an
 initializer:
 
 ```ruby
-PremailerRails.config = {
-  :preserve_styles => true,
-  :remove_ids      => true
-}
+PremailerRails.config.merge(:preserve_styles => true,
+                            :remove_ids      => true)
 ```
 
 For a list of options, refer to the [Premailer documentation](http://rubydoc.info/gems/premailer/1.7.3/Premailer:initialize)
 
-Note that the options `with_html_string` and `css_string` are used to make this
-gem work and will thus be overridden.
+The default configs are:
+
+```ruby
+{
+  :input_encoding     => 'UTF-8',
+  :generate_text_part => true
+}
+```
+
+If you don't want to generate a text part from the html part, set the config
+`:generate_text_part` to false.
+
+Note that the options `:with_html_string` and `:css_string` are used to make
+this gem work and will thus be overridden.
