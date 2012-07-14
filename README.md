@@ -65,9 +65,15 @@ The default configs are:
 ```ruby
 {
   :input_encoding     => 'UTF-8',
+  :inputencoding      => 'UTF-8',
   :generate_text_part => true
 }
 ```
+
+The input encoding option [changed](https://github.com/alexdunae/premailer/commit/5f5cbb4ac181299a7e73d3eca11f3cf546585364)
+at some point. To make sure this option works regardless of the premailer
+version, the old and new setting is specified. If you want to use another
+encoding make sure to specify the right one or both.
 
 If you don't want to generate a text part from the html part, set the config
 `:generate_text_part` to false.
