@@ -1,4 +1,6 @@
-# Premailer Rails 3 README
+# premailer-rails3
+
+[![Build Status](https://secure.travis-ci.org/fphilipe/premailer-rails3.png?branch=master)](http://travis-ci.org/fphilipe/premailer-rails3) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/fphilipe/premailer-rails3)
 
 This gem is a no config solution for the wonderful
 [Premailer gem](https://github.com/alexdunae/premailer) to be used with Rails 3.
