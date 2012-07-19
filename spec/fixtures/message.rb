@@ -19,6 +19,24 @@ module Fixtures
 </html>
     HTML
 
+    HTML_PART_WITH_CSS = <<-HTML
+<html>
+  <head>
+    <style type="text/css">
+      p { color: red; }
+    </style>
+  </head>
+  <body>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+      commodo consequat.
+    </p>
+  </body>
+</html>
+    HTML
+
     TEXT_PART = <<-TEXT
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis

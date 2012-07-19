@@ -19,7 +19,7 @@ module PremailerRails
     def css_for_doc(doc)
       urls = css_urls_in_doc(doc)
       if urls.empty?
-        load_css(:default)
+        load_css(:default) unless has_inline_css? doc
       else
         urls.map { |url| load_css(url) }.join("\n")
       end
@@ -31,6 +31,10 @@ module PremailerRails
       doc.search('link[@type="text/css"]').map do |link|
         link.attributes['href'].to_s
       end
+    end
+
+    def has_inline_css?(doc)
+      not doc.search('style[@type="text/css"]').empty?
     end
 
     def load_css(url)
