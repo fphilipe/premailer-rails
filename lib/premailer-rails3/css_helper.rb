@@ -5,74 +5,52 @@ module PremailerRails
   module CSSHelper
     extend self
 
-    @@css_cache = {}
+    @cache = {}
+    attr :cache
 
+    STRATEGIES = [
+      CSSLoaders::CacheLoader,
+      CSSLoaders::HassleLoader,
+      CSSLoaders::AssetPipelineLoader,
+      CSSLoaders::FileSystemLoader
+    ]
+
+    # Returns all linked CSS files concatenated as string.
     def css_for_doc(doc)
-      css = doc.search('link[@type="text/css"]').map { |link|
-              url = link.attributes['href'].to_s
-              load_css_at_path(url) unless url.blank?
-            }.reject(&:blank?).join("\n")
-      css = load_css_at_path(:default) if css.blank?
-      css
+      urls = css_urls_in_doc(doc)
+      if urls.empty?
+        load_css(:default)
+      else
+        urls.map { |url| load_css(url) }.join("\n")
+      end
     end
 
     private
 
-    def load_css_at_path(path)
-      if path.is_a? String
+    def css_urls_in_doc(doc)
+      doc.search('link[@type="text/css"]').map do |link|
+        link.attributes['href'].to_s
+      end
+    end
+
+    def load_css(url)
+      path = extract_path(url)
+
+      @cache[path] = STRATEGIES.each do |strategy|
+                       css = strategy.load(path)
+                       break css if css
+                     end
+    end
+
+    # Extracts the path of a url.
+    def extract_path(url)
+      if url.is_a? String
         # Remove everything after ? including ?
-        path = path[0..(path.index('?') - 1)] if path.include? '?'
+        url = url[0..(url.index('?') - 1)] if url.include? '?'
         # Remove the host
-        path = path.sub(/^https?\:\/\/[^\/]*/, '') if path.index('http') == 0
-      end
-
-      # Don't cache in development.
-      if Rails.env.development? or not @@css_cache.include? path
-        @@css_cache[path] =
-          if defined? Hassle and Rails.configuration.middleware.include? Hassle
-            file = path == :default ? '/stylesheets/email.css' : path
-            File.read("#{Rails.root}/tmp/hassle#{file}")
-          elsif assets_enabled?
-            file = if path == :default
-                     'email.css'
-                   else
-                     path.sub("#{Rails.configuration.assets.prefix}/", '') \
-                         .sub(/-.*\.css$/, '.css')
-                   end
-            if asset = Rails.application.assets.find_asset(file)
-              asset.to_s
-            else
-              request_and_unzip(file)
-            end
-          else
-            file = path == :default ? '/stylesheets/email.css' : path
-            File.read("#{Rails.root}/public#{file}")
-          end
-      end
-
-      @@css_cache[path]
-    rescue NoMethodError => ex
-      # Log an error and return empty css:
-      Rails.logger.try(:warn, ex.message)
-      ''
-    end
-
-    def assets_enabled?
-      Rails.configuration.assets.enabled rescue false
-    end
-
-    def request_and_unzip(file)
-      url = [
-        Rails.configuration.action_controller.asset_host,
-        Rails.configuration.assets.prefix.sub(/^\//, ''),
-        Rails.configuration.assets.digests[file]
-      ].join('/')
-      response = Kernel.open(url)
-      begin
-        Zlib::GzipReader.new(response).read
-      rescue Zlib::GzipFile::Error
-        response.rewind
-        response.read
+        url = url.sub(/^https?\:\/\/[^\/]*/, '') if url.index('http') == 0
+      else
+        url
       end
     end
   end
