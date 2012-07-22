@@ -23,7 +23,9 @@ Every CSS file (including the default `email.css`) is loaded from within the
 app. The retrieval of the file depends on your assets configuration:
 
 * Rails 3.1 asset pipeline: It will load the compiled version of the CSS asset
-  which is normally located in `app/assets/stylesheets/`.
+  which is normally located in `app/assets/stylesheets/`. If the asset can't be
+  found (e.g. it is only available on a CDN and not locally), it will be
+  HTTP requested.
 
 * Classic static assets: It will try to load the CSS file located in
   `public/stylesheets/`
