@@ -16,8 +16,8 @@ By default it inlines all the CSS files that are linked to in the HTML:
 
 Don't worry about the host in the CSS URL since this will be ignored.
 
-If no CSS file is linked to in the HTML it will try to load a default CSS file
-`email.css`.
+If no CSS file is linked to in the HTML and no inline `<style type="text/css">`
+is presnet, it will try to load a default CSS file `email.css`.
 
 Every CSS file (including the default `email.css`) is loaded from within the
 app. The retrieval of the file depends on your assets configuration:

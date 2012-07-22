@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe PremailerRails::CSSHelper do
   # Reset the CSS cache
-  after { PremailerRails::CSSHelper.send(:class_variable_set, '@@css_cache', {}) }
+  after { PremailerRails::CSSHelper.send(:instance_variable_set, '@cache', {}) }
 
-  def load_css_at_path(path)
-    PremailerRails::CSSHelper.send(:load_css_at_path, path)
+  def load_css(path)
+    PremailerRails::CSSHelper.send(:load_css, path)
   end
 
   def css_for_doc(doc)
@@ -21,11 +21,11 @@ describe PremailerRails::CSSHelper do
 
       it 'should return the content of both files concatenated' do
         PremailerRails::CSSHelper \
-          .expects(:load_css_at_path) \
+          .expects(:load_css) \
           .with('http://example.com/stylesheets/base.css') \
           .returns('content of base.css')
         PremailerRails::CSSHelper \
-          .expects(:load_css_at_path) \
+          .expects(:load_css) \
           .with('http://example.com/stylesheets/font.css') \
           .returns('content of font.css')
 
@@ -33,49 +33,53 @@ describe PremailerRails::CSSHelper do
       end
     end
 
-    context 'when HTML contains no linked CSS file' do
+    context 'when HTML contains style tag' do
       let(:files) { [] }
+    end
 
-      it 'should return the content of the default file' do
+    context 'when HTML contains no linked CSS file' do
+      let(:html) { Fixtures::HTML.with_style_block }
+
+      it 'should not load the default file' do
         PremailerRails::CSSHelper \
-          .expects(:load_css_at_path) \
+          .expects(:load_css) \
           .with(:default) \
-          .returns('content of default css file')
+          .never
 
-        css_for_doc(doc).should == 'content of default css file'
+        css_for_doc(doc).should be_nil
       end
     end
   end
 
-  describe '#load_css_at_path' do
+  describe '#load_css' do
     context 'when path is a url' do
       it 'should load the CSS at the local path' do
         File.expects(:read).with('RAILS_ROOT/public/stylesheets/base.css')
 
-        load_css_at_path('http://example.com/stylesheets/base.css?test')
+        load_css('http://example.com/stylesheets/base.css?test')
       end
     end
 
     context 'when file is cached' do
       it 'should return the cached value' do
-        cache = PremailerRails::CSSHelper.send(:class_variable_get, '@@css_cache')
+        cache = PremailerRails::CSSHelper.send(:instance_variable_get, '@cache')
         cache['/stylesheets/base.css'] = 'content of base.css'
 
-        load_css_at_path('http://example.com/stylesheets/base.css') \
+        load_css('http://example.com/stylesheets/base.css') \
           .should == 'content of base.css'
       end
     end
 
     context 'when in development mode' do
       it 'should not return cached values' do
-        cache = PremailerRails::CSSHelper.send(:class_variable_get, '@@css_cache')
+        cache = PremailerRails::CSSHelper.send(:instance_variable_get, '@cache')
         cache['/stylesheets/base.css'] = 'cached content of base.css'
         File.expects(:read) \
             .with('RAILS_ROOT/public/stylesheets/base.css') \
             .returns('new content of base.css')
         Rails.env.stubs(:development?).returns(true)
 
-        load_css_at_path('http://example.com/stylesheets/base.css') \
+        load_css('http://example.com/stylesheets/base.css') \
           .should == 'new content of base.css'
       end
     end
@@ -90,7 +94,7 @@ describe PremailerRails::CSSHelper do
             .with('RAILS_ROOT/tmp/hassle/stylesheets/email.css') \
             .returns('content of default css')
 
-        load_css_at_path(:default).should == 'content of default css'
+        load_css(:default).should == 'content of default css'
       end
 
       it 'should return the content of the file compiled by Hassle' do
@@ -98,7 +102,7 @@ describe PremailerRails::CSSHelper do
             .with('RAILS_ROOT/tmp/hassle/stylesheets/base.css') \
             .returns('content of base.css')
 
-        load_css_at_path('http://example.com/stylesheets/base.css') \
+        load_css('http://example.com/stylesheets/base.css') \
           .should == 'content of base.css'
       end
     end
@@ -118,7 +122,7 @@ describe PremailerRails::CSSHelper do
                                 .with('email.css') \
                                 .returns(mock(:to_s => 'content of default css'))
 
-        load_css_at_path(:default).should == 'content of default css'
+        load_css(:default).should == 'content of default css'
       end
 
       it 'should return the content of the file compiled by Rails' do
@@ -126,7 +130,7 @@ describe PremailerRails::CSSHelper do
                                 .with('base.css') \
                                 .returns(mock(:to_s => 'content of base.css'))
 
-        load_css_at_path('http://example.com/assets/base.css') \
+        load_css('http://example.com/assets/base.css') \
           .should == 'content of base.css'
       end
 
@@ -136,7 +140,7 @@ describe PremailerRails::CSSHelper do
                          .with('base.css') \
                          .returns(mock(:to_s => 'content of base.css'))
 
-        load_css_at_path(
+        load_css(
           'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
         ).should == 'content of base.css'
       end
@@ -165,7 +169,7 @@ describe PremailerRails::CSSHelper do
         it 'should request the file' do
           Kernel.expects(:open).with(url).returns(string_io)
 
-          load_css_at_path(
+          load_css(
             'http://example.com/assets/base.css'
           ).should == 'content of base.css'
         end
@@ -173,7 +177,7 @@ describe PremailerRails::CSSHelper do
         it 'should request the same file when path contains file fingerprint' do
           Kernel.expects(:open).with(url).returns(string_io)
 
-          load_css_at_path(
+          load_css(
             'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
           ).should == 'content of base.css'
         end
@@ -186,7 +190,7 @@ describe PremailerRails::CSSHelper do
             .with('RAILS_ROOT/public/stylesheets/email.css') \
             .returns('content of default css')
 
-        load_css_at_path(:default).should == 'content of default css'
+        load_css(:default).should == 'content of default css'
       end
 
       it 'should return the content of the static file' do
@@ -194,7 +198,7 @@ describe PremailerRails::CSSHelper do
             .with('RAILS_ROOT/public/stylesheets/base.css') \
             .returns('content of base.css')
 
-        load_css_at_path('http://example.com/stylesheets/base.css') \
+        load_css('http://example.com/stylesheets/base.css') \
           .should == 'content of base.css'
       end
     end
