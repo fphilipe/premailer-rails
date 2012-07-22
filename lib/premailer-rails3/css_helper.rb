@@ -70,7 +70,7 @@ module PremailerRails
       response = Kernel.open(url)
       begin
         Zlib::GzipReader.new(response).read
-      rescue Zlib::GzipFile::Error
+      rescue Zlib::GzipFile::Error, Zlib::Error
         response.rewind
         response.read
       end
