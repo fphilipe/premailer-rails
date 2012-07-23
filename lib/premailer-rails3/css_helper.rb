@@ -53,9 +53,9 @@ module PremailerRails
         url = url[0..(url.index('?') - 1)] if url.include? '?'
         # Remove the host
         url = url.sub(/^https?\:\/\/[^\/]*/, '') if url.index('http') == 0
-      else
-        url
       end
+
+      url
     end
   end
 end
