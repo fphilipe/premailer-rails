@@ -71,6 +71,14 @@ describe PremailerRails::CSSHelper do
       end
     end
 
+    context 'when path is a relative url' do
+      it 'should load the CSS at the local path' do
+        File.expects(:read).with('RAILS_ROOT/public/stylesheets/base.css')
+
+        load_css('/stylesheets/base.css?test')
+      end
+    end
+
     context 'when file is cached' do
       it 'should return the cached value' do
         cache = PremailerRails::CSSHelper.send(:instance_variable_get, '@cache')
