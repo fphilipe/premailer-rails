@@ -35,9 +35,6 @@ describe PremailerRails::CSSHelper do
 
     context 'when HTML contains style tag' do
       let(:files) { [] }
-    end
-
-    context 'when HTML contains no linked CSS file' do
       let(:html) { Fixtures::HTML.with_style_block }
 
       it 'should not load the default file' do
@@ -47,6 +44,20 @@ describe PremailerRails::CSSHelper do
           .never
 
         css_for_doc(doc).should be_nil
+      end
+    end
+
+    context 'when HTML contains no linked CSS file nor style block tag' do
+      let(:files) { [] }
+      let(:html) { Fixtures::HTML.with_no_css_link }
+
+      it 'should load the default file' do
+        PremailerRails::CSSHelper \
+          .expects(:load_css) \
+          .with(:default) \
+          .returns('content of default css')
+
+        css_for_doc(doc).should == 'content of default css'
       end
     end
   end
