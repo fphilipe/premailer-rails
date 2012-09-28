@@ -12,3 +12,7 @@ require 'premailer-rails3'
 RSpec.configure do |config|
   config.mock_with :mocha
 end
+
+def fixture_dir
+  File.dirname(__FILE__) + '/fixtures'
+end

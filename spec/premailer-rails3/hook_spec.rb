@@ -34,6 +34,54 @@ describe PremailerRails::Hook do
         run_hook(message)
         message.parts.count { |i| i.content_type =~ /text\/html/ }.should == 1
       end
+
+      context "with no attachments" do
+        it "should set the content-type to multipart/alternative" do
+          run_hook(message)
+          message.header['Content-Type'].value.should =~ /multipart\/alternative/
+        end
+      end
+
+      context "with an attachment" do
+        let(:message) {Fixtures::Message.with_parts :html, :attachment}
+
+        it "should set the content-type to multipart/mixed" do
+          run_hook(message)
+          message.header['Content-Type'].value.should =~ /multipart\/mixed/
+        end
+
+        it "should have a multipart/alternative part" do
+          run_hook(message)
+          message.parts.count do
+            |i| i.content_type =~ /multipart\/alternative/
+          end.should == 1
+        end
+
+        it 'should create a text part from the html part' do
+          PremailerRails::Premailer.any_instance.expects(:to_plain_text)
+          run_hook(message)
+          message.text_part.should be_a Mail::Part
+        end
+
+        it 'should inline the css in the html part' do
+          PremailerRails::Premailer.any_instance.expects(:to_inline_css)
+          run_hook(message)
+        end
+
+        it 'should not create a text part if disabled' do
+          PremailerRails::Premailer.any_instance.expects(:to_plain_text).never
+          PremailerRails.config[:generate_text_part] = false
+          run_hook(message)
+          PremailerRails.config[:generate_text_part] = true
+          message.text_part.should be_nil
+          message.html_part.should be_a Mail::Part
+        end
+
+        it 'should not create an additional html part' do
+          run_hook(message)
+          message.all_parts.count { |i| i.content_type =~ /text\/html/ }.should == 1
+        end
+      end
     end
 
     context 'when message contains text part' do
@@ -57,6 +105,32 @@ describe PremailerRails::Hook do
       it 'should inline the css in the html part' do
         PremailerRails::Premailer.any_instance.expects(:to_inline_css)
         run_hook(message)
+      end
+
+      context "with attachment" do
+        let(:message) {Fixtures::Message.with_parts :html, :text, :attachment}
+
+        it "should set the content-type to multipart/mixed" do
+          run_hook(message)
+          message.header['Content-Type'].value.should =~ /multipart\/mixed/
+        end
+
+        it "should have a multipart/alternative part" do
+          run_hook(message)
+          message.parts.count do
+            |i| i.content_type =~ /multipart\/alternative/
+          end.should == 1
+        end
+        it 'should not create a text part from the html part' do
+          PremailerRails::Premailer.any_instance.expects(:to_plain_text).never
+          run_hook(message)
+          message.text_part.should be_a Mail::Part
+        end
+
+        it 'should inline the css in the html part' do
+          PremailerRails::Premailer.any_instance.expects(:to_inline_css)
+          run_hook(message)
+        end
       end
     end
 
