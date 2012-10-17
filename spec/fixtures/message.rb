@@ -56,6 +56,14 @@ nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
         content_type 'text/plain; charset=UTF-8'
       end if part_types.include? :text
 
+      if part_types.include? :attachment
+        alt_message = message
+        message = base_message
+        message.add_part(alt_message)
+
+        message.add_file(fixture_dir + '/test.pdf')
+      end
+
       message
     end
 
