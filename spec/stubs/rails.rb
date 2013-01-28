@@ -57,6 +57,10 @@ module Rails
     Logger
   end
 
+  def public_path
+    File.join(root, 'public')
+  end
+
   def root
     'RAILS_ROOT'
   end

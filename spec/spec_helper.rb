@@ -1,3 +1,4 @@
+require 'stubs/action_controller'
 require 'stubs/action_mailer'
 require 'stubs/rails'
 require 'stubs/hassle'
