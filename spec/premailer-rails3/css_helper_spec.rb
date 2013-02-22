@@ -127,6 +127,7 @@ describe PremailerRails::CSSHelper do
     end
 
     context 'when Rails asset pipeline is used' do
+
       before {
         Rails.configuration.stubs(:assets).returns(
           stub(
@@ -134,6 +135,7 @@ describe PremailerRails::CSSHelper do
             :prefix  => '/assets'
           )
         )
+        PremailerRails::CSSLoaders::AssetPipelineLoader.stubs(:assets_precompiled?).returns(false)
       }
 
       it 'should load email.css when the default CSS is requested' do
@@ -199,6 +201,20 @@ describe PremailerRails::CSSHelper do
           load_css(
             'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
           ).should == 'content of base.css'
+        end
+      end
+
+      context 'when assets are precompiled' do
+        before {
+          PremailerRails::CSSLoaders::AssetPipelineLoader.stubs(:assets_precompiled?).returns(true)
+        }
+
+        it 'should load precompiled assets from the filesystem' do
+          File.expects(:read) \
+              .with('RAILS_ROOT/public/somewhere/on/the/disk/precompiled.css') \
+              .returns('content of compiled css')
+
+          load_css('precompiled.css').should == 'content of compiled css'
         end
       end
     end
