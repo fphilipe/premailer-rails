@@ -12,21 +12,6 @@ class Premailer
         end
       end
 
-      # Loads the CSS from Hassle middleware if present.
-      module HassleLoader
-        extend self
-
-        def load(path)
-          if hassle_enabled?
-            File.read("#{::Rails.root}/tmp/hassle#{path}")
-          end
-        end
-
-        def hassle_enabled?
-          ::Rails.configuration.middleware.include? Hassle rescue false
-        end
-      end
-
       # Loads the CSS from the asset pipeline.
       module AssetPipelineLoader
         extend self

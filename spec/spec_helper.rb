@@ -2,7 +2,6 @@ require 'premailer/rails'
 
 require 'stubs/action_mailer'
 require 'stubs/rails'
-require 'stubs/hassle'
 require 'fixtures/message'
 require 'fixtures/html'
 

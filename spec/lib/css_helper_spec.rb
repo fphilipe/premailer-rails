@@ -77,21 +77,6 @@ describe Premailer::Rails::CSSHelper do
       end
     end
 
-    context 'when Hassle is used' do
-      before { Rails.configuration.middleware.stubs(:include?) \
-                                             .with(Hassle) \
-                                             .returns(true) }
-
-      it 'should return the content of the file compiled by Hassle' do
-        File.expects(:read) \
-            .with('RAILS_ROOT/tmp/hassle/stylesheets/base.css') \
-            .returns('content of base.css')
-
-        load_css('http://example.com/stylesheets/base.css') \
-          .should == 'content of base.css'
-      end
-    end
-
     context 'when Rails asset pipeline is used' do
       before {
         Rails.configuration.stubs(:assets).returns(
