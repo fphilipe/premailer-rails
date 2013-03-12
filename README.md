@@ -1,12 +1,12 @@
-# premailer-rails3
+# premailer-rails
 
-[![Build Status](https://travis-ci.org/fphilipe/premailer-rails3.png)](https://travis-ci.org/fphilipe/premailer-rails3)
-[![Gem Version](https://badge.fury.io/rb/premailer-rails3.png)](http://badge.fury.io/rb/premailer-rails3)
-[![Dependency Status](https://gemnasium.com/fphilipe/premailer-rails3.png)](https://gemnasium.com/fphilipe/premailer-rails3)
-[![Code Climate](https://codeclimate.com/github/fphilipe/premailer-rails3.png)](https://codeclimate.com/github/fphilipe/premailer-rails3)
+[![Build Status](https://travis-ci.org/fphilipe/premailer-rails.png)](https://travis-ci.org/fphilipe/premailer-rails)
+[![Gem Version](https://badge.fury.io/rb/premailer-rails.png)](http://badge.fury.io/rb/premailer-rails)
+[![Dependency Status](https://gemnasium.com/fphilipe/premailer-rails.png)](https://gemnasium.com/fphilipe/premailer-rails)
+[![Code Climate](https://codeclimate.com/github/fphilipe/premailer-rails.png)](https://codeclimate.com/github/fphilipe/premailer-rails)
 
 This gem is a no config solution for the wonderful
-[Premailer gem](https://github.com/alexdunae/premailer) to be used with Rails 3.
+[Premailer gem](https://github.com/alexdunae/premailer) to be used with Rails.
 It uses interceptors which were introduced in Rails 3 and tweaks all mails which
 are `deliver`ed and adds a plain text part to them and inlines all CSS rules
 into the HTML part.
@@ -19,11 +19,8 @@ By default it inlines all the CSS files that are linked to in the HTML:
 
 Don't worry about the host in the CSS URL since this will be ignored.
 
-If no CSS file is linked to in the HTML and no inline `<style type="text/css">`
-is present, it will try to load a default CSS file `email.css`.
-
-Every CSS file (including the default `email.css`) is loaded from within the
-app. The retrieval of the file depends on your assets configuration:
+Every CSS file is loaded from within the app.
+The retrieval of the file depends on your assets configuration:
 
 * Rails 3.1 asset pipeline: It will load the compiled version of the CSS asset
   which is normally located in `app/assets/stylesheets/`. If the asset can't be
@@ -41,9 +38,9 @@ app. The retrieval of the file depends on your assets configuration:
 
 Simply add the gem to your Gemfile in your Rails project:
 
-    gem 'premailer-rails3'
+    gem 'premailer-rails'
 
-premailer-rails3 requires either nokogiri or hpricot. It doesn't list them as a
+premailer-rails requires either nokogiri or hpricot. It doesn't list them as a
 dependency so you can choose which one to use.
 
     gem 'nokogiri'
@@ -56,7 +53,7 @@ That's it!
 
 ## Configuration
 
-Premailer itself accepts a number of options. In order for premailer-rails3 to
+Premailer itself accepts a number of options. In order for premailer-rails to
 pass these options on to the underlying premailer instance, specify them in an
 initializer:
 
