@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "premailer/rails/version"
 
 Gem::Specification.new do |s|
-  s.name        = "premailer-rails3"
+  s.name        = "premailer-rails"
   s.version     = Premailer::Rails::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Philipe Fatio"]
