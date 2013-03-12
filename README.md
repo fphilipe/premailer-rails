@@ -61,8 +61,8 @@ pass these options on to the underlying premailer instance, specify them in an
 initializer:
 
 ```ruby
-PremailerRails.config.merge!(:preserve_styles => true,
-                             :remove_ids      => true)
+Premailer::Rails.config.merge!(:preserve_styles => true,
+                               :remove_ids      => true)
 ```
 
 For a list of options, refer to the [Premailer documentation](http://rubydoc.info/gems/premailer/1.7.3/Premailer:initialize)

@@ -1,9 +1,7 @@
 require 'stubs/dummy'
 
-module Logger
-  extend self
-
-  def try(*args); end
+class Logger
+  def self.try(*args); end
 end
 
 module Rails

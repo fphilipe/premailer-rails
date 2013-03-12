@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe PremailerRails do
+describe Premailer::Rails do
   describe '#config' do
-    subject { PremailerRails.config }
+    subject { Premailer::Rails.config }
     context 'when set' do
-      before { PremailerRails.config = { :foo => :bar } }
+      before { Premailer::Rails.config = { :foo => :bar } }
       it { should == { :foo => :bar } }
     end
   end

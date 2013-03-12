@@ -1,5 +1,5 @@
 module ActionMailer
-  module Base
+  class Base
     def self.register_interceptor(x); end
   end
 end
