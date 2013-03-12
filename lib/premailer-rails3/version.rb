@@ -1,3 +1,5 @@
 module PremailerRails
-  VERSION = '1.3.1'
+  VERSION = File.read(
+    File.expand_path('../../../VERSION', __FILE__)
+  ).strip
 end
