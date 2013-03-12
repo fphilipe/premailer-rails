@@ -5,6 +5,6 @@ describe 'ActionMailer::Base.register_interceptor' do
     ActionMailer::Base \
       .expects(:register_interceptor) \
       .with(Premailer::Rails::Hook)
-    load 'premailer/rails3.rb'
+    load 'premailer/rails.rb'
   end
 end

@@ -79,7 +79,7 @@ nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     def base_message
       Mail.new do
         to      'some@email.com'
-        subject 'testing premailer-rails3'
+        subject 'testing premailer-rails'
       end
     end
   end
