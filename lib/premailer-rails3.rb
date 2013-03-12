@@ -1,4 +1,6 @@
 require 'premailer'
+require 'action_mailer'
+
 require 'premailer-rails3/css_loaders'
 require 'premailer-rails3/css_helper'
 require 'premailer-rails3/premailer'
