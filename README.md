@@ -1,6 +1,9 @@
 # premailer-rails3
 
-[![Build Status](https://secure.travis-ci.org/fphilipe/premailer-rails3.png?branch=master)](http://travis-ci.org/fphilipe/premailer-rails3) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/fphilipe/premailer-rails3)
+[![Build Status](https://travis-ci.org/fphilipe/premailer-rails3.png)](https://travis-ci.org/fphilipe/premailer-rails3)
+[![Gem Version](https://badge.fury.io/rb/premailer-rails3.png)](http://badge.fury.io/rb/premailer-rails3)
+[![Dependency Status](https://gemnasium.com/fphilipe/premailer-rails3.png)](https://gemnasium.com/fphilipe/premailer-rails3)
+[![Code Climate](https://codeclimate.com/github/fphilipe/premailer-rails3.png)](https://codeclimate.com/github/fphilipe/premailer-rails3)
 
 This gem is a no config solution for the wonderful
 [Premailer gem](https://github.com/alexdunae/premailer) to be used with Rails 3.
