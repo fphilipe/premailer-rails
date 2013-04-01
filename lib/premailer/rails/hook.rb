@@ -25,8 +25,7 @@ class Premailer
             # part.
             text_part = message.text_part
             if Rails.config[:generate_text_part] && !message.text_part
-              text_part = message.text_part ||
-                  Mail::Part.new do
+              text_part = Mail::Part.new do
                     content_type "text/plain; charset=#{charset}"
                     body premailer.to_plain_text
                   end
@@ -39,7 +38,7 @@ class Premailer
 
             if message.has_attachments?
               m = Mail::Part.new("Content-Type: multipart/alternative")
-              m.text_part = text_part if text_part
+              m.text_part = text_part if text_part && !message.parts.include?(text_part)
               m.html_part = html_part
 
               # delete the old alternative part
@@ -48,7 +47,7 @@ class Premailer
               message.add_part(m)
             else
               message.html_part = html_part
-              message.text_part = text_part if text_part
+              message.text_part = text_part if text_part && !message.parts.include?(text_part)
             end
 
             message

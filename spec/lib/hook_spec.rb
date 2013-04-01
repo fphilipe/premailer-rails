@@ -75,9 +75,12 @@ describe Premailer::Rails::Hook do
 
         it 'should not create a text part if disabled' do
           Premailer.any_instance.expects(:to_plain_text).never
+          Premailer::Rails::CustomizedPremailer.any_instance.expects(:to_plain_text).never
           Premailer::Rails.config[:generate_text_part] = false
+          puts message.text_part.inspect
           run_hook(message)
           Premailer::Rails.config[:generate_text_part] = true
+
           message.text_part.should be_nil
           message.html_part.should be_a Mail::Part
         end
@@ -106,6 +109,11 @@ describe Premailer::Rails::Hook do
           .any_instance.expects(:to_plain_text).never
         run_hook(message)
         message.text_part.should be_a Mail::Part
+      end
+
+      it 'should not create duplicate parts' do
+        run_hook(message)
+        message.parts.count.should ==2
       end
 
       it 'should inline the css in the html part' do
