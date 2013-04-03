@@ -1,42 +1,115 @@
 class Premailer
   module Rails
     class Hook
+      attr_reader :message
+
       def self.delivering_email(message)
-        # If the mail only has one part, it may be stored in message.body. In that
-        # case, if the mail content type is text/html, the body part will be the
-        # html body.
-        if message.html_part
-          html_body       = message.html_part.body.to_s
-          needs_multipart = true
-          message.parts.delete(message.html_part)
-        elsif message.content_type =~ /text\/html/
-          html_body       = message.body.to_s
-          message.body    = nil
-          needs_multipart = Rails.config[:generate_text_part]
+        self.new(message).perform
+      end
+
+      def initialize(message)
+        @message = message
+      end
+
+      def perform
+        if message_contains_html?
+          replace_html_part(generate_html_part_replacement)
         end
 
-        if html_body
-          premailer = CustomizedPremailer.new(html_body)
-          charset   = message.charset
+        message
+      end
 
-          if needs_multipart
-            # IMPORTANT: Plain text part must be generated before CSS is inlined.
-            # Not doing so results in CSS declarations visible in the plain text
-            # part.
-            if Rails.config[:generate_text_part] \
-            and not message.text_part
-              message.text_part do
-                content_type "text/plain; charset=#{charset}"
-                body premailer.to_plain_text
-              end
-            end
+      private
 
-            message.html_part do
-              content_type "text/html; charset=#{charset}"
-              body premailer.to_inline_css
+      def message_contains_html?
+        html_part.present?
+      end
+
+      # Returns true if the message itself has a content type of text/html, thus
+      # it does not contain other parts such as alternatives and attachments.
+      def pure_html_message?
+        message.content_type.include?('text/html')
+      end
+
+      def generate_html_part_replacement
+        if generate_text_part?
+          generate_alternative_part
+        else
+          generate_html_part
+        end
+      end
+
+      def generate_text_part?
+        Rails.config[:generate_text_part] && !message.text_part
+      end
+
+      def generate_alternative_part
+        part = Mail::Part.new(:content_type => 'multipart/alternative')
+        part.add_part(generate_html_part)
+        part.add_part(generate_text_part)
+
+        part
+      end
+
+      def generate_html_part
+        # Make sure that the text part is generated first. Otherwise the text
+        # can end up containing CSS rules.
+        generate_text_part  if generate_text_part?
+
+        Mail::Part.new(
+          :content_type => "text/html; charset=#{html_part.charset}",
+          :body => premailer.to_inline_css)
+      end
+
+      def generate_text_part
+        @text_part ||= Mail::Part.new(
+          :content_type => "text/plain; charset=#{html_part.charset}",
+          :body => premailer.to_plain_text)
+      end
+
+      def premailer
+        @premailer ||= CustomizedPremailer.new(html_part.body.to_s)
+      end
+
+      def html_part
+        if pure_html_message?
+          message
+        else
+          message.html_part
+        end
+      end
+
+      def replace_html_part(new_part)
+        if pure_html_message?
+          replace_in_pure_html_message(new_part)
+        else
+          replace_part_in_list(message.parts, html_part, new_part)
+        end
+      end
+
+      # If the new part is a pure text/html part, the body and its content type
+      # are used for the message. If the new part is
+      def replace_in_pure_html_message(new_part)
+        if new_part.content_type.include?('text/html')
+          message.body = new_part.body.to_s
+          message.content_type = new_part.content_type
+        else
+          message.body = nil
+          message.content_type = new_part.content_type
+          new_part.parts.each do |part|
+            message.add_part(part)
+          end
+        end
+      end
+
+      def replace_part_in_list(parts_list, old_part, new_part)
+        if (index = parts_list.index(old_part))
+          parts_list[index] = new_part
+        else
+          parts_list.any? do |part|
+            if part.respond_to?(:parts)
+              replace_part_in_list(part.parts, old_part, new_part)
             end
-          else
-            message.body = premailer.to_inline_css
           end
         end
       end
