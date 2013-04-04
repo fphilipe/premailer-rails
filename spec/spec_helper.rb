@@ -1,5 +1,7 @@
 require 'coveralls'
-Coveralls.wear!
+Coveralls.wear! do
+  add_filter 'spec/'
+end
 
 require 'premailer/rails'
 
