@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.4.0
+
+- Fix attachments
+
+## v1.3.2
+
+- Refactor code
+
+- Add support for precompiled assets
+
 ## v1.1.0
 
 - Fixed several bugs
