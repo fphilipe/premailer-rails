@@ -1,105 +1,77 @@
 require 'spec_helper'
 
 describe Premailer::Rails::Hook do
-  describe '.delivering_email' do
-    before { File.stubs(:read).returns('') }
-    def run_hook(message)
-      Premailer::Rails::Hook.delivering_email(message)
+  def run_hook(message)
+    Premailer::Rails::Hook.delivering_email(message)
+  end
+
+  class Mail::Message
+    def html_string
+      (html_part || self).body.to_s
+    end
+  end
+
+  let(:message) { Fixtures::Message.with_body(:html) }
+  let(:processed_message) { run_hook(message) }
+
+  it 'inlines the CSS' do
+    expect { run_hook(message) }.to \
+      change { message.html_string.include?("<p style=") }
+  end
+
+  it 'replaces the html part with an alternative part containing text and html parts' do
+    processed_message.content_type.should include 'multipart/alternative'
+    processed_message.parts.should =~ [message.html_part, message.text_part]
+  end
+
+  it 'generates a text part from the html' do
+    expect { run_hook(message) }.to change(message, :text_part)
+  end
+
+  context 'when message contains no html' do
+    let(:message) { Fixtures::Message.with_body(:text) }
+
+    it 'does not modify the message' do
+      expect { run_hook(message) }.to_not change(message, :html_string)
+    end
+  end
+
+  context 'when message also contains a text part' do
+    let(:message) { Fixtures::Message.with_parts(:html, :text) }
+
+    it 'does not generate a text part' do
+      expect { run_hook(message) }.to_not change(message, :text_part)
     end
 
-    context 'when message contains html part' do
-      let(:message) { Fixtures::Message.with_parts :html }
+    it 'does not replace any message part' do
+      expect { run_hook(message) }.to_not \
+        change { message.all_parts.map(&:content_type) }
+    end
+  end
 
-      it 'should create a text part from the html part' do
-        Premailer::Rails::CustomizedPremailer \
-          .any_instance.expects(:to_plain_text)
-        run_hook(message)
-        message.text_part.should be_a Mail::Part
-      end
-
-      it 'should inline the css in the html part' do
-        Premailer::Rails::CustomizedPremailer \
-          .any_instance.expects(:to_inline_css)
-        run_hook(message)
-      end
-
-      it 'should not create a text part if disabled' do
-        Premailer::Rails::CustomizedPremailer \
-          .any_instance.expects(:to_plain_text).never
+  context 'when text generation is disabled' do
+    it 'does not generate a text part' do
+      begin
         Premailer::Rails.config[:generate_text_part] = false
-        run_hook(message)
+
+        expect { run_hook(message) }.to_not change(message, :text_part)
+      ensure
         Premailer::Rails.config[:generate_text_part] = true
-        message.text_part.should be_nil
-        message.html_part.should be_a Mail::Part
-      end
-
-      it 'should not create an additional html part' do
-        run_hook(message)
-        message.parts.count { |i| i.content_type =~ /text\/html/ }.should == 1
       end
     end
+  end
 
-    context 'when message contains text part' do
-      let(:message) { Fixtures::Message.with_parts :text }
+  context 'when message also contains an attachment' do
+    let(:message) { Fixtures::Message.with_parts(:html, :attachment) }
+    it 'does not mess with it' do
+      message.content_type.should include 'multipart/mixed'
+      message.parts.first.content_type.should include 'text/html'
+      message.parts.last.content_type.should include 'image/png'
 
-      it 'should not modify the message' do
-        Premailer.expects(:new).never
-        run_hook(message)
-      end
-    end
-
-    context 'when message contains html and text part' do
-      let(:message) { Fixtures::Message.with_parts :html, :text }
-
-      it 'should not create a text part from the html part' do
-        Premailer::Rails::CustomizedPremailer \
-          .any_instance.expects(:to_plain_text).never
-        run_hook(message)
-        message.text_part.should be_a Mail::Part
-      end
-
-      it 'should inline the css in the html part' do
-        Premailer::Rails::CustomizedPremailer \
-          .any_instance.expects(:to_inline_css)
-        run_hook(message)
-      end
-    end
-
-    context 'when message contains html body' do
-      let(:message) { Fixtures::Message.with_body :html }
-
-      it 'should create a text part from the html part' do
-        Premailer::Rails::CustomizedPremailer \
-          .any_instance.expects(:to_plain_text)
-        run_hook(message)
-      end
-
-      it 'should create a html part and inline the css' do
-        Premailer::Rails::CustomizedPremailer \
-          .any_instance.expects(:to_inline_css)
-        run_hook(message)
-        message.html_part.should be_a Mail::Part
-      end
-
-      it 'should not create a text part if disabled' do
-        Premailer::Rails::CustomizedPremailer \
-          .any_instance.expects(:to_plain_text).never
-        Premailer::Rails.config[:generate_text_part] = false
-        run_hook(message)
-        Premailer::Rails.config[:generate_text_part] = true
-        message.text_part.should be_nil
-        message.html_part.should be_nil
-        message.body.should_not be_empty
-      end
-    end
-
-    context 'when message contains text body' do
-      let(:message) { Fixtures::Message.with_body :text }
-
-      it 'should not modify the message' do
-        Premailer.expects(:new).never
-        run_hook(message)
-      end
+      processed_message.content_type.should include 'multipart/mixed'
+      processed_message.parts.first.content_type.should \
+        include 'multipart/alternative'
+      processed_message.parts.last.content_type.should include 'image/png'
     end
   end
 end

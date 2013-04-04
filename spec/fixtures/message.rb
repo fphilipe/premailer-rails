@@ -44,17 +44,39 @@ nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     TEXT
 
     def with_parts(*part_types)
+      if part_types.count == 1 and [:html, :text].include?(part_types.first)
+        return with_body(part_types.first)
+      end
+
       message = base_message
+      content_part = message
 
-      message.html_part do
-        body HTML_PART
-        content_type 'text/html; charset=UTF-8'
-      end if part_types.include? :html
+      if part_types.include?(:html) and part_types.include?(:text)
+        content_part = Mail::Part.new(:content_type => 'multipart/alternative')
+        message.add_part(content_part)
+      end
 
-      message.text_part do
-        body TEXT_PART
-        content_type 'text/plain; charset=UTF-8'
-      end if part_types.include? :text
+      if part_types.include? :html
+        html_part = Mail::Part.new do
+          body HTML_PART_WITH_CSS
+          content_type 'text/html; charset=UTF-8'
+        end
+        content_part.html_part = html_part
+      end
+
+      if part_types.include? :text
+        text_part = Mail::Part.new do
+          body TEXT_PART
+          content_type 'text/plain; charset=UTF-8'
+        end
+        content_part.text_part = text_part
+      end
+
+      if part_types.include? :attachment
+        message.add_file(:filename => 'foo.png', :content => 'foobar')
+      end
+
+      message.ready_to_send!
 
       message
     end
@@ -64,12 +86,14 @@ nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
       case body_type
       when :html
-        message.body = HTML_PART
+        message.body = HTML_PART_WITH_CSS
         message.content_type 'text/html; charset=UTF-8'
       when :text
         message.body = TEXT_PART
         message.content_type 'text/plain; charset=UTF-8'
       end
+
+      message.ready_to_send!
 
       message
     end
