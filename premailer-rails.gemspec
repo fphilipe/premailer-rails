@@ -29,4 +29,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mail'
   s.add_development_dependency 'nokogiri'
   s.add_development_dependency 'hpricot'
+  s.add_development_dependency 'coveralls'
 end

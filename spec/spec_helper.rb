@@ -1,3 +1,6 @@
+require 'coveralls'
+Coveralls.wear!
+
 require 'premailer/rails'
 
 require 'stubs/action_mailer'

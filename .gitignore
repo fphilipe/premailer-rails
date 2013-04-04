@@ -1,3 +1,4 @@
 *.gem
 doc/
 Gemfile.lock
+coverage/
