@@ -29,10 +29,6 @@ class Premailer
         end
       end
 
-      def has_inline_css?(doc)
-        not doc.search('style[@type="text/css"]').empty?
-      end
-
       def load_css(url)
         path = extract_path(url)
 
