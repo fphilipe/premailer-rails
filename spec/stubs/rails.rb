@@ -59,6 +59,10 @@ module Rails
     'RAILS_ROOT'
   end
 
+  def public_path
+    File.join(root, 'public')
+  end
+
   def application
     Application
   end

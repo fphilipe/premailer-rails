@@ -19,10 +19,11 @@ class Premailer
         def load(path)
           if assets_enabled?
             file = file_name(path)
-            if asset = ::Rails.application.assets.find_asset(file)
-              asset.to_s
-            else
+            asset = read_asset_from_pipeline(file)
+            if asset.blank?
               request_and_unzip(file)
+            else
+              asset.to_s
             end
           end
         end
@@ -31,9 +32,24 @@ class Premailer
           ::Rails.configuration.assets.enabled rescue false
         end
 
+        def assets_precompiled?
+          # If on-the-fly asset compilation is disabled, we must be precompiling assets.
+          !::Rails.configuration.assets.compile rescue false
+        end
+
+        def read_asset_from_pipeline(file)
+          if assets_precompiled?
+            # Read the precompiled asset
+            asset_path = ActionController::Base.helpers.asset_path(file)
+            File.read(File.join(::Rails.public_path, asset_path))
+          else
+            # This will compile and return the asset
+            ::Rails.application.assets.find_asset(file).to_s
+          end
+        end
+
         def file_name(path)
-          path.sub("#{::Rails.configuration.assets.prefix}/", '') \
-            .sub(/-.*\.css$/, '.css')
+          path.sub("#{::Rails.configuration.assets.prefix}/", '').sub(/-.*\.css$/, '.css')
         end
 
         def request_and_unzip(file)
