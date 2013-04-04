@@ -6,6 +6,10 @@
 
 ## v1.3.2
 
+- Rename gem to premailer-rails (drop the 3)
+
+- Add support for rails 4
+
 - Refactor code
 
 - Add support for precompiled assets
