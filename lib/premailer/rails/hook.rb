@@ -23,18 +23,34 @@ class Premailer
             # IMPORTANT: Plain text part must be generated before CSS is inlined.
             # Not doing so results in CSS declarations visible in the plain text
             # part.
-            if Rails.config[:generate_text_part] \
-            and not message.text_part
-              message.text_part do
-                content_type "text/plain; charset=#{charset}"
-                body premailer.to_plain_text
-              end
+            text_part = message.text_part
+            if Rails.config[:generate_text_part] && !message.text_part
+              text_part = Mail::Part.new do
+                    content_type "text/plain; charset=#{charset}"
+                    body premailer.to_plain_text
+                  end
             end
 
-            message.html_part do
+            html_part = Mail::Part.new do
               content_type "text/html; charset=#{charset}"
               body premailer.to_inline_css
             end
+
+            if message.has_attachments?
+              m = Mail::Part.new("Content-Type: multipart/alternative")
+              m.text_part = text_part if text_part && !message.parts.include?(text_part)
+              m.html_part = html_part
+
+              # delete the old alternative part
+              alt_part = message.find_first_mime_type("multipart/alternative")
+              message.parts.delete(alt_part)
+              message.add_part(m)
+            else
+              message.html_part = html_part
+              message.text_part = text_part if text_part && !message.parts.include?(text_part)
+            end
+
+            message
           else
             message.body = premailer.to_inline_css
           end
