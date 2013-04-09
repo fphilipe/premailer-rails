@@ -74,4 +74,19 @@ describe Premailer::Rails::Hook do
       processed_message.parts.last.content_type.should include 'image/png'
     end
   end
+
+  context 'when message disables premailer' do
+    it 'does not change the body of a html message' do
+      message[:premailer] = 'off'
+      expect { run_hook(message) }.to_not change(message, :body)
+      message[:premailer].should be_nil
+    end
+
+    it 'does not change the html of a multipart message' do
+      message = Fixtures::Message.with_parts(:html, :text)
+      message[:premailer] = 'off'
+      expect { run_hook(message) }.to_not change(message, :html_part)
+      message[:premailer].should be_nil
+    end
+  end
 end
