@@ -12,14 +12,25 @@ class Premailer
       end
 
       def perform
-        if message_contains_html?
+        if !skip_premailer? && message_contains_html?
           replace_html_part(generate_html_part_replacement)
         end
 
+        remove_skip_header
         message
       end
 
       private
+      SKIP_HEADER = "premailer"
+      SKIP_VALUES = ['off', 'false']
+      def skip_premailer?
+        skip_header_field = message[SKIP_HEADER]
+        skip_header_field && SKIP_VALUES.include?(skip_header_field.value)
+      end
+
+      def remove_skip_header
+        message.header.fields.delete_if{|n| n.name == SKIP_HEADER }
+      end
 
       def message_contains_html?
         html_part.present?
