@@ -43,6 +43,8 @@ If both are loaded for some reason, premailer chooses hpricot.
 
 That's it!
 
+Note: If you are upgrading from 1.1.0, you'll need to include email.css in your templates, as it is no longer autoloaded.
+
 ## Configuration
 
 Premailer itself accepts a number of options. In order for premailer-rails to

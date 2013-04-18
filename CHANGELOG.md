@@ -14,6 +14,8 @@
 
 - Add support for precompiled assets
 
+- Remove autoloading of default stylesheet (email.css)
+
 ## v1.1.0
 
 - Fixed several bugs
