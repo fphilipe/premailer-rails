@@ -7,6 +7,7 @@ end
 
 require 'premailer/rails'
 
+require 'stubs/action_controller'
 require 'stubs/action_mailer'
 require 'stubs/rails'
 require 'fixtures/message'
