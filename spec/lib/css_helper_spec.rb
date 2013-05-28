@@ -144,6 +144,32 @@ describe Premailer::Rails::CSSHelper do
           ).should == 'content of base.css'
         end
       end
+
+      context 'when asset can not be found and it is not in the digest' do
+        before {
+          Kernel.stubs(:open).raises(Errno::ENOENT)
+          Rails.application.assets.stubs(:find_asset).returns(nil)
+          Rails.configuration.stubs(:action_controller).returns(
+            stub(:asset_host => 'http://example.com')
+          )
+          Rails.configuration.stubs(:assets).returns(
+            stub(
+              :enabled => true,
+              :prefix  => '/assets',
+              :digests => { }
+            )
+          )
+        }
+
+        it 'should request the static file' do
+					File.expects(:read) \
+							.with('RAILS_ROOT/public/stylesheets/base.css') \
+							.returns('content of base.css')
+
+					load_css('/stylesheets/base.css') \
+						.should == 'content of base.css'
+        end
+      end
     end
 
     context 'when static stylesheets are used' do

@@ -42,7 +42,7 @@ class Premailer
             ::Rails.configuration.assets.prefix.sub(/^\//, ''),
             ::Rails.configuration.assets.digests[file]
           ].join('/')
-          response = Kernel.open(url)
+          response = Kernel.open(url) rescue return
 
           begin
             Zlib::GzipReader.new(response).read
