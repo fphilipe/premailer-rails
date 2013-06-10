@@ -33,7 +33,7 @@ class Premailer
 
         def file_name(path)
           path.sub("#{::Rails.configuration.assets.prefix}/", '') \
-            .sub(/-.*\.css$/, '.css')
+            .sub(/-[0-9a-f]{32}\.css$/, '.css')
         end
 
         def request_and_unzip(file)
