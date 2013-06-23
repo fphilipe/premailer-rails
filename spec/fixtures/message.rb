@@ -52,7 +52,7 @@ nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
       content_part = message
 
       if part_types.include?(:html) and part_types.include?(:text)
-        content_part = Mail::Part.new(:content_type => 'multipart/alternative')
+        content_part = Mail::Part.new(content_type: 'multipart/alternative')
         message.add_part(content_part)
       end
 
@@ -73,7 +73,7 @@ nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
       end
 
       if part_types.include? :attachment
-        message.add_file(:filename => 'foo.png', :content => 'foobar')
+        message.add_file(filename: 'foo.png', content: 'foobar')
       end
 
       message.ready_to_send!

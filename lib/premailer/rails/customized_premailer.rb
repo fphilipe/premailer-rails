@@ -8,11 +8,11 @@ class Premailer
         # suitable adaptor (Nokogiri or Hpricot). To make load_html work, an
         # adaptor needs to be included and @options[:with_html_string] needs to
         # be set. For further information, refer to ::Premailer#initialize.
-        @options = Rails.config.merge(:with_html_string => true)
+        @options = Rails.config.merge(with_html_string: true)
         Premailer.send(:include, Adapter.find(Adapter.use))
         doc = load_html(html)
 
-        options = @options.merge(:css_string => CSSHelper.css_for_doc(doc))
+        options = @options.merge(css_string: CSSHelper.css_for_doc(doc))
         super(html, options)
       end
     end

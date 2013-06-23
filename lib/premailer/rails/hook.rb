@@ -44,7 +44,7 @@ class Premailer
       end
 
       def generate_alternative_part
-        part = Mail::Part.new(:content_type => 'multipart/alternative')
+        part = Mail::Part.new(content_type: 'multipart/alternative')
         part.add_part(generate_html_part)
         part.add_part(generate_text_part)
 
@@ -57,14 +57,14 @@ class Premailer
         generate_text_part  if generate_text_part?
 
         Mail::Part.new(
-          :content_type => "text/html; charset=#{html_part.charset}",
-          :body => premailer.to_inline_css)
+          content_type: "text/html; charset=#{html_part.charset}",
+          body: premailer.to_inline_css)
       end
 
       def generate_text_part
         @text_part ||= Mail::Part.new(
-          :content_type => "text/plain; charset=#{html_part.charset}",
-          :body => premailer.to_plain_text)
+          content_type: "text/plain; charset=#{html_part.charset}",
+          body: premailer.to_plain_text)
       end
 
       def premailer

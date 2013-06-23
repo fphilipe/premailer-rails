@@ -47,13 +47,13 @@ describe Premailer::Rails::CustomizedPremailer do
     end
 
     it 'should pass on the configs' do
-      Premailer::Rails.config = { :foo => :bar }
+      Premailer::Rails.config = { foo: :bar }
       premailer = Premailer::Rails::CustomizedPremailer.new('some html')
       premailer.instance_variable_get(:'@options')[:foo].should == :bar
     end
 
     it 'should not allow to override with_html_string' do
-      Premailer::Rails.config = { :with_html_string => false }
+      Premailer::Rails.config = { with_html_string: false }
       premailer = Premailer::Rails::CustomizedPremailer.new('some html')
       options = premailer.instance_variable_get(:'@options')
       options[:with_html_string].should == true

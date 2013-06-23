@@ -50,8 +50,8 @@ pass these options on to the underlying premailer instance, specify them in an
 initializer:
 
 ```ruby
-Premailer::Rails.config.merge!(:preserve_styles => true,
-                               :remove_ids      => true)
+Premailer::Rails.config.merge!(preserve_styles: true,
+                               remove_ids:      true)
 ```
 
 For a list of options, refer to the [Premailer documentation](http://rubydoc.info/gems/premailer/1.7.3/Premailer:initialize)
@@ -60,9 +60,9 @@ The default configs are:
 
 ```ruby
 {
-  :input_encoding     => 'UTF-8',
-  :inputencoding      => 'UTF-8',
-  :generate_text_part => true
+  input_encoding:     'UTF-8',
+  inputencoding:      'UTF-8',
+  generate_text_part: true
 }
 ```
 

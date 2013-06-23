@@ -81,8 +81,8 @@ describe Premailer::Rails::CSSHelper do
       before {
         Rails.configuration.stubs(:assets).returns(
           stub(
-            :enabled => true,
-            :prefix  => '/assets'
+            enabled: true,
+            prefix:  '/assets'
           )
         )
       }
@@ -90,7 +90,7 @@ describe Premailer::Rails::CSSHelper do
       it 'should return the content of the file compiled by Rails' do
         Rails.application.assets.expects(:find_asset) \
                                 .with('base.css') \
-                                .returns(mock(:to_s => 'content of base.css'))
+                                .returns(mock(to_s: 'content of base.css'))
 
         load_css('http://example.com/assets/base.css') \
           .should == 'content of base.css'
@@ -100,7 +100,7 @@ describe Premailer::Rails::CSSHelper do
         Rails.application.assets \
                          .expects(:find_asset) \
                          .with('base.css') \
-                         .returns(mock(:to_s => 'content of base.css'))
+                         .returns(mock(to_s: 'content of base.css'))
 
         load_css(
           'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
@@ -111,13 +111,13 @@ describe Premailer::Rails::CSSHelper do
         before {
           Rails.application.assets.stubs(:find_asset).returns(nil)
           Rails.configuration.stubs(:action_controller).returns(
-            stub(:asset_host => 'http://example.com')
+            stub(asset_host: 'http://example.com')
           )
           Rails.configuration.stubs(:assets).returns(
             stub(
-              :enabled => true,
-              :prefix  => '/assets',
-              :digests => {
+              enabled: true,
+              prefix:  '/assets',
+              digests: {
                 'base.css' => 'base-089e35bd5d84297b8d31ad552e433275.css'
               }
             )
