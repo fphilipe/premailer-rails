@@ -10,9 +10,9 @@ describe Premailer::Rails::CustomizedPremailer do
       describe '#to_plain_text' do
         it 'should include the text from the HTML part' do
           premailer =
-            Premailer::Rails::CustomizedPremailer \
+            Premailer::Rails::CustomizedPremailer
               .new(Fixtures::Message::HTML_PART)
-          premailer.to_plain_text.gsub(/\s/, ' ').strip \
+          premailer.to_plain_text.gsub(/\s/, ' ').strip
             .should == Fixtures::Message::TEXT_PART.gsub(/\s/, ' ').strip
         end
       end
@@ -20,8 +20,8 @@ describe Premailer::Rails::CustomizedPremailer do
       describe '#to_inline_css' do
         context 'when inline CSS block present' do
           it 'should return the HTML with the CSS inlined' do
-            Premailer::Rails::CSSHelper \
-              .stubs(:css_for_doc) \
+            Premailer::Rails::CSSHelper
+              .stubs(:css_for_doc)
               .returns('p { color: red; }')
             html = Fixtures::Message::HTML_PART
             premailer = Premailer::Rails::CustomizedPremailer.new(html)

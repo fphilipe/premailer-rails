@@ -20,13 +20,13 @@ describe Premailer::Rails::CSSHelper do
       let(:files) { %w[ stylesheets/base.css stylesheets/font.css ] }
 
       it 'should return the content of both files concatenated' do
-        Premailer::Rails::CSSHelper \
-          .expects(:load_css) \
-          .with('http://example.com/stylesheets/base.css') \
+        Premailer::Rails::CSSHelper
+          .expects(:load_css)
+          .with('http://example.com/stylesheets/base.css')
           .returns('content of base.css')
-        Premailer::Rails::CSSHelper \
-          .expects(:load_css) \
-          .with('http://example.com/stylesheets/font.css') \
+        Premailer::Rails::CSSHelper
+          .expects(:load_css)
+          .with('http://example.com/stylesheets/font.css')
           .returns('content of font.css')
 
         css_for_doc(doc).should == "content of base.css\ncontent of font.css"
@@ -57,7 +57,7 @@ describe Premailer::Rails::CSSHelper do
           Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
         cache['/stylesheets/base.css'] = 'content of base.css'
 
-        load_css('http://example.com/stylesheets/base.css') \
+        load_css('http://example.com/stylesheets/base.css')
           .should == 'content of base.css'
       end
     end
@@ -67,12 +67,12 @@ describe Premailer::Rails::CSSHelper do
         cache =
           Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
         cache['/stylesheets/base.css'] = 'cached content of base.css'
-        File.expects(:read) \
-            .with('RAILS_ROOT/public/stylesheets/base.css') \
+        File.expects(:read)
+            .with('RAILS_ROOT/public/stylesheets/base.css')
             .returns('new content of base.css')
         Rails.env.stubs(:development?).returns(true)
 
-        load_css('http://example.com/stylesheets/base.css') \
+        load_css('http://example.com/stylesheets/base.css')
           .should == 'new content of base.css'
       end
     end
@@ -88,19 +88,20 @@ describe Premailer::Rails::CSSHelper do
       }
 
       it 'should return the content of the file compiled by Rails' do
-        Rails.application.assets.expects(:find_asset) \
-                                .with('base.css') \
-                                .returns(mock(to_s: 'content of base.css'))
+        Rails.application.assets
+          .expects(:find_asset)
+          .with('base.css')
+          .returns(mock(to_s: 'content of base.css'))
 
-        load_css('http://example.com/assets/base.css') \
+        load_css('http://example.com/assets/base.css')
           .should == 'content of base.css'
       end
 
       it 'should return same file when path contains file fingerprint' do
-        Rails.application.assets \
-                         .expects(:find_asset) \
-                         .with('base.css') \
-                         .returns(mock(to_s: 'content of base.css'))
+        Rails.application.assets
+          .expects(:find_asset)
+          .with('base.css')
+          .returns(mock(to_s: 'content of base.css'))
 
         load_css(
           'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
@@ -148,11 +149,11 @@ describe Premailer::Rails::CSSHelper do
 
     context 'when static stylesheets are used' do
       it 'should return the content of the static file' do
-        File.expects(:read) \
-            .with('RAILS_ROOT/public/stylesheets/base.css') \
+        File.expects(:read)
+            .with('RAILS_ROOT/public/stylesheets/base.css')
             .returns('content of base.css')
 
-        load_css('http://example.com/stylesheets/base.css') \
+        load_css('http://example.com/stylesheets/base.css')
           .should == 'content of base.css'
       end
     end

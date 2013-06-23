@@ -32,7 +32,8 @@ class Premailer
         end
 
         def file_name(path)
-          path.sub("#{::Rails.configuration.assets.prefix}/", '') \
+          path
+            .sub("#{::Rails.configuration.assets.prefix}/", '')
             .sub(/-\h{32}\.css$/, '.css')
         end
 
