@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- No longer support ruby 1.8
+
 ## v1.4.0
 
 - Fix attachments
