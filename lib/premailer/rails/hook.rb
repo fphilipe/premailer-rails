@@ -68,7 +68,7 @@ class Premailer
       end
 
       def premailer
-        @premailer ||= CustomizedPremailer.new(html_part.body.to_s)
+        @premailer ||= CustomizedPremailer.new(html_part.decoded)
       end
 
       def html_part
@@ -91,7 +91,7 @@ class Premailer
       # are used for the message. If the new part is
       def replace_in_pure_html_message(new_part)
         if new_part.content_type.include?('text/html')
-          message.body = new_part.body.to_s
+          message.body = new_part.decoded
           message.content_type = new_part.content_type
         else
           message.body = nil
