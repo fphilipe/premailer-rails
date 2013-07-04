@@ -18,11 +18,10 @@ class Premailer
 
         def load(path)
           if assets_enabled?
-            file = file_name(path)
-            if asset = ::Rails.application.assets.find_asset(file)
+            if asset = ::Rails.application.assets.find_asset(file_name(path))
               asset.to_s
             else
-              request_and_unzip(file)
+              request_and_unzip(path)
             end
           end
         end
@@ -32,25 +31,32 @@ class Premailer
         end
 
         def file_name(path)
-          path
+          CSSLoaders.extract_path(path)
             .sub("#{::Rails.configuration.assets.prefix}/", '')
             .sub(/-\h{32}\.css$/, '.css')
         end
 
-        def request_and_unzip(file)
-          url = [
-            ::Rails.configuration.action_controller.asset_host,
-            ::Rails.configuration.assets.prefix.sub(/^\//, ''),
-            ::Rails.configuration.assets.digests[file]
-          ].join('/')
-          response = Kernel.open(url)
+        def request_and_unzip(url)
+          ungzip(Kernel.open(normalize_asset_url(url)))
+        end
+        
+        def ungzip(response)
+          Zlib::GzipReader.new(response).read
+        rescue Zlib::GzipFile::Error, Zlib::Error
+          response.rewind
+          response.read
+        end
 
-          begin
-            Zlib::GzipReader.new(response).read
-          rescue Zlib::GzipFile::Error, Zlib::Error
-            response.rewind
-            response.read
+        def normalize_asset_url(url)
+          unless url =~ %r{^(\w+:)?//}
+            url = [
+              ::Rails.configuration.action_controller.asset_host,
+              ::Rails.configuration.assets.prefix.sub(/^\//, ''),
+              ::Rails.configuration.assets.digests[url]
+            ].join('/')
           end
+          url = "http:" + url if url =~ %r{^//}
+          url
         end
       end
 
@@ -59,8 +65,21 @@ class Premailer
         extend self
 
         def load(path)
+          path = CSSLoaders.extract_path(path)
           File.read("#{::Rails.root}/public#{path}")
         end
+ 
+      end
+      # Extracts the path of a url.
+      def self.extract_path(url)
+        if url.is_a? String
+          # Remove everything after ? including ?
+          url = url[0..(url.index('?') - 1)] if url.include? '?'
+          # Remove the host
+          url = url.sub(/^https?\:\/\/[^\/]*/, '') if url.index('http') == 0
+        end
+
+        url
       end
     end
   end
