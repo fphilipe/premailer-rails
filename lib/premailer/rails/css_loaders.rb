@@ -37,6 +37,8 @@ class Premailer
         end
 
         def request_and_unzip(file)
+					return if ::Rails.configuration.assets.digests.nil?
+
           url = [
             ::Rails.configuration.action_controller.asset_host,
             ::Rails.configuration.assets.prefix.sub(/^\//, ''),
