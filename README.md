@@ -1,3 +1,4 @@
+[![Stories in Ready](http://badge.waffle.io/fphilipe/premailer-rails.png)](http://waffle.io/fphilipe/premailer-rails)  
 # premailer-rails
 
 [![Build Status](https://travis-ci.org/fphilipe/premailer-rails.png)](https://travis-ci.org/fphilipe/premailer-rails)
