@@ -73,3 +73,7 @@ If you want to use another encoding make sure to specify the right one or both.
 If you don't want to automatically generate a text part from the html part, set the config `:generate_text_part` to false.
 
 Note that the options `:with_html_string` and `:css_string` are used internally and thus will be overridden.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/fphilipe/premailer-rails/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
