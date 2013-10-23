@@ -19,7 +19,7 @@ module Fixtures
     HTML
 
     LINK = <<-LINK
-<link rel='stylesheet' type='text/css' href='%s' />
+<link rel='stylesheet' href='%s' />
     LINK
 
     def with_css_links(*files)
