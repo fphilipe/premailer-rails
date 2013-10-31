@@ -25,7 +25,7 @@ describe Premailer::Rails::CustomizedPremailer do
               .returns('p { color: red; }')
             html = Fixtures::Message::HTML_PART
             premailer = Premailer::Rails::CustomizedPremailer.new(html)
-            premailer.to_inline_css.should include '<p style="color: red;">'
+            premailer.to_inline_css.should =~ /<p style=("|')color: ?red;?\1>/
           end
         end
 
@@ -33,7 +33,7 @@ describe Premailer::Rails::CustomizedPremailer do
           it 'should return the HTML with the CSS inlined' do
             html = Fixtures::Message::HTML_PART_WITH_CSS
             premailer = Premailer::Rails::CustomizedPremailer.new(html)
-            premailer.to_inline_css.should include '<p style="color: red;">'
+            premailer.to_inline_css.should =~ /<p style=("|')color: ?red;?\1>/
           end
         end
       end
