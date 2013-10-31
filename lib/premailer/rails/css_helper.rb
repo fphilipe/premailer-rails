@@ -24,7 +24,7 @@ class Premailer
       private
 
       def css_urls_in_doc(doc)
-        doc.search('link[@type="text/css"]').map do |link|
+        doc.search('link[@rel="stylesheet"]').map do |link|
           link.attributes['href'].to_s
         end
       end
