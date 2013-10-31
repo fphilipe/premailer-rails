@@ -11,7 +11,7 @@ It uses interceptors which were introduced in Rails 3 and tweaks all mails which
 By default it inlines all inline `<style>` declarations and all the CSS files that are linked to in the HTML:
 
 ```html
-<link type='text/css' ... />
+<link rel="stylesheet" ... />
 ```
 
 Don't worry about the host in the CSS URL since this will be ignored.
