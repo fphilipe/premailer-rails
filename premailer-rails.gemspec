@@ -20,8 +20,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency("premailer", ["~> 1.7"])
-  s.add_dependency("rails", [">= 3"])
+  s.add_dependency 'premailer', '~> 1.7'
+  s.add_dependency 'rails', '>= 3'
 
   s.add_development_dependency 'rspec-core'
   s.add_development_dependency 'rspec-expectations'
@@ -29,5 +29,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mail'
   s.add_development_dependency 'nokogiri'
   s.add_development_dependency 'hpricot'
-  s.add_development_dependency 'coveralls'
 end

@@ -4,7 +4,6 @@
 [![Gem Version](https://badge.fury.io/rb/premailer-rails.png)](http://badge.fury.io/rb/premailer-rails)
 [![Dependency Status](https://gemnasium.com/fphilipe/premailer-rails.png)](https://gemnasium.com/fphilipe/premailer-rails)
 [![Code Climate](https://codeclimate.com/github/fphilipe/premailer-rails.png)](https://codeclimate.com/github/fphilipe/premailer-rails)
-[![Coverage Status](https://coveralls.io/repos/fphilipe/premailer-rails/badge.png?branch=master)](https://coveralls.io/r/fphilipe/premailer-rails)
 
 This gem is a no config solution for the wonderful [Premailer gem](https://github.com/alexdunae/premailer) to be used with Rails.
 It uses interceptors which were introduced in Rails 3 and tweaks all mails which are `deliver`ed and adds a plain text part to them and inlines all CSS rules into the HTML part.

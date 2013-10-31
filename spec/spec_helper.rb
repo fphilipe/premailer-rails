@@ -1,10 +1,3 @@
-if RUBY_VERSION >= '1.9'
-  require 'coveralls'
-  Coveralls.wear! do
-    add_filter 'spec/'
-  end
-end
-
 require 'premailer/rails'
 
 require 'stubs/action_mailer'
