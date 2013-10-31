@@ -14,7 +14,7 @@ describe Premailer::Rails::CSSHelper do
 
   describe '#css_for_doc' do
     let(:html) { Fixtures::HTML.with_css_links(*files) }
-    let(:doc) { Hpricot(html) }
+    let(:doc) { Nokogiri(html) }
 
     context 'when HTML contains linked CSS files' do
       let(:files) { %w[ stylesheets/base.css stylesheets/font.css ] }
