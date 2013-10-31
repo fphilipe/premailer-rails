@@ -4,6 +4,8 @@ require 'spec_helper'
 
 describe Premailer::Rails::CustomizedPremailer do
   [ :nokogiri, :hpricot ].each do |adapter|
+    next if adapter == :hpricot and RUBY_PLATFORM == 'java'
+
     context "when adapter is #{adapter}" do
       before { Premailer::Adapter.stubs(:use).returns(adapter) }
 

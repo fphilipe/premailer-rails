@@ -28,5 +28,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'mail'
   s.add_development_dependency 'nokogiri'
-  s.add_development_dependency 'hpricot'
+  s.add_development_dependency 'hpricot' unless RUBY_PLATFORM == 'java'
 end
