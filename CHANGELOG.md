@@ -1,8 +1,13 @@
 # Changelog
 
-## HEAD
+## v1.5.0
 
 - No longer support ruby 1.8
+
+- Find linked stylesheets by `rel='stylesheet'` attribute instead of
+  `type='text/css'`
+
+- Don't test hpricot on JRuby due to incompatibility
 
 ## v1.4.0
 
