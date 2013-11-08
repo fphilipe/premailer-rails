@@ -25,7 +25,7 @@ class Premailer
             if asset = ::Rails.application.assets.find_asset(file)
               asset.to_s
             else
-              request_and_unzip(uri_for_path(path))
+              Net::HTTP.get(uri_for_path(path))
             end
           end
         end
@@ -38,18 +38,6 @@ class Premailer
           path
             .sub("#{::Rails.configuration.assets.prefix}/", '')
             .sub(/-\h{32}\.css$/, '.css')
-        end
-
-        def request_and_unzip(uri)
-          response = Net::HTTP.get(uri)
-          io = StringIO.new(response)
-
-          begin
-            Zlib::GzipReader.new(io).read
-          rescue Zlib::GzipFile::Error, Zlib::Error
-            io.rewind
-            io.read
-          end
         end
 
         def uri_for_path(path)
