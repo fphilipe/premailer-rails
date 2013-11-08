@@ -89,11 +89,13 @@ describe Premailer::Rails::CSSHelper do
         )
       }
 
-      it 'should return the precompiled file before attempting to use pipeline' do
-        path = 'email-digest.css'
-        content = 'read from file'
-        expect_file("#{::Rails.root}/public#{path}", content)
-        load_css(path).should == content
+      context 'and a precompiled file exists' do
+        it 'should return that file' do
+          path = '/assets/email-digest.css'
+          content = 'read from file'
+          expect_file("RAILS_ROOT/public#{path}", content)
+          load_css(path).should == content
+        end
       end
 
       it 'should return the content of the file compiled by Rails' do
