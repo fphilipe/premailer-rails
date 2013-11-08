@@ -55,7 +55,7 @@ describe Premailer::Rails::CSSHelper do
       it 'should return the cached value' do
         cache =
           Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
-        cache['/stylesheets/base.css'] = 'content of base.css'
+        cache['http://example.com/stylesheets/base.css'] = 'content of base.css'
 
         load_css('http://example.com/stylesheets/base.css')
           .should == 'content of base.css'
@@ -133,18 +133,35 @@ describe Premailer::Rails::CSSHelper do
           Kernel.expects(:open).with(url).returns(string_io)
 
           load_css(
-            'http://example.com/assets/base.css'
-          ).should == 'content of base.css'
-        end
-
-        it 'should request the same file when path contains file fingerprint' do
-          Kernel.expects(:open).with(url).returns(string_io)
-
-          load_css(
             'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
           ).should == 'content of base.css'
         end
+
+        context "when asset url has no protocol" do
+          let(:url) {
+            "http://example.com/assets/base.css"
+          }
+          it "should prepend http protocol" do
+            Kernel.expects(:open).with(url).returns(string_io)
+            load_css(
+              '//example.com/assets/base.css'
+            ).should == "content of base.css"
+          end
+        end
+
+        context "when asset host is given explicitly" do
+          let(:url) {
+            "http://myhost.com/assets/base.css"
+          }
+          it "should just request given url" do
+            Kernel.expects(:open).with(url).returns(string_io)
+            load_css(
+              url
+            ).should == "content of base.css"
+          end
+        end
       end
+
     end
 
     context 'when static stylesheets are used' do
