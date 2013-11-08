@@ -60,6 +60,8 @@ class Premailer
 
         def load(path)
           File.read("#{::Rails.root}/public#{path}")
+        rescue Errno::ENOENT # File not found
+          nil
         end
       end
     end
