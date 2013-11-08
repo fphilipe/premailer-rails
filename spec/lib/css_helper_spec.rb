@@ -120,7 +120,7 @@ describe Premailer::Rails::CSSHelper do
       end
 
       context 'when asset can not be found' do
-        let(:string_io) { StringIO.new('content of base.css') }
+        let(:response) { 'content of base.css' }
         let(:path) { '/assets/base-089e35bd5d84297b8d31ad552e433275.css' }
         let(:url) { "http://assets.example.com#{path}" }
         let(:asset_host) { 'http://assets.example.com' }
@@ -130,7 +130,7 @@ describe Premailer::Rails::CSSHelper do
           Rails.configuration.stubs(:action_controller).returns(
             stub(asset_host: asset_host)
           )
-          Kernel.expects(:open).with(url).returns(string_io)
+          Net::HTTP.stubs(:get).with { |uri| uri.to_s == url }.returns(response)
         end
 
         it 'should request the file' do
