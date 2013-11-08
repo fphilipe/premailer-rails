@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.5.1
+
+- Prefer precompiled assets over asset pipeline
+
+- Improve construction of file URL when requesting from CDN
+
+- No longer use open-uri
+
+- Remove gzip unzipping after requesting file
+
 ## v1.5.0
 
 - No longer support ruby 1.8
