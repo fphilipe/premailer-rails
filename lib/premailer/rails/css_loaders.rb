@@ -38,12 +38,14 @@ class Premailer
         end
 
         def request_and_unzip(file)
+					return if ::Rails.configuration.assets.digests.nil?
+
           url = [
             ::Rails.configuration.action_controller.asset_host,
             ::Rails.configuration.assets.prefix.sub(/^\//, ''),
             ::Rails.configuration.assets.digests[file]
           ].join('/')
-          response = Kernel.open(url)
+          response = Kernel.open(url) rescue return
 
           begin
             Zlib::GzipReader.new(response).read
