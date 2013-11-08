@@ -120,42 +120,37 @@ describe Premailer::Rails::CSSHelper do
       end
 
       context 'when asset can not be found' do
-        before {
+        let(:string_io) { StringIO.new('content of base.css') }
+        let(:path) { '/assets/base-089e35bd5d84297b8d31ad552e433275.css' }
+        let(:url) { "http://assets.example.com#{path}" }
+        let(:asset_host) { 'http://assets.example.com' }
+
+        before do
           Rails.application.assets.stubs(:find_asset).returns(nil)
           Rails.configuration.stubs(:action_controller).returns(
-            stub(asset_host: 'http://example.com')
+            stub(asset_host: asset_host)
           )
-          Rails.configuration.stubs(:assets).returns(
-            stub(
-              enabled: true,
-              prefix:  '/assets',
-              digests: {
-                'base.css' => 'base-089e35bd5d84297b8d31ad552e433275.css'
-              }
-            )
-          )
-        }
-        let(:string_io) { StringIO.new('content of base.css') }
-        let(:url) {
-          'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
-        }
+          Kernel.expects(:open).with(url).returns(string_io)
+        end
 
         it 'should request the file' do
-          Kernel.expects(:open).with(url).returns(string_io)
-
-          load_css(
-            'http://example.com/assets/base.css'
-          ).should == 'content of base.css'
+          load_css(url).should == 'content of base.css'
         end
 
-        it 'should request the same file when path contains file fingerprint' do
-          Kernel.expects(:open).with(url).returns(string_io)
+        context 'when file url does not include the host' do
+          it 'should request the file using the asset host as host' do
+            load_css(path).should == 'content of base.css'
+          end
 
-          load_css(
-            'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
-          ).should == 'content of base.css'
+          context 'and the asset host uses protocol relative scheme' do
+            let(:asset_host) { '//assets.example.com' }
+
+            it 'should request the file using http as the scheme' do
+              load_css(path).should == 'content of base.css'
+            end
+          end
         end
-      end
+     end
     end
 
     context 'when static stylesheets are used' do

@@ -1,3 +1,7 @@
+require 'uri'
+require 'open-uri'
+require 'zlib'
+
 class Premailer
   module Rails
     module CSSLoaders
@@ -22,7 +26,7 @@ class Premailer
             if asset = ::Rails.application.assets.find_asset(file)
               asset.to_s
             else
-              request_and_unzip(file)
+              request_and_unzip(url_for_path(path))
             end
           end
         end
@@ -37,12 +41,7 @@ class Premailer
             .sub(/-\h{32}\.css$/, '.css')
         end
 
-        def request_and_unzip(file)
-          url = [
-            ::Rails.configuration.action_controller.asset_host,
-            ::Rails.configuration.assets.prefix.sub(/^\//, ''),
-            ::Rails.configuration.assets.digests[file]
-          ].join('/')
+        def request_and_unzip(url)
           response = Kernel.open(url)
 
           begin
@@ -51,6 +50,16 @@ class Premailer
             response.rewind
             response.read
           end
+        end
+
+        def url_for_path(path)
+          URI(path).tap do |uri|
+            scheme, host =
+              ::Rails.configuration.action_controller.asset_host.split(%r{:?//})
+            scheme = 'http' if scheme.blank?
+            uri.scheme ||= scheme
+            uri.host ||= host
+          end.to_s
         end
       end
 

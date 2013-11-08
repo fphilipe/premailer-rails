@@ -1,6 +1,3 @@
-require 'open-uri'
-require 'zlib'
-
 class Premailer
   module Rails
     module CSSHelper
