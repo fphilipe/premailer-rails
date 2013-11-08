@@ -12,6 +12,11 @@ describe Premailer::Rails::CSSHelper do
     Premailer::Rails::CSSHelper.css_for_doc(doc)
   end
 
+  def expect_file(path, content=nil)
+    File.stubs(:exist?).with(path).returns(true)
+    File.expects(:read).with(path).returns(content)
+  end
+
   describe '#css_for_doc' do
     let(:html) { Fixtures::HTML.with_css_links(*files) }
     let(:doc) { Nokogiri(html) }
@@ -37,7 +42,7 @@ describe Premailer::Rails::CSSHelper do
   describe '#load_css' do
     context 'when path is a url' do
       it 'should load the CSS at the local path' do
-        File.expects(:read).with('RAILS_ROOT/public/stylesheets/base.css')
+        expect_file('RAILS_ROOT/public/stylesheets/base.css')
 
         load_css('http://example.com/stylesheets/base.css?test')
       end
@@ -45,8 +50,7 @@ describe Premailer::Rails::CSSHelper do
 
     context 'when path is a relative url' do
       it 'should load the CSS at the local path' do
-        File.expects(:read).with('RAILS_ROOT/public/stylesheets/base.css')
-
+        expect_file('RAILS_ROOT/public/stylesheets/base.css')
         load_css('/stylesheets/base.css?test')
       end
     end
@@ -67,13 +71,11 @@ describe Premailer::Rails::CSSHelper do
         cache =
           Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
         cache['/stylesheets/base.css'] = 'cached content of base.css'
-        File.expects(:read)
-            .with('RAILS_ROOT/public/stylesheets/base.css')
-            .returns('new content of base.css')
+        content = 'new content of base.css'
+        expect_file('RAILS_ROOT/public/stylesheets/base.css', content)
         Rails.env.stubs(:development?).returns(true)
 
-        load_css('http://example.com/stylesheets/base.css')
-          .should == 'new content of base.css'
+        load_css('http://example.com/stylesheets/base.css').should == content
       end
     end
 
@@ -88,9 +90,10 @@ describe Premailer::Rails::CSSHelper do
       }
 
       it 'should return the precompiled file before attempting to use pipeline' do
-        path = "email-digest.css"
-        File.expects(:read).with("#{::Rails.root}/public#{path}").returns 'read from file'
-        load_css(path).should == 'read from file'
+        path = 'email-digest.css'
+        content = 'read from file'
+        expect_file("#{::Rails.root}/public#{path}", content)
+        load_css(path).should == content
       end
 
       it 'should return the content of the file compiled by Rails' do
@@ -155,12 +158,9 @@ describe Premailer::Rails::CSSHelper do
 
     context 'when static stylesheets are used' do
       it 'should return the content of the static file' do
-        File.expects(:read)
-            .with('RAILS_ROOT/public/stylesheets/base.css')
-            .returns('content of base.css')
-
-        load_css('http://example.com/stylesheets/base.css')
-          .should == 'content of base.css'
+        content = 'content of base.css'
+        expect_file('RAILS_ROOT/public/stylesheets/base.css', content)
+        load_css('http://example.com/stylesheets/base.css').should == content
       end
     end
   end
