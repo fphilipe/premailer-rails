@@ -59,7 +59,8 @@ class Premailer
         extend self
 
         def load(path)
-          File.read("#{::Rails.root}/public#{path}")
+          file_path = "#{::Rails.root}/public#{path}"
+          File.read(file_path) if File.exist?(file_path)
         end
       end
     end
