@@ -1,5 +1,4 @@
 require 'uri'
-require 'zlib'
 
 class Premailer
   module Rails
