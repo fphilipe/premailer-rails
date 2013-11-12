@@ -12,7 +12,7 @@ describe Premailer::Rails::CSSHelper do
     Premailer::Rails::CSSHelper.css_for_doc(doc)
   end
 
-  def expect_file(path, content=nil)
+  def expect_file(path, content='file content')
     File.stubs(:exist?).with(path).returns(true)
     File.expects(:read).with(path).returns(content)
   end
