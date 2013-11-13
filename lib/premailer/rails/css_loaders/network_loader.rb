@@ -1,5 +1,3 @@
-require 'uri'
-
 class Premailer
   module Rails
     module CSSLoaders
