@@ -80,14 +80,9 @@ describe Premailer::Rails::CSSHelper do
     end
 
     context 'when Rails asset pipeline is used' do
-      before {
-        Rails.configuration.stubs(:assets).returns(
-          stub(
-            enabled: true,
-            prefix:  '/assets'
-          )
-        )
-      }
+      before do
+        Rails.configuration.stubs(:assets).returns(stub(prefix: '/assets'))
+      end
 
       context 'and a precompiled file exists' do
         it 'should return that file' do

@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Only use asset pipeline if Rails is defined and if compile is true
+
 ## v1.5.1
 
 - Prefer precompiled assets over asset pipeline
