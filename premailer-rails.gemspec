@@ -21,12 +21,11 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency 'premailer', '~> 1.7'
-  s.add_dependency 'rails', '>= 3'
+  s.add_dependency 'actionmailer', '>= 3', '< 5'
 
   s.add_development_dependency 'rspec-core'
   s.add_development_dependency 'rspec-expectations'
   s.add_development_dependency 'mocha'
-  s.add_development_dependency 'mail'
   s.add_development_dependency 'nokogiri'
   s.add_development_dependency 'hpricot' unless RUBY_PLATFORM == 'java'
 end
