@@ -4,6 +4,10 @@
 
 - Only use asset pipeline if Rails is defined and if compile is true
 
+- Depend on actionmailer instead of rails
+
+- Check whether `::Rails` is defined before using it
+
 ## v1.5.1
 
 - Prefer precompiled assets over asset pipeline
