@@ -42,7 +42,7 @@ describe Premailer::Rails::CSSHelper do
   describe '#load_css' do
     context 'when path is a url' do
       it 'should load the CSS at the local path' do
-        expect_file('RAILS_ROOT/public/stylesheets/base.css')
+        expect_file('public/stylesheets/base.css')
 
         load_css('http://example.com/stylesheets/base.css?test')
       end
@@ -50,7 +50,7 @@ describe Premailer::Rails::CSSHelper do
 
     context 'when path is a relative url' do
       it 'should load the CSS at the local path' do
-        expect_file('RAILS_ROOT/public/stylesheets/base.css')
+        expect_file('public/stylesheets/base.css')
         load_css('/stylesheets/base.css?test')
       end
     end
@@ -73,7 +73,7 @@ describe Premailer::Rails::CSSHelper do
         cache['http://example.com/stylesheets/base.css'] =
           'cached content of base.css'
         content = 'new content of base.css'
-        expect_file('RAILS_ROOT/public/stylesheets/base.css', content)
+        expect_file('public/stylesheets/base.css', content)
         Rails.env.stubs(:development?).returns(true)
 
         load_css('http://example.com/stylesheets/base.css').should == content
@@ -89,7 +89,7 @@ describe Premailer::Rails::CSSHelper do
         it 'should return that file' do
           path = '/assets/email-digest.css'
           content = 'read from file'
-          expect_file("RAILS_ROOT/public#{path}", content)
+          expect_file("public#{path}", content)
           load_css(path).should == content
         end
       end
@@ -152,7 +152,7 @@ describe Premailer::Rails::CSSHelper do
     context 'when static stylesheets are used' do
       it 'should return the content of the static file' do
         content = 'content of base.css'
-        expect_file('RAILS_ROOT/public/stylesheets/base.css', content)
+        expect_file('public/stylesheets/base.css', content)
         load_css('http://example.com/stylesheets/base.css').should == content
       end
     end
