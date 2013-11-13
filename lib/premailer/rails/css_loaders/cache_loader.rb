@@ -4,9 +4,9 @@ class Premailer
       module CacheLoader
         extend self
 
-        def load(path)
+        def load(url)
           unless ::Rails.env.development?
-            CSSHelper.cache[path]
+            CSSHelper.cache[url]
           end
         end
       end

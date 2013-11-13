@@ -59,7 +59,7 @@ describe Premailer::Rails::CSSHelper do
       it 'should return the cached value' do
         cache =
           Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
-        cache['/stylesheets/base.css'] = 'content of base.css'
+        cache['http://example.com/stylesheets/base.css'] = 'content of base.css'
 
         load_css('http://example.com/stylesheets/base.css')
           .should == 'content of base.css'
@@ -70,7 +70,8 @@ describe Premailer::Rails::CSSHelper do
       it 'should not return cached values' do
         cache =
           Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
-        cache['/stylesheets/base.css'] = 'cached content of base.css'
+        cache['http://example.com/stylesheets/base.css'] =
+          'cached content of base.css'
         content = 'new content of base.css'
         expect_file('RAILS_ROOT/public/stylesheets/base.css', content)
         Rails.env.stubs(:development?).returns(true)
