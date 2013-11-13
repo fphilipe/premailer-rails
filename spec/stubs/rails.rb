@@ -55,10 +55,6 @@ module Rails
     Logger
   end
 
-  def root
-    'RAILS_ROOT'
-  end
-
   def application
     Application
   end
