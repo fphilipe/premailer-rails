@@ -6,4 +6,6 @@ rvm:
   - 1.9.3
   - jruby-19mode
   - rbx-19mode
-env: "JRUBY_OPTS=--debug"
+include:
+  - rvm: jruby-19mode
+    env: "JRUBY_OPTS=--debug"
