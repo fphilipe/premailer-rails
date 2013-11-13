@@ -4,9 +4,9 @@ class Premailer
       module AssetPipelineLoader
         extend self
 
-        def load(path)
+        def load(url)
           if asset_pipeline_present?
-            file = file_name(path)
+            file = file_name(url)
             asset = ::Rails.application.assets.find_asset(file)
             asset.to_s if asset
           end
@@ -16,8 +16,8 @@ class Premailer
           defined?(::Rails) and ::Rails.application.respond_to?(:assets)
         end
 
-        def file_name(path)
-          path
+        def file_name(url)
+          URI(url).path
             .sub("#{::Rails.configuration.assets.prefix}/", '')
             .sub(/-\h{32}\.css$/, '.css')
         end

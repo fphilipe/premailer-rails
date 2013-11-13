@@ -6,12 +6,12 @@ class Premailer
       module NetworkLoader
         extend self
 
-        def load(path)
-          Net::HTTP.get(uri_for_path(path))
+        def load(url)
+          Net::HTTP.get(uri_for_url(url))
         end
 
-        def uri_for_path(path)
-          URI(path).tap do |uri|
+        def uri_for_url(url)
+          URI(url).tap do |uri|
             scheme, host =
               ::Rails.configuration.action_controller.asset_host.split(%r{:?//})
             scheme = 'http' if scheme.blank?

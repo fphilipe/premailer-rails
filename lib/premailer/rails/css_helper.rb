@@ -28,24 +28,11 @@ class Premailer
       end
 
       def load_css(url)
-        path = extract_path(url)
-
-        @cache[path] = STRATEGIES.each do |strategy|
-                         css = strategy.load(path)
-                         break css if css
-                       end
-      end
-
-      # Extracts the path of a url.
-      def extract_path(url)
-        if url.is_a? String
-          # Remove everything after ? including ?
-          url = url[0..(url.index('?') - 1)] if url.include? '?'
-          # Remove the host
-          url = url.sub(/^https?\:\/\/[^\/]*/, '') if url.index('http') == 0
-        end
-
-        url
+        @cache[url] =
+          STRATEGIES.each do |strategy|
+            css = strategy.load(url)
+            break css if css
+          end
       end
     end
   end
