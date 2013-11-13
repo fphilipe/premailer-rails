@@ -5,9 +5,13 @@ class Premailer
         extend self
 
         def load(url)
-          unless ::Rails.env.development?
+          unless development_env?
             CSSHelper.cache[url]
           end
+        end
+
+        def development_env?
+          defined?(::Rails) and ::Rails.env.development?
         end
       end
     end

@@ -6,7 +6,7 @@ class Premailer
 
         def load(url)
           path = URI(url).path
-          file_path = "#{::Rails.root}/public#{path}"
+          file_path = "public#{path}"
           File.read(file_path) if File.exist?(file_path)
         end
       end
