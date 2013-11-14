@@ -1,3 +1,9 @@
+require 'coveralls'
+Coveralls::Output.silent = true
+Coveralls.wear! do
+  add_filter 'spec/'
+end
+
 require 'premailer/rails'
 
 require 'stubs/action_mailer'
