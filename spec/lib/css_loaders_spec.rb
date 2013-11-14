@@ -4,7 +4,7 @@ describe Premailer::Rails::CSSLoaders::AssetPipelineLoader do
   before do
     assets = double(prefix: '/assets')
     config = double(assets: assets)
-    Rails.stub(:configuration).and_return(config)
+    allow(Rails).to receive(:configuration).and_return(config)
   end
 
   describe ".file_name" do
