@@ -1,10 +1,16 @@
 require 'spec_helper'
 
 describe Premailer::Rails::CSSLoaders::AssetPipelineLoader do
-  before { Rails.stubs(:configuration).returns stub(assets: stub(prefix: '/assets')) }
+  before do
+    assets = double(prefix: '/assets')
+    config = double(assets: assets)
+    Rails.stub(:configuration).and_return(config)
+  end
 
   describe ".file_name" do
-    subject { Premailer::Rails::CSSLoaders::AssetPipelineLoader.file_name asset }
+    subject do
+      Premailer::Rails::CSSLoaders::AssetPipelineLoader.file_name(asset)
+    end
 
     context "when asset file path contains prefix" do
       let(:asset) { '/assets/application.css' }

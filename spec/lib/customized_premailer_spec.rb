@@ -7,7 +7,7 @@ describe Premailer::Rails::CustomizedPremailer do
     next if adapter == :hpricot and RUBY_PLATFORM == 'java'
 
     context "when adapter is #{adapter}" do
-      before { Premailer::Adapter.stubs(:use).returns(adapter) }
+      before { Premailer::Adapter.stub(:use).and_return(adapter) }
 
       describe '#to_plain_text' do
         it 'should include the text from the HTML part' do
@@ -23,8 +23,8 @@ describe Premailer::Rails::CustomizedPremailer do
         context 'when inline CSS block present' do
           it 'should return the HTML with the CSS inlined' do
             Premailer::Rails::CSSHelper
-              .stubs(:css_for_doc)
-              .returns('p { color: red; }')
+              .stub(:css_for_doc)
+              .and_return('p { color: red; }')
             html = Fixtures::Message::HTML_PART
             premailer = Premailer::Rails::CustomizedPremailer.new(html)
             premailer.to_inline_css.should =~ /<p style=("|')color: ?red;?\1>/
@@ -44,7 +44,7 @@ describe Premailer::Rails::CustomizedPremailer do
 
   describe '.new' do
     it 'should extract the CSS' do
-      Premailer::Rails::CSSHelper.expects(:css_for_doc)
+      expect(Premailer::Rails::CSSHelper).to receive(:css_for_doc)
       Premailer::Rails::CustomizedPremailer.new('some html')
     end
 

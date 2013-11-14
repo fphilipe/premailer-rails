@@ -9,5 +9,4 @@ require 'hpricot' unless RUBY_PLATFORM == 'java'
 require 'nokogiri'
 
 RSpec.configure do |config|
-  config.mock_with :mocha
 end
