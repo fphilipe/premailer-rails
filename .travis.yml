@@ -6,3 +6,11 @@ rvm:
   - 1.9.3
   - jruby-19mode
   - rbx-19mode
+env:
+  - "ACTION_MAILER_VERSION=3.1.0"
+  - "ACTION_MAILER_VERSION=3.2.0"
+  - "ACTION_MAILER_VERSION=4.0.0"
+  - "ACTION_MAILER_VERSION=head"
+matrix:
+  allow_failures:
+    - env: "ACTION_MAILER_VERSION=head"
