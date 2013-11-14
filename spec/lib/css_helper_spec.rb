@@ -131,8 +131,9 @@ describe Premailer::Rails::CSSHelper do
           allow(Rails.configuration).to \
             receive(:action_controller).and_return(config)
 
+          uri_satisfaction = satisfy { |uri| uri.to_s == url }
           allow(Net::HTTP).to \
-            receive(:get).with { |uri| uri.to_s == url }.and_return(response)
+            receive(:get).with(uri_satisfaction).and_return(response)
         end
 
         it 'should request the file' do
