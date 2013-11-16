@@ -11,7 +11,7 @@ describe Premailer::Rails::Hook do
     end
   end
 
-  let(:message) { Fixtures::Message.with_body(:html) }
+  let(:message) { Fixtures::Message.with_parts(:html) }
   let(:processed_message) { run_hook(message) }
 
   it 'inlines the CSS' do
@@ -30,7 +30,7 @@ describe Premailer::Rails::Hook do
   end
 
   context 'when message contains no html' do
-    let(:message) { Fixtures::Message.with_body(:text) }
+    let(:message) { Fixtures::Message.with_parts(:text) }
 
     it 'does not modify the message' do
       expect { run_hook(message) }.to_not change(message, :html_string)
