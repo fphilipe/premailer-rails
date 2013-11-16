@@ -10,6 +10,8 @@
 
 - Add ability to skip premailer
 
+- Test against multiple action mailer versions on travis
+
 ## v1.5.1
 
 - Prefer precompiled assets over asset pipeline
