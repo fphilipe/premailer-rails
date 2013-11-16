@@ -11,10 +11,10 @@ end
 
 require 'premailer/rails'
 
-require 'stubs/action_mailer'
-require 'stubs/rails'
-require 'fixtures/message'
-require 'fixtures/html'
+require 'support/stubs/action_mailer'
+require 'support/stubs/rails'
+require 'support/fixtures/message'
+require 'support/fixtures/html'
 
 require 'hpricot' unless RUBY_PLATFORM == 'java'
 require 'nokogiri'
