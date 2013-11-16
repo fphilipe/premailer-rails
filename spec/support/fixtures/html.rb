@@ -30,13 +30,5 @@ module Fixtures
 
       TEMPLATE % links.join
     end
-
-    def with_no_css_link
-      with_css_links
-    end
-
-    def with_style_block
-      TEMPLATE % '<style type="text/css">p { color: red; }</style>'
-    end
   end
 end

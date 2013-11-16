@@ -1,8 +1,10 @@
 require 'spec_helper'
 
 describe Premailer::Rails::CSSHelper do
-  # Reset the CSS cache
-  after { Premailer::Rails::CSSHelper.send(:instance_variable_set, '@cache', {}) }
+  # Reset the CSS cache:
+  after do
+    Premailer::Rails::CSSHelper.send(:instance_variable_set, '@cache', {})
+  end
 
   def load_css(path)
     Premailer::Rails::CSSHelper.send(:load_css, path)
@@ -13,8 +15,8 @@ describe Premailer::Rails::CSSHelper do
   end
 
   def expect_file(path, content='file content')
-    File.stubs(:exist?).with(path).returns(true)
-    File.expects(:read).with(path).returns(content)
+    allow(File).to receive(:exist?).with(path).and_return(true)
+    expect(File).to receive(:read).with(path).and_return(content)
   end
 
   describe '#css_for_doc' do
@@ -25,16 +27,16 @@ describe Premailer::Rails::CSSHelper do
       let(:files) { %w[ stylesheets/base.css stylesheets/font.css ] }
 
       it 'should return the content of both files concatenated' do
-        Premailer::Rails::CSSHelper
-          .expects(:load_css)
-          .with('http://example.com/stylesheets/base.css')
-          .returns('content of base.css')
-        Premailer::Rails::CSSHelper
-          .expects(:load_css)
-          .with('http://example.com/stylesheets/font.css')
-          .returns('content of font.css')
+        allow(Premailer::Rails::CSSHelper).to \
+          receive(:load_css)
+            .with('http://example.com/stylesheets/base.css')
+            .and_return('content of base.css')
+        allow(Premailer::Rails::CSSHelper).to \
+          receive(:load_css)
+            .with('http://example.com/stylesheets/font.css')
+            .and_return('content of font.css')
 
-        css_for_doc(doc).should == "content of base.css\ncontent of font.css"
+        expect(css_for_doc(doc)).to eq("content of base.css\ncontent of font.css")
       end
     end
   end
@@ -61,8 +63,8 @@ describe Premailer::Rails::CSSHelper do
           Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
         cache['http://example.com/stylesheets/base.css'] = 'content of base.css'
 
-        load_css('http://example.com/stylesheets/base.css')
-          .should == 'content of base.css'
+        expect(load_css('http://example.com/stylesheets/base.css')).to \
+          eq('content of base.css')
       end
     end
 
@@ -74,15 +76,15 @@ describe Premailer::Rails::CSSHelper do
           'cached content of base.css'
         content = 'new content of base.css'
         expect_file('public/stylesheets/base.css', content)
-        Rails.env.stubs(:development?).returns(true)
+        allow(Rails.env).to receive(:development?).and_return(true)
 
-        load_css('http://example.com/stylesheets/base.css').should == content
+        expect(load_css('http://example.com/stylesheets/base.css')).to eq(content)
       end
     end
 
     context 'when Rails asset pipeline is used' do
       before do
-        Rails.configuration.stubs(:assets).returns(stub(prefix: '/assets'))
+        allow(Rails.configuration).to receive(:assets).and_return(double(prefix: '/assets'))
       end
 
       context 'and a precompiled file exists' do
@@ -90,29 +92,29 @@ describe Premailer::Rails::CSSHelper do
           path = '/assets/email-digest.css'
           content = 'read from file'
           expect_file("public#{path}", content)
-          load_css(path).should == content
+          expect(load_css(path)).to eq(content)
         end
       end
 
       it 'should return the content of the file compiled by Rails' do
-        Rails.application.assets
-          .expects(:find_asset)
-          .with('base.css')
-          .returns(mock(to_s: 'content of base.css'))
+        expect(Rails.application.assets).to \
+          receive(:find_asset)
+            .with('base.css')
+            .and_return(double(to_s: 'content of base.css'))
 
-        load_css('http://example.com/assets/base.css')
-          .should == 'content of base.css'
+        expect(load_css('http://example.com/assets/base.css')).to \
+          eq('content of base.css')
       end
 
       it 'should return same file when path contains file fingerprint' do
-        Rails.application.assets
-          .expects(:find_asset)
-          .with('base.css')
-          .returns(mock(to_s: 'content of base.css'))
+        expect(Rails.application.assets).to \
+          receive(:find_asset)
+            .with('base.css')
+            .and_return(double(to_s: 'content of base.css'))
 
-        load_css(
+        expect(load_css(
           'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
-        ).should == 'content of base.css'
+        )).to eq('content of base.css')
       end
 
       context 'when asset can not be found' do
@@ -122,27 +124,32 @@ describe Premailer::Rails::CSSHelper do
         let(:asset_host) { 'http://assets.example.com' }
 
         before do
-          Rails.application.assets.stubs(:find_asset).returns(nil)
-          Rails.configuration.stubs(:action_controller).returns(
-            stub(asset_host: asset_host)
-          )
-          Net::HTTP.stubs(:get).with { |uri| uri.to_s == url }.returns(response)
+          allow(Rails.application.assets).to \
+            receive(:find_asset).and_return(nil)
+
+          config = double(asset_host: asset_host)
+          allow(Rails.configuration).to \
+            receive(:action_controller).and_return(config)
+
+          uri_satisfaction = satisfy { |uri| uri.to_s == url }
+          allow(Net::HTTP).to \
+            receive(:get).with(uri_satisfaction).and_return(response)
         end
 
         it 'should request the file' do
-          load_css(url).should == 'content of base.css'
+          expect(load_css(url)).to eq('content of base.css')
         end
 
         context 'when file url does not include the host' do
           it 'should request the file using the asset host as host' do
-            load_css(path).should == 'content of base.css'
+            expect(load_css(path)).to eq('content of base.css')
           end
 
           context 'and the asset host uses protocol relative scheme' do
             let(:asset_host) { '//assets.example.com' }
 
             it 'should request the file using http as the scheme' do
-              load_css(path).should == 'content of base.css'
+              expect(load_css(path)).to eq('content of base.css')
             end
           end
         end
@@ -153,7 +160,8 @@ describe Premailer::Rails::CSSHelper do
       it 'should return the content of the static file' do
         content = 'content of base.css'
         expect_file('public/stylesheets/base.css', content)
-        load_css('http://example.com/stylesheets/base.css').should == content
+        loaded_content = load_css('http://example.com/stylesheets/base.css')
+        expect(loaded_content).to eq(content)
       end
     end
   end

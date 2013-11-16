@@ -1,26 +1,8 @@
-require 'stubs/dummy'
-
-class Logger
-  def self.try(*args); end
-end
-
 module Rails
   extend self
 
   module Configuration
     extend self
-
-    module Middleware
-      extend self
-
-      def include?(what)
-        false
-      end
-    end
-
-    def middleware
-      Middleware
-    end
   end
 
   module Env
@@ -49,10 +31,6 @@ module Rails
 
   def configuration
     Configuration
-  end
-
-  def logger
-    Logger
   end
 
   def application

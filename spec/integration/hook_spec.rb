@@ -11,7 +11,7 @@ describe Premailer::Rails::Hook do
     end
   end
 
-  let(:message) { Fixtures::Message.with_body(:html) }
+  let(:message) { Fixtures::Message.with_parts(:html) }
   let(:processed_message) { run_hook(message) }
 
   it 'inlines the CSS' do
@@ -20,8 +20,9 @@ describe Premailer::Rails::Hook do
   end
 
   it 'replaces the html part with an alternative part containing text and html parts' do
-    processed_message.content_type.should include 'multipart/alternative'
-    processed_message.parts.should =~ [message.html_part, message.text_part]
+    expect(processed_message.content_type).to include('multipart/alternative')
+    expected_parts = [message.html_part, message.text_part]
+    expect(processed_message.parts).to match_array(expected_parts)
   end
 
   it 'generates a text part from the html' do
@@ -29,7 +30,7 @@ describe Premailer::Rails::Hook do
   end
 
   context 'when message contains no html' do
-    let(:message) { Fixtures::Message.with_body(:text) }
+    let(:message) { Fixtures::Message.with_parts(:text) }
 
     it 'does not modify the message' do
       expect { run_hook(message) }.to_not change(message, :html_string)
@@ -64,14 +65,14 @@ describe Premailer::Rails::Hook do
   context 'when message also contains an attachment' do
     let(:message) { Fixtures::Message.with_parts(:html, :attachment) }
     it 'does not mess with it' do
-      message.content_type.should include 'multipart/mixed'
-      message.parts.first.content_type.should include 'text/html'
-      message.parts.last.content_type.should include 'image/png'
+      expect(message.content_type).to include 'multipart/mixed'
+      expect(message.parts.first.content_type).to include 'text/html'
+      expect(message.parts.last.content_type).to include 'image/png'
 
-      processed_message.content_type.should include 'multipart/mixed'
-      processed_message.parts.first.content_type.should \
+      expect(processed_message.content_type).to include 'multipart/mixed'
+      expect(processed_message.parts.first.content_type).to \
         include 'multipart/alternative'
-      processed_message.parts.last.content_type.should include 'image/png'
+      expect(processed_message.parts.last.content_type).to include 'image/png'
     end
   end
 
