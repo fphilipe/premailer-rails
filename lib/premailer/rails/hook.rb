@@ -5,6 +5,7 @@ class Premailer
 
       def self.delivering_email(message)
         self.new(message).perform
+        message
       end
 
       def initialize(message)
@@ -12,14 +13,22 @@ class Premailer
       end
 
       def perform
-        if message_contains_html?
+        if skip_premailer_header_present?
+          remove_skip_premailer_header
+        elsif message_contains_html?
           replace_html_part(generate_html_part_replacement)
         end
-
-        message
       end
 
       private
+
+      def skip_premailer_header_present?
+        message.header[:skip_premailer]
+      end
+
+      def remove_skip_premailer_header
+        message.header[:skip_premailer] = nil
+      end
 
       def message_contains_html?
         html_part.present?

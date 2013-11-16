@@ -74,4 +74,19 @@ describe Premailer::Rails::Hook do
       processed_message.parts.last.content_type.should include 'image/png'
     end
   end
+
+  context 'when message has a skip premailer header' do
+    before do
+      message.header[:skip_premailer] = true
+    end
+
+    it 'does not change the message body' do
+      expect { run_hook(message) }.to_not change(message, :body)
+    end
+
+    it 'removes that header' do
+      expect { run_hook(message) }.to \
+        change { message.header[:skip_premailer].nil? }.to(true)
+    end
+  end
 end

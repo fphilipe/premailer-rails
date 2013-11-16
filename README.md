@@ -73,6 +73,21 @@ If you don't want to automatically generate a text part from the html part, set 
 
 Note that the options `:with_html_string` and `:css_string` are used internally and thus will be overridden.
 
+## Usage
+
+premailer-rails processes all outgoing emails by default.
+If you wish to skip premailer for a certain email, simply set the `:skip_premailer` header.
+
+```ruby
+class UserMailer < ActionMailer::Base
+  def welcome_email(user)
+    mail to: user.email,
+         subject: 'Welcome to My Awesome Site',
+         skip_premailer: true
+  end
+end
+```
+
+***
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/fphilipe/premailer-rails/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
