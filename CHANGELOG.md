@@ -8,6 +8,8 @@
 
 - Check whether `::Rails` is defined before using it
 
+- Add ability to skip premailer
+
 ## v1.5.1
 
 - Prefer precompiled assets over asset pipeline
