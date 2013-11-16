@@ -75,18 +75,18 @@ describe Premailer::Rails::Hook do
     end
   end
 
-  context 'when message disables premailer' do
-    it 'does not change the body of a html message' do
-      message[:premailer] = 'off'
-      expect { run_hook(message) }.to_not change(message, :body)
-      message[:premailer].should be_nil
+  context 'when message has a skip premailer header' do
+    before do
+      message.header[:skip_premailer] = true
     end
 
-    it 'does not change the html of a multipart message' do
-      message = Fixtures::Message.with_parts(:html, :text)
-      message[:premailer] = 'off'
-      expect { run_hook(message) }.to_not change(message, :html_part)
-      message[:premailer].should be_nil
+    it 'does not change the message body' do
+      expect { run_hook(message) }.to_not change(message, :body)
+    end
+
+    it 'removes that header' do
+      expect { run_hook(message) }.to \
+        change { message.header[:skip_premailer].nil? }.to(true)
     end
   end
 end
