@@ -14,6 +14,8 @@
 
 - Ensure CSS strings are always UTF-8 encoded
 
+- Require premailer version >= 1.7.9
+
 ## v1.5.1
 
 - Prefer precompiled assets over asset pipeline

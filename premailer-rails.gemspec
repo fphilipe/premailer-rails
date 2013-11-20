@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency 'premailer', '~> 1.7'
+  s.add_dependency 'premailer', '~> 1.7', '>= 1.7.9'
   s.add_dependency 'actionmailer', '>= 3', '< 5'
 
   s.add_development_dependency 'rspec', '>= 3.0.0.beta1'

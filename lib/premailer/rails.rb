@@ -11,8 +11,7 @@ require 'premailer/rails/nokogiri_fix'
 class Premailer
   module Rails
     @config = {
-      input_encoding:     'UTF-8',
-      inputencoding:      'UTF-8',
+      input_encoding: 'UTF-8',
       generate_text_part: true
     }
     class << self
