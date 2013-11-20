@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## v1.6.0
 
 - Only use asset pipeline if Rails is defined and if compile is true
 
