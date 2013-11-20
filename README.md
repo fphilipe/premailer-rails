@@ -1,83 +1,93 @@
 # premailer-rails
 
-[![Build Status](https://travis-ci.org/fphilipe/premailer-rails.png)](https://travis-ci.org/fphilipe/premailer-rails)
-[![Gem Version](https://badge.fury.io/rb/premailer-rails.png)](http://badge.fury.io/rb/premailer-rails)
-[![Dependency Status](https://gemnasium.com/fphilipe/premailer-rails.png)](https://gemnasium.com/fphilipe/premailer-rails)
-[![Code Climate](https://codeclimate.com/github/fphilipe/premailer-rails.png)](https://codeclimate.com/github/fphilipe/premailer-rails)
-[![Coverage Status](https://coveralls.io/repos/fphilipe/premailer-rails/badge.png?branch=master)](https://coveralls.io/r/fphilipe/premailer-rails)
+CSS styled emails without the hassle.
 
-This gem is a no config solution for the wonderful [Premailer gem](https://github.com/alexdunae/premailer) to be used with Rails.
-It uses interceptors which were introduced in Rails 3 and tweaks all mails which are `deliver`ed and adds a plain text part to them and inlines all CSS rules into the HTML part.
+[![Build Status][build-image]][build-link]
+[![Gem Version][gem-image]][gem-link]
+[![Dependency Status][deps-image]][deps-link]
+[![Code Climate][gpa-image]][gpa-link]
+[![Coverage Status][cov-image]][cov-link]
+[![Bitdeli Badge][stats-image]][stats-link]
 
-By default it inlines all inline `<style>` declarations and all the CSS files that are linked to in the HTML:
+## Introduction
 
-```html
-<link rel="stylesheet" ... />
-```
+This gem is a drop in solution for styling HTML emails with CSS without having
+to do the hard work yourself.
 
-Don't worry about the host in the CSS URL since this will be ignored.
+Styling emails is not just a matter of linking to a stylesheet. Most clients,
+especially web clients, ignore linked stylesheets or `<style>` tags in the HTML.
+The workaround is to write all the CSS rules in the `style` attribute of each
+tag inside your email. This is a rather tedious and hard to maintain approach.
 
-The retrieval of the file depends on your assets configuration:
+Premailer to the rescue! The great [premailer] gem applies all CSS rules to each
+matching HTML element by adding them to the `style` attribute. This allows you
+to keep HTML and CSS in separate files, just as you're used to from web
+development, thus keeping your sanity.
 
-* Rails 3.1 asset pipeline: It will load the compiled version of the CSS asset
-  which is normally located in `app/assets/stylesheets/`. If the asset can't be
-  found (e.g. it is only available on a CDN and not locally), it will be
-  HTTP requested.
+This gem is an adapter for premailer to work with [actionmailer] out of the box.
+Actionmailer is the email framework used in Rails, which also works outside of
+Rails. Although premailer-rails has certain Rails specific features, **it also
+works in the absence of Rails** making it compatible with other frameworks such
+as sinatra.
 
-* Classic static assets: It will try to load the CSS file located in
-  `public/stylesheets/`
+premailer-rails works with actionmailer by registering a delivery hook. This
+causes all emails that are delivered to be processed by premailer-rails. This
+means that, by simply including premailer-rails in your `Gemfile`, you'll get
+styled emails without having to set anything up.
 
 ## Installation
 
-Simply add the gem to your Gemfile in your Rails project:
+Simply add the gem to your `Gemfile`:
 
-    gem 'premailer-rails'
+```ruby
+gem 'premailer-rails'
+```
 
-premailer-rails requires either nokogiri or hpricot. It doesn't list them as a dependency so you can choose which one to use.
+premailer-rails requires either [nokogiri] or [hpricot]. It doesn't list them as
+a dependency so you can choose which one to use. Since hpricot is no longer
+maintained, I suggest you to go with nokogiri. Add either one to your `Gemfile`:
 
-    gem 'nokogiri'
-    # or
-    gem 'hpricot'
+```ruby
+gem 'nokogiri'
+# or
+gem 'hpricot'
+```
 
-If both are loaded for some reason, premailer chooses hpricot.
+If both gems are loaded for some reason, premailer chooses hpricot.
 
 That's it!
 
 ## Configuration
 
 Premailer itself accepts a number of options. In order for premailer-rails to
-pass these options on to the underlying premailer instance, specify them in an
-initializer:
+pass these options on to the underlying premailer instance, specify them
+as follows (in Rails you could do that in an initializer such as
+`config/initializers/premailer_rails.rb`):
 
 ```ruby
-Premailer::Rails.config.merge!(preserve_styles: true,
-                               remove_ids:      true)
+Premailer::Rails.config.merge!(preserve_styles: true, remove_ids: true)
 ```
 
-For a list of options, refer to the [Premailer documentation](http://rubydoc.info/gems/premailer/1.7.3/Premailer:initialize)
-
-The default configs are:
+For a list of options, refer to the [premailer documentation]. The default
+configs are:
 
 ```ruby
 {
-  input_encoding:     'UTF-8',
-  inputencoding:      'UTF-8',
+  input_encoding: 'UTF-8',
   generate_text_part: true
 }
 ```
 
-The input encoding option [changed](https://github.com/alexdunae/premailer/commit/5f5cbb4ac181299a7e73d3eca11f3cf546585364) at some point.
-To make sure this option works regardless of the premailer version, the old and new setting is specified.
-If you want to use another encoding make sure to specify the right one or both.
+If you don't want to automatically generate a text part from the html part, set
+the config `:generate_text_part` to false.
 
-If you don't want to automatically generate a text part from the html part, set the config `:generate_text_part` to false.
-
-Note that the options `:with_html_string` and `:css_string` are used internally and thus will be overridden.
+Note that the options `:with_html_string` and `:css_string` are used internally
+by premailer-rails and thus will be overridden.
 
 ## Usage
 
-premailer-rails processes all outgoing emails by default.
-If you wish to skip premailer for a certain email, simply set the `:skip_premailer` header.
+premailer-rails processes all outgoing emails by default. If you wish to skip
+premailer for a certain email, simply set the `:skip_premailer` header:
 
 ```ruby
 class UserMailer < ActionMailer::Base
@@ -89,6 +99,22 @@ class UserMailer < ActionMailer::Base
 end
 ```
 
-***
+[build-image]: https://travis-ci.org/fphilipe/premailer-rails.png
+[build-link]:  https://travis-ci.org/fphilipe/premailer-rails
+[gem-image]:   https://badge.fury.io/rb/premailer-rails.png
+[gem-link]:    https://rubygems.org/gems/premailer-rails
+[deps-image]:  https://gemnasium.com/fphilipe/premailer-rails.png
+[deps-link]:   https://gemnasium.com/fphilipe/premailer-rails
+[gpa-image]:   https://codeclimate.com/github/fphilipe/premailer-rails.png
+[gpa-link]:    https://codeclimate.com/github/fphilipe/premailer-rails
+[cov-image]:   https://coveralls.io/repos/fphilipe/premailer-rails/badge.png
+[cov-link]:    https://coveralls.io/r/fphilipe/premailer-rails
+[stats-image]: https://d2weczhvl823v0.cloudfront.net/fphilipe/premailer-rails/trend.png
+[stats-link]:  https://bitdeli.com/
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/fphilipe/premailer-rails/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[premailer]:    https://github.com/premailer/premailer
+[actionmailer]: https://github.com/rails/rails/tree/master/actionmailer
+[nokogiri]:     https://github.com/sparklemotion/nokogiri
+[hpricot]:      https://github.com/hpricot/hpricot
+
+[premailer documentation]: http://rubydoc.info/gems/premailer/1.7.3/Premailer:initialize
