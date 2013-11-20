@@ -16,7 +16,7 @@ class Premailer
       # Returns all linked CSS files concatenated as string.
       def css_for_doc(doc)
         urls = css_urls_in_doc(doc)
-        urls.map { |url| load_css(url) }.join("\n")
+        urls.map { |url| load_css(url).force_encoding('UTF-8') }.join("\n")
       end
 
       private

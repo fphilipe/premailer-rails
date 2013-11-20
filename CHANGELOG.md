@@ -12,6 +12,8 @@
 
 - Test against multiple action mailer versions on travis
 
+- Ensure CSS strings are always UTF-8 encoded
+
 ## v1.5.1
 
 - Prefer precompiled assets over asset pipeline
