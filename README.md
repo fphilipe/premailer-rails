@@ -132,6 +132,18 @@ class UserMailer < ActionMailer::Base
 end
 ```
 
+## Small Print
+
+### Author
+
+Philipe Fatio ([@fphilipe][fphilipe twitter])
+
+[![Support via Gittip][tip-image]][tip-link]
+
+### License
+
+premailer-rails is released under the MIT license. See the [license file].
+
 [build-image]: https://travis-ci.org/fphilipe/premailer-rails.png
 [build-link]:  https://travis-ci.org/fphilipe/premailer-rails
 [gem-image]:   https://badge.fury.io/rb/premailer-rails.png
@@ -144,6 +156,8 @@ end
 [cov-link]:    https://coveralls.io/r/fphilipe/premailer-rails
 [stats-image]: https://d2weczhvl823v0.cloudfront.net/fphilipe/premailer-rails/trend.png
 [stats-link]:  https://bitdeli.com/
+[tip-image]:   https://rawgithub.com/twolfson/gittip-badge/0.1.0/dist/gittip.png
+[tip-link]:    https://www.gittip.com/fphilipe/
 
 [premailer]:    https://github.com/premailer/premailer
 [actionmailer]: https://github.com/rails/rails/tree/master/actionmailer
@@ -151,3 +165,6 @@ end
 [hpricot]:      https://github.com/hpricot/hpricot
 
 [premailer documentation]: http://rubydoc.info/gems/premailer/1.7.3/Premailer:initialize
+
+[fphilipe twitter]: https://twitter.com/fphilipe
+[license file]:     LICENSE
