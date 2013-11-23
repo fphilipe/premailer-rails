@@ -15,3 +15,8 @@ end
 platforms :jruby do
   gem "jruby-openssl"
 end
+
+platforms :rbx do
+  gem 'rubysl'
+  gem 'racc'
+end
