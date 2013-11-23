@@ -1,4 +1,4 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 gemspec
 
@@ -13,7 +13,7 @@ else
 end
 
 platforms :jruby do
-  gem "jruby-openssl"
+  gem 'jruby-openssl'
 end
 
 platforms :rbx do
