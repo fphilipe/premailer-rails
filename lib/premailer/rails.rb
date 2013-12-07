@@ -6,7 +6,6 @@ require 'premailer/rails/css_loaders'
 require 'premailer/rails/css_helper'
 require 'premailer/rails/customized_premailer'
 require 'premailer/rails/hook'
-require 'premailer/rails/nokogiri_fix'
 
 class Premailer
   module Rails
