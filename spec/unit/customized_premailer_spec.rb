@@ -37,6 +37,15 @@ describe Premailer::Rails::CustomizedPremailer do
             expect(premailer.to_inline_css).to match(regex)
           end
         end
+
+        context 'when HTML contains unicode' do
+          it 'should not mess those up' do
+            html = Fixtures::Message::HTML_PART_WITH_UNICODE
+            premailer = Premailer::Rails::CustomizedPremailer.new(html)
+            expect(premailer.to_inline_css).to \
+              include(Fixtures::Message::UNICODE_STRING)
+          end
+        end
       end
     end
   end

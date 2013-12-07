@@ -19,6 +19,20 @@ module Fixtures
 </html>
     HTML
 
+    UNICODE_STRING = '٩(-̮̮̃-̃)۶ ٩(●̮̮̃•̃)۶ ٩(͡๏̯͡๏)۶ ٩(-̮̮̃•̃).'
+
+    HTML_PART_WITH_UNICODE = <<-HTML
+<html>
+  <head>
+  </head>
+  <body>
+    <p>
+      #{UNICODE_STRING}
+    </p>
+  </body>
+</html>
+    HTML
+
     HTML_PART_WITH_CSS = <<-HTML
 <html>
   <head>
