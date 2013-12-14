@@ -54,8 +54,8 @@ class Premailer
 
       def generate_alternative_part
         part = Mail::Part.new(content_type: 'multipart/alternative')
-        part.add_part(generate_html_part)
         part.add_part(generate_text_part)
+        part.add_part(generate_html_part)
 
         part
       end
