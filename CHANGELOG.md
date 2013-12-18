@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.6.1
+
+- Remove Nokogiri unicode fix since it's working properly without it by now
+
+- Make sure html part comes before text part
+
 ## v1.6.0
 
 - Only use asset pipeline if Rails is defined and if compile is true
