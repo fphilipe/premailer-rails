@@ -2,6 +2,7 @@ language: ruby
 cache: bundler
 script: "bundle exec rspec"
 rvm:
+  - 2.1.0
   - 2.0.0
   - 1.9.3
   - ruby-head
