@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## v1.7.0
 
 - Register preview hook for the new previewing functionality introduced in
   rails 4.1.0
