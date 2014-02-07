@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Premailer::Rails::Hook do
   def run_hook(message)
-    Premailer::Rails::Hook.delivering_email(message)
+    Premailer::Rails::Hook.perform(message)
   end
 
   class Mail::Message
@@ -13,6 +13,24 @@ describe Premailer::Rails::Hook do
 
   let(:message) { Fixtures::Message.with_parts(:html) }
   let(:processed_message) { run_hook(message) }
+
+  describe '.delivering_email' do
+    it 'is an alias to .perform' do
+      method = described_class.method(:delivering_email)
+      expected_method = described_class.method(:perform)
+
+      expect(method).to eq expected_method
+    end
+  end
+
+  describe '.previewing_email' do
+    it 'is an alias to .perform' do
+      method = described_class.method(:previewing_email)
+      expected_method = described_class.method(:perform)
+
+      expect(method).to eq expected_method
+    end
+  end
 
   it 'inlines the CSS' do
     expect { run_hook(message) }.to \

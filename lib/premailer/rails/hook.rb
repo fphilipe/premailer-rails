@@ -3,9 +3,14 @@ class Premailer
     class Hook
       attr_reader :message
 
-      def self.delivering_email(message)
-        self.new(message).perform
-        message
+      class << self
+        def perform(message)
+          new(message).perform
+          message
+        end
+
+        alias_method :delivering_email, :perform
+        alias_method :previewing_email, :perform
       end
 
       def initialize(message)
