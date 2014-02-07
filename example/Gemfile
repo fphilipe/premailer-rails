@@ -1,0 +1,12 @@
+source 'https://rubygems.org'
+
+gem 'rails', github: 'rails'
+gem 'sprockets-rails'
+
+gem 'premailer-rails', path: '..'
+gem 'nokogiri'
+
+platforms :rbx do
+  gem 'rubysl'
+  gem 'racc'
+end
