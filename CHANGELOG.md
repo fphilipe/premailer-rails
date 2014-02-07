@@ -1,5 +1,12 @@
 # Changelog
 
+## HEAD
+
+- Register preview hook for the new previewing functionality introduced in
+  rails 4.1.0
+
+- Add example rails application
+
 ## v1.6.1
 
 - Remove Nokogiri unicode fix since it's working properly without it by now
