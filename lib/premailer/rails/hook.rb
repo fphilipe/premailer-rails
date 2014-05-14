@@ -29,7 +29,6 @@ class Premailer
       private
 
       def skip_premailer_header_present?
-        message.header[:skip_premailer]
         message_header :skip_premailer
       end
 
