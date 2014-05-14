@@ -20,7 +20,8 @@ class Premailer
       def perform
         if skip_premailer_header_present?
           remove_skip_premailer_header
-        elsif message_contains_html?
+        elsif (message_contains_html? && (!Rails.config[:disable_premailer] || enable_premailer_header_present? ))
+          remove_enable_premailer_header if enable_premailer_header_present?
           replace_html_part(generate_html_part_replacement)
         end
       end
@@ -29,10 +30,27 @@ class Premailer
 
       def skip_premailer_header_present?
         message.header[:skip_premailer]
+        message_header :skip_premailer
+      end
+
+      def enable_premailer_header_present?
+        message_header :enable_premailer
       end
 
       def remove_skip_premailer_header
-        message.header[:skip_premailer] = nil
+        remove_header :skip_premailer
+      end
+
+      def remove_enable_premailer_header
+        remove_header :enable_premailer
+      end
+
+      def message_header(symbol)
+        message.header[symbol]
+      end
+
+      def remove_header(symbol)
+        message.header[symbol] = nil
       end
 
       def message_contains_html?
