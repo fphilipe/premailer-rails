@@ -13,7 +13,7 @@ describe Premailer::Rails do
           described_class.config = default_config
         end
       end
-      it { should == { foo: :bar } }
+      it { is_expected.to eq(foo: :bar) }
     end
   end
 end

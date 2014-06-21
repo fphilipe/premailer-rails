@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'premailer', '~> 1.7', '>= 1.7.9'
   s.add_dependency 'actionmailer', '>= 3', '< 5'
 
-  s.add_development_dependency 'rspec', '>= 3.0.0.beta1'
+  s.add_development_dependency 'rspec', '~> 3.0.0'
   s.add_development_dependency 'nokogiri'
   s.add_development_dependency 'hpricot' unless RUBY_PLATFORM == 'java'
   s.add_development_dependency 'coveralls' if RUBY_ENGINE == 'ruby'

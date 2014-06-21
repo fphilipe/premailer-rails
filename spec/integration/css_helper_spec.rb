@@ -26,7 +26,7 @@ describe Premailer::Rails::CSSHelper do
     context 'when HTML contains linked CSS files' do
       let(:files) { %w[ stylesheets/base.css stylesheets/font.css ] }
 
-      it 'should return the content of both files concatenated' do
+      it 'returns the content of both files concatenated' do
         allow(Premailer::Rails::CSSHelper).to \
           receive(:load_css)
             .with('http://example.com/stylesheets/base.css')
@@ -43,7 +43,7 @@ describe Premailer::Rails::CSSHelper do
 
   describe '#load_css' do
     context 'when path is a url' do
-      it 'should load the CSS at the local path' do
+      it 'loads the CSS at the local path' do
         expect_file('public/stylesheets/base.css')
 
         load_css('http://example.com/stylesheets/base.css?test')
@@ -51,14 +51,14 @@ describe Premailer::Rails::CSSHelper do
     end
 
     context 'when path is a relative url' do
-      it 'should load the CSS at the local path' do
+      it 'loads the CSS at the local path' do
         expect_file('public/stylesheets/base.css')
         load_css('/stylesheets/base.css?test')
       end
     end
 
     context 'when file is cached' do
-      it 'should return the cached value' do
+      it 'returns the cached value' do
         cache =
           Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
         cache['http://example.com/stylesheets/base.css'] = 'content of base.css'
@@ -69,7 +69,7 @@ describe Premailer::Rails::CSSHelper do
     end
 
     context 'when in development mode' do
-      it 'should not return cached values' do
+      it 'does not return cached values' do
         cache =
           Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
         cache['http://example.com/stylesheets/base.css'] =
@@ -88,7 +88,7 @@ describe Premailer::Rails::CSSHelper do
       end
 
       context 'and a precompiled file exists' do
-        it 'should return that file' do
+        it 'returns that file' do
           path = '/assets/email-digest.css'
           content = 'read from file'
           expect_file("public#{path}", content)
@@ -96,7 +96,7 @@ describe Premailer::Rails::CSSHelper do
         end
       end
 
-      it 'should return the content of the file compiled by Rails' do
+      it 'returns the content of the file compiled by Rails' do
         expect(Rails.application.assets).to \
           receive(:find_asset)
             .with('base.css')
@@ -106,7 +106,7 @@ describe Premailer::Rails::CSSHelper do
           eq('content of base.css')
       end
 
-      it 'should return same file when path contains file fingerprint' do
+      it 'returns same file when path contains file fingerprint' do
         expect(Rails.application.assets).to \
           receive(:find_asset)
             .with('base.css')
@@ -136,19 +136,19 @@ describe Premailer::Rails::CSSHelper do
             receive(:get).with(uri_satisfaction).and_return(response)
         end
 
-        it 'should request the file' do
+        it 'requests the file' do
           expect(load_css(url)).to eq('content of base.css')
         end
 
         context 'when file url does not include the host' do
-          it 'should request the file using the asset host as host' do
+          it 'requests the file using the asset host as host' do
             expect(load_css(path)).to eq('content of base.css')
           end
 
           context 'and the asset host uses protocol relative scheme' do
             let(:asset_host) { '//assets.example.com' }
 
-            it 'should request the file using http as the scheme' do
+            it 'requests the file using http as the scheme' do
               expect(load_css(path)).to eq('content of base.css')
             end
           end
@@ -157,7 +157,7 @@ describe Premailer::Rails::CSSHelper do
     end
 
     context 'when static stylesheets are used' do
-      it 'should return the content of the static file' do
+      it 'returns the content of the static file' do
         content = 'content of base.css'
         expect_file('public/stylesheets/base.css', content)
         loaded_content = load_css('http://example.com/stylesheets/base.css')
