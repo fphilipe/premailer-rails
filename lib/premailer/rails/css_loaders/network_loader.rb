@@ -18,6 +18,9 @@ class Premailer
             scheme = 'http' if scheme.blank?
             uri.scheme ||= scheme
             uri.host ||= host
+
+            # Cast what may be a URI::Generic to URI::HTTP
+            uri = URI(uri.to_s)
           end
 
           uri if valid_uri?(uri)
