@@ -18,17 +18,17 @@ class Premailer
       end
 
       def perform
-        if skip_premailer_header_present?
-          remove_skip_premailer_header
-        elsif message_contains_html?
+        if !skip_premailer_header_present? && message_contains_html?
           replace_html_part(generate_html_part_replacement)
         end
+        remove_skip_premailer_header
       end
 
       private
 
       def skip_premailer_header_present?
-        message.header[:skip_premailer]
+        header = message.header[:skip_premailer]
+        header && header.value.to_s.downcase == 'true'
       end
 
       def remove_skip_premailer_header

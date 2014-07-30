@@ -108,4 +108,35 @@ describe Premailer::Rails::Hook do
         change { message.header[:skip_premailer].nil? }.to(true)
     end
   end
+
+  context 'when message has a skip premailer header=false' do
+    before do
+      message.header[:skip_premailer] = false
+    end
+
+    it 'does change the message body' do
+      expect { run_hook(message) }.to change(message, :body)
+    end
+
+    it 'removes that header' do
+      expect { run_hook(message) }.to \
+        change { message.header[:skip_premailer].nil? }.to(true)
+    end
+  end
+
+  context 'when message has a skip premailer header=nil' do
+    before do
+      message.header[:skip_premailer] = nil
+    end
+
+    it 'does change the message body' do
+      expect { run_hook(message) }.to change(message, :body)
+    end
+
+    it 'removes that header' do
+      expect { run_hook(message) }.to \
+        change { message.header[:skip_premailer].nil? }.to(true)
+    end
+  end
+
 end
