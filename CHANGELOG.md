@@ -1,5 +1,11 @@
 # Changelog
 
+## HEAD
+
+- `ActionMailer` interceptors are registered after Rails initialization and no
+  longer when loading this gem. If you were using this gem outside Rails, you'll
+  need to call `Premailer::Rails.register_interceptors` manually.
+
 ## v1.7.0
 
 - Register preview hook for the new previewing functionality introduced in
