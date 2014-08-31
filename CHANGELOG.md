@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## v1.8.0
 
 - `ActionMailer` interceptors are registered after Rails initialization and no
   longer when loading this gem. If you were using this gem outside Rails, you'll
