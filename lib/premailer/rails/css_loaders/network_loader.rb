@@ -14,7 +14,7 @@ class Premailer
 
           if not valid_uri?(uri) and defined?(::Rails)
             scheme, host =
-              ::Rails.configuration.action_controller.asset_host.split(%r{:?//})
+              asset_host.split(%r{:?//})
             scheme = 'http' if scheme.blank?
             uri.scheme ||= scheme
             uri.host ||= host
@@ -25,6 +25,16 @@ class Premailer
 
         def valid_uri?(uri)
           uri.host.present? && uri.scheme.present?
+        end
+
+        def asset_host
+          host = ::Rails.configuration.action_controller.asset_host
+
+          if host.respond_to?(:call)
+            host.call
+          else
+            host
+          end
         end
       end
     end
