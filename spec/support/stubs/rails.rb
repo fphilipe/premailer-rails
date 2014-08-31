@@ -25,6 +25,18 @@ module Rails
     end
   end
 
+  class Railtie
+    class Configuration
+      def after_initialize
+        yield
+      end
+    end
+
+    def self.config
+      Configuration.new
+    end
+  end
+
   def env
     Env
   end

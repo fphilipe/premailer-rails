@@ -117,6 +117,11 @@ the config `:generate_text_part` to false.
 Note that the options `:with_html_string` and `:css_string` are used internally
 by premailer-rails and thus will be overridden.
 
+If you're using this gem outside of Rails, you'll need to call
+`Premailer::Rails.register_interceptors` manually in order for it to work. This
+is done ideally in some kind of initializer, depending on the framework you're
+using.
+
 ## Usage
 
 premailer-rails processes all outgoing emails by default. If you wish to skip
