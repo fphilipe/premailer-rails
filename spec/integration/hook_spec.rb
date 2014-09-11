@@ -94,18 +94,67 @@ describe Premailer::Rails::Hook do
     end
   end
 
-  context 'when message has a skip premailer header' do
+  context 'default skip premailer is true' do
     before do
-      message.header[:skip_premailer] = true
+      allow(Premailer::Rails).to receive(:config).and_return({default_skip_premailer: true})
     end
 
-    it 'does not change the message body' do
+    it 'skips premailer if no message headers are set' do
       expect { run_hook(message) }.to_not change(message, :body)
     end
 
-    it 'removes that header' do
-      expect { run_hook(message) }.to \
-        change { message.header[:skip_premailer].nil? }.to(true)
+    it 'skips premailer if skip-premailer header is set' do
+      message.header[:skip_premailer] = 'something'
+      expect { run_hook(message) }.to_not change(message, :body)
     end
+
+    it 'does not skip premailer if run-premailer header is set' do
+      message.header[:run_premailer] = 'something'
+      expect { run_hook(message) }.to change(message, :body)
+    end
+
+    it 'raises an exception if both skip and no-skip headers are set' do
+      message.header[:skip_premailer] = 'something'
+      message.header[:run_premailer] = 'something'
+      expect { run_hook(message) }.to raise_error
+    end
+  end
+
+  context 'default skip premailer is false' do
+    before do
+      allow(Premailer::Rails).to receive(:config).and_return({default_skip_premailer: false})
+    end
+
+    it 'does not skip premailer if no message headers are set' do
+      expect { run_hook(message) }.to change(message, :body)
+    end
+
+    it 'skips premailer if skip-premailer header is set' do
+      message.header[:skip_premailer] = 'something'
+      expect { run_hook(message) }.to_not change(message, :body)
+    end
+
+    it 'does not skip premailer if run-premailer header is set' do
+      message.header[:run_premailer] = 'something'
+      expect { run_hook(message) }.to change(message, :body)
+    end
+
+    it 'raises an exception if both skip and no-skip headers are set' do
+      message.header[:skip_premailer] = 'something'
+      message.header[:run_premailer] = 'something'
+      expect { run_hook(message) }.to raise_error
+    end
+  end
+
+  it "should remove skip_premailer header" do
+    message.header[:skip_premailer] = true
+    expect { run_hook(message) }.to \
+    change { message.header[:skip_premailer].nil? }.to(true)
+  end
+
+  it "should remove run_premailer header" do
+    message.header[:run_premailer] = true
+    expect { run_hook(message) }.to \
+    change { message.header[:run_premailer].nil? }.to(true)
   end
 end
