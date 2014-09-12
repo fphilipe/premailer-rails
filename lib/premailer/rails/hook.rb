@@ -49,8 +49,8 @@ class Premailer
       end
 
       def remove_extra_headers
-        message.header[:skip_premailer] = nil
-        message.header[:run_premailer] = nil
+        message.header[:skip_premailer] = nil if skip_premailer_header_present?
+        message.header[:run_premailer] = nil if run_premailer_header_present?
       end
 
       def message_contains_html?
