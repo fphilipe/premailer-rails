@@ -17,9 +17,11 @@ class Premailer
         end
 
         def file_name(url)
-          URI(url).path
+          path = URI(url).path
             .sub("#{::Rails.configuration.assets.prefix}/", '')
             .sub(/-\h{32}\.css$/, '.css')
+          path.sub!(ENV['RAILS_RELATIVE_URL_ROOT'], '') if ENV['RAILS_RELATIVE_URL_ROOT']
+          path
         end
       end
     end

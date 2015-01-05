@@ -26,5 +26,13 @@ describe Premailer::Rails::CSSLoaders::AssetPipelineLoader do
       let(:asset) { 'test/20130708152545-foo-bar.css' }
       it { is_expected.to eq("test/20130708152545-foo-bar.css") }
     end
+
+    context "when asset file page contains RAILS_RELATIVE_URL_ROOT" do
+      before do
+         ENV['RAILS_RELATIVE_URL_ROOT'] = '/development'
+      end
+      let(:asset) { "#{ENV['RAILS_RELATIVE_URL_ROOT']}foo-bar.css" }
+      it { should == "foo-bar.css" }
+    end
   end
 end
