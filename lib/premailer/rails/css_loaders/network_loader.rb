@@ -11,16 +11,20 @@ class Premailer
 
         def uri_for_url(url)
           uri = URI(url)
+          return uri if valid_uri?(uri)
 
-          if not valid_uri?(uri) and defined?(::Rails)
-            scheme, host =
-              asset_host.split(%r{:?//})
-            scheme = 'http' if scheme.blank?
-            uri.scheme ||= scheme
-            uri.host ||= host
-          end
+          return nil unless asset_host.present?
+          URI("#{scheme}://#{host}#{url}")
+        end
 
-          uri if valid_uri?(uri)
+        private
+
+        def scheme
+          asset_host.start_with?('https://') ? 'https' : 'http'
+        end
+
+        def host
+          asset_host.sub(/^http[s]?:\/\//,'')
         end
 
         def valid_uri?(uri)

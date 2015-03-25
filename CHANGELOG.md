@@ -1,5 +1,10 @@
 # Changelog
 
+## master
+
+- `Premailer::Rails::CSSLoaders::NetworkLoader` is more resilient and works even
+  if the Rails asset host is set without a URI scheme. (panthomakos)
+
 ## v1.8.0
 
 - `ActionMailer` interceptors are registered after Rails initialization and no
