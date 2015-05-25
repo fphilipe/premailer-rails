@@ -1,6 +1,6 @@
 # Changelog
 
-## master
+## v1.8.2
 
 - `Premailer::Rails::CSSLoaders::NetworkLoader` is more resilient and works even
   if the Rails asset host is set without a URI scheme. (panthomakos)
