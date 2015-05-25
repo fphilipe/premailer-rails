@@ -12,29 +12,29 @@ class Premailer
         def uri_for_url(url)
           uri = URI(url)
 
-          if not valid_uri?(uri) and defined?(::Rails)
-            scheme, host =
-              asset_host.split(%r{:?//})
+          if uri.host.present?
+            return uri if uri.scheme.present?
+            URI("http://#{uri.to_s}")
+          elsif asset_host_present?
+            scheme, host = asset_host.split(%r{:?//})
+            scheme, host = host, scheme if host.nil?
             scheme = 'http' if scheme.blank?
-            uri.scheme ||= scheme
-            uri.host ||= host
+            path = url
+            URI(File.join("#{scheme}://#{host}", path))
           end
-
-          uri if valid_uri?(uri)
         end
 
         def valid_uri?(uri)
           uri.host.present? && uri.scheme.present?
         end
 
-        def asset_host
-          host = ::Rails.configuration.action_controller.asset_host
+        def asset_host_present?
+          ::Rails.configuration.action_controller.asset_host.present?
+        end
 
-          if host.respond_to?(:call)
-            host.call
-          else
-            host
-          end
+        def asset_host
+          config = ::Rails.configuration.action_controller.asset_host
+          config.respond_to?(:call) ? config.call : config
         end
       end
     end
