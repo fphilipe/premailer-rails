@@ -1,4 +1,4 @@
-ki premailer-rails
+# premailer-rails
 
 CSS styled emails without the hassle.
 
