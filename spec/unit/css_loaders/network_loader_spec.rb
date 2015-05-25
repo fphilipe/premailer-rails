@@ -2,55 +2,51 @@ require 'spec_helper'
 
 describe Premailer::Rails::CSSLoaders::NetworkLoader do
   describe '#uri_for_url' do
-    let(:path){ '/assets/foo.css' }
-    subject{ described_class.uri_for_url(path) }
+    subject { described_class.uri_for_url(url) }
+    let(:asset_host) { nil }
 
-    context 'with an asset host' do
-      let(:host){ 'example.com' }
-      let(:config){ double(action_controller: double(asset_host: host)) }
-
-      before{ allow(Rails).to receive(:configuration).and_return(config) }
-
-      it 'creates a URI with the asset host' do
-        expect(subject.host).to eq(host)
-      end
-
-      it 'creates a URI with the proper scheme' do
-        expect(subject.scheme).to eq('http')
-      end
-
-      it 'infers the scheme from the asset host if present' do
-        allow(config.action_controller).to receive(:asset_host){ "https://#{host}" }
-        expect(subject.host).to eq(host)
-        expect(subject.scheme).to eq('https')
-      end
-
-      it 'creates a URI with the proper request uri' do
-        expect(subject.request_uri).to eq(path)
-      end
+    before do
+      action_controller = double(asset_host: asset_host)
+      config = double(action_controller: action_controller)
+      allow(Rails).to receive(:configuration).and_return(config)
     end
 
-    context 'without an asset host' do
-      let(:config){ double(action_controller: double(asset_host: nil)) }
-
-      before{ allow(Rails).to receive(:configuration).and_return(config) }
-
-      it{ is_expected.to be(nil) }
+    context 'with a valid URL' do
+      let(:url) { 'http://example.com/test.css' }
+      it { is_expected.to eq(URI(url)) }
     end
 
-    context 'already valid URL' do
-      let(:path){ 'http://example2.com/image.jpg' }
+    context 'with a protocol relative URL' do
+      let(:url) { '//example.com/test.css' }
+      it { is_expected.to eq(URI("http://#{url}")) }
+    end
 
-      it 'creates a URI with the proper host' do
-        expect(subject.host).to eq('example2.com')
+    context 'with a file path' do
+      let(:url) { '/assets/foo.css' }
+
+      context 'and a domain as asset host' do
+        let(:asset_host) { 'example.com' }
+        it { is_expected.to eq(URI("http://example.com#{url}")) }
       end
 
-      it 'creates a URI with the proper scheme' do
-        expect(subject.scheme).to eq('http')
+      context 'and a URL as asset host' do
+        let(:asset_host) { 'https://example.com' }
+        it { is_expected.to eq(URI("https://example.com/assets/foo.css")) }
       end
 
-      it 'creates a URI with the proper request uri' do
-        expect(subject.request_uri).to eq('/image.jpg')
+      context 'and a protocol relative URL as asset host' do
+        let(:asset_host) { '//example.com' }
+        it { is_expected.to eq(URI("http://example.com/assets/foo.css")) }
+      end
+
+      context 'and a proc as asset host' do
+        let(:asset_host) { ->{ 'example.com' } }
+        it { is_expected.to eq(URI("http://example.com/assets/foo.css")) }
+      end
+
+      context 'without an asset host' do
+        let(:asset_host) { nil }
+        it { is_expected.not_to be }
       end
     end
   end
