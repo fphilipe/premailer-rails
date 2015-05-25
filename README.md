@@ -7,7 +7,6 @@ CSS styled emails without the hassle.
 [![Dependency Status][deps-image]][deps-link]
 [![Code Climate][gpa-image]][gpa-link]
 [![Coverage Status][cov-image]][cov-link]
-[![Bitdeli Badge][stats-image]][stats-link]
 
 ## Introduction
 
@@ -154,19 +153,17 @@ Philipe Fatio ([@fphilipe][fphilipe twitter])
 
 premailer-rails is released under the MIT license. See the [license file].
 
-[build-image]: https://travis-ci.org/fphilipe/premailer-rails.png
+[build-image]: https://travis-ci.org/fphilipe/premailer-rails.svg
 [build-link]:  https://travis-ci.org/fphilipe/premailer-rails
-[gem-image]:   https://badge.fury.io/rb/premailer-rails.png
+[gem-image]:   https://badge.fury.io/rb/premailer-rails.svg
 [gem-link]:    https://rubygems.org/gems/premailer-rails
-[deps-image]:  https://gemnasium.com/fphilipe/premailer-rails.png
+[deps-image]:  https://gemnasium.com/fphilipe/premailer-rails.svg
 [deps-link]:   https://gemnasium.com/fphilipe/premailer-rails
-[gpa-image]:   https://codeclimate.com/github/fphilipe/premailer-rails.png
+[gpa-image]:   https://codeclimate.com/github/fphilipe/premailer-rails.svg
 [gpa-link]:    https://codeclimate.com/github/fphilipe/premailer-rails
-[cov-image]:   https://coveralls.io/repos/fphilipe/premailer-rails/badge.png
+[cov-image]:   https://coveralls.io/repos/fphilipe/premailer-rails/badge.svg
 [cov-link]:    https://coveralls.io/r/fphilipe/premailer-rails
-[stats-image]: https://d2weczhvl823v0.cloudfront.net/fphilipe/premailer-rails/trend.png
-[stats-link]:  https://bitdeli.com/
-[tip-image]:   https://rawgithub.com/twolfson/gittip-badge/0.1.0/dist/gittip.png
+[tip-image]:   https://rawgithub.com/twolfson/gittip-badge/0.1.0/dist/gittip.svg
 [tip-link]:    https://www.gittip.com/fphilipe/
 
 [premailer]:    https://github.com/premailer/premailer
