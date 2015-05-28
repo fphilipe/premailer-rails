@@ -6,7 +6,10 @@ class Premailer
 
         def load(url)
           unless development_env?
-            CSSHelper.cache[url]
+            if cached = CSSHelper.cache[url]
+              ::Rails.logger.debug "premailer-rails: loaded asset from cache (#{url})"
+              cached
+            end
           end
         end
 

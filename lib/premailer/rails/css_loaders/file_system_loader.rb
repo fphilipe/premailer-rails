@@ -6,8 +6,17 @@ class Premailer
 
         def load(url)
           path = URI(url).path
-          file_path = "public#{path}"
-          File.read(file_path) if File.exist?(file_path)
+
+          # Remove leading slash if it exists
+          path = path[1..-1] if path[0,1] == "/"
+
+          file_path = ::Rails.root.join("public/#{path}")
+
+
+          if File.exist?(file_path)
+            ::Rails.logger.debug "premailer-rails: loaded asset from #{file_path} (#{url})"
+            File.read(file_path)
+          end
         end
       end
     end

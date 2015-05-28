@@ -5,8 +5,10 @@ class Premailer
         extend self
 
         def load(url)
-          uri = uri_for_url(url)
-          Net::HTTP.get(uri) if uri
+          if uri = uri_for_url(url)
+            ::Rails.logger.debug "premailer-rails: loaded asset from network (#{url})"
+            Net::HTTP.get(uri)
+          end
         end
 
         def uri_for_url(url)
