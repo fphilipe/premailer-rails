@@ -14,7 +14,6 @@ class Premailer
 
 
           if File.exist?(file_path)
-            ::Rails.logger.debug "premailer-rails: loaded asset from #{file_path} (#{url})"
             File.read(file_path)
           end
         end

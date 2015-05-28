@@ -4,11 +4,19 @@ class Premailer
       module CacheLoader
         extend self
 
+        def reset!
+          @cache = {}
+        end
+
+        def cache
+          reset! if @cache.nil?
+          @cache
+        end
+
         def load(url)
           unless development_env?
             if cached = CSSHelper.cache[url]
-              ::Rails.logger.debug "premailer-rails: loaded asset from cache (#{url})"
-              cached
+              @cache[url] = cached
             end
           end
         end

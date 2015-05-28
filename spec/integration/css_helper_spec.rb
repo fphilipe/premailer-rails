@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Premailer::Rails::CSSHelper do
   # Reset the CSS cache:
   after do
-    Premailer::Rails::CSSHelper.send(:instance_variable_set, '@cache', {})
+    Premailer::Rails::CSSLoaders::CacheLoader.reset!
   end
 
   def load_css(path)
@@ -59,8 +59,7 @@ describe Premailer::Rails::CSSHelper do
 
     context 'when file is cached' do
       it 'returns the cached value' do
-        cache =
-          Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
+        cache = Premailer::Rails::CSSLoaders::CacheLoader.cache
         cache['http://example.com/stylesheets/base.css'] = 'content of base.css'
 
         expect(load_css('http://example.com/stylesheets/base.css')).to \
@@ -70,8 +69,7 @@ describe Premailer::Rails::CSSHelper do
 
     context 'when in development mode' do
       it 'does not return cached values' do
-        cache =
-          Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
+        cache = Premailer::Rails::CSSLoaders::CacheLoader.cache
         cache['http://example.com/stylesheets/base.css'] =
           'cached content of base.css'
         content = 'new content of base.css'

@@ -9,7 +9,6 @@ class Premailer
             file = file_name(url)
 
             if asset = ::Rails.application.assets.find_asset(file)
-              ::Rails.logger.debug "premailer-rails: loaded asset from pipeline (#{url})"
               asset.to_s
             end
           end

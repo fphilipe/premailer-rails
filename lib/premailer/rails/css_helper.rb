@@ -3,9 +3,6 @@ class Premailer
     module CSSHelper
       extend self
 
-      @cache = {}
-      attr :cache
-
       STRATEGIES = [
         CSSLoaders::CacheLoader,
         CSSLoaders::FileSystemLoader,
@@ -28,11 +25,14 @@ class Premailer
       end
 
       def load_css(url)
-        @cache[url] =
-          STRATEGIES.each do |strategy|
-            css = strategy.load(url)
-            break css if css
+        STRATEGIES.each do |strategy|
+          if css = strategy.load(url)
+            ::Rails.logger.debug "premailer-rails: loaded asset #{url} using #{strategy}"
+            return css
           end
+        end
+        # if we don't return nil, it will return the array STRATEGIES
+        nil
       end
     end
   end
