@@ -27,11 +27,15 @@ class Premailer
       private
 
       def lookup_cached(url)
-        if ::Rails.env.development? || !cache.has_key?(url)
+        if rails_dev_env? || !cache.has_key?(url)
           cache[url] = yield
         else
           cache[url]
         end
+      end
+
+      def rails_dev_env?
+        defined?(::Rails) && ::Rails.env.development?
       end
 
       def css_urls_in_doc(doc)
@@ -44,7 +48,7 @@ class Premailer
         lookup_cached(url) do
           STRATEGIES.each do |strategy|
             if css = strategy.load(url)
-              ::Rails.logger.debug "premailer-rails: loaded asset #{url} using #{strategy}"
+              ::Rails.logger.debug "premailer-rails: loaded asset #{url} using #{strategy}" if defined?(::Rails)
               return css
             end
           end
