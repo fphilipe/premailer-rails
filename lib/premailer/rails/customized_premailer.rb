@@ -12,7 +12,7 @@ class Premailer
         Premailer.send(:include, Adapter.find(Adapter.use))
         doc = load_html(html)
 
-        options = @options.merge(css_string: CSSHelper.css_for_doc(doc))
+        options = @options.merge(include_link_tags: false, css_string: CSSHelper.css_for_doc(doc))
         super(html, options)
       end
     end
