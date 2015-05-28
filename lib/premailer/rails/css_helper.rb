@@ -4,11 +4,19 @@ class Premailer
       extend self
 
       STRATEGIES = [
-        CSSLoaders::CacheLoader,
         CSSLoaders::FileSystemLoader,
         CSSLoaders::AssetPipelineLoader,
-        CSSLoaders::NetworkLoader
+        CSSLoaders::NetworkLoader,
       ]
+
+      def reset_cache!
+        @cache = {}
+      end
+
+      def cache
+        reset_cache! if @cache.nil?
+        @cache
+      end
 
       # Returns all linked CSS files concatenated as string.
       def css_for_doc(doc)
@@ -18,6 +26,14 @@ class Premailer
 
       private
 
+      def lookup_cached(url)
+        if ::Rails.env.development? || !cache.has_key?(url)
+          cache[url] = yield
+        else
+          cache[url]
+        end
+      end
+
       def css_urls_in_doc(doc)
         doc.search('link[@rel="stylesheet"]').map do |link|
           link.attributes['href'].to_s
@@ -25,14 +41,16 @@ class Premailer
       end
 
       def load_css(url)
-        STRATEGIES.each do |strategy|
-          if css = strategy.load(url)
-            ::Rails.logger.debug "premailer-rails: loaded asset #{url} using #{strategy}"
-            return css
+        lookup_cached(url) do
+          STRATEGIES.each do |strategy|
+            if css = strategy.load(url)
+              ::Rails.logger.debug "premailer-rails: loaded asset #{url} using #{strategy}"
+              return css
+            end
           end
+          # if we don't return nil, it will return the array STRATEGIES
+          nil
         end
-        # if we don't return nil, it will return the array STRATEGIES
-        nil
       end
     end
   end
