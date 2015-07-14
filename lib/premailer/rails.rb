@@ -6,7 +6,6 @@ require 'premailer/rails/css_loaders'
 require 'premailer/rails/css_helper'
 require 'premailer/rails/customized_premailer'
 require 'premailer/rails/hook'
-require 'premailer/rails/railtie' if defined?(Rails)
 
 class Premailer
   module Rails
@@ -28,3 +27,5 @@ class Premailer
     end
   end
 end
+
+require 'premailer/rails/railtie' if defined?(Rails)

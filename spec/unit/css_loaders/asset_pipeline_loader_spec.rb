@@ -17,8 +17,13 @@ describe Premailer::Rails::CSSLoaders::AssetPipelineLoader do
       it { is_expected.to eq('application.css') }
     end
 
-    context "when asset file path contains fingerprint" do
+    context "when asset file path contains 32 chars fingerprint" do
       let(:asset) { 'application-6776f581a4329e299531e1d52aa59832.css' }
+      it { is_expected.to eq('application.css') }
+    end
+
+    context "when asset file path contains 64 chars fingerprint" do
+      let(:asset) { 'application-02275ccb3fd0c11615bbfb11c99ea123ca2287e75045fe7b72cefafb880dad2b.css' }
       it { is_expected.to eq('application.css') }
     end
 
