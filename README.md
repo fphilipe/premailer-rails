@@ -147,8 +147,6 @@ transformed into a string, causing `'false'` to become truethy.
 
 Philipe Fatio ([@fphilipe][fphilipe twitter])
 
-[![Support via Gittip][tip-image]][tip-link]
-
 ### License
 
 premailer-rails is released under the MIT license. See the [license file].
