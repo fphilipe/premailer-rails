@@ -1,21 +1,18 @@
+sudo: false
 language: ruby
-before_install:
-  - gem install bundler
 cache: bundler
 script: "bundle exec rspec"
 rvm:
-  - 2.1.0
-  - 2.0.0
   - 1.9.3
+  - 2.2.2
   - ruby-head
   - jruby-19mode
-  - rbx-2
 env:
-  - "ACTION_MAILER_VERSION=3.1.0"
-  - "ACTION_MAILER_VERSION=3.2.0"
-  - "ACTION_MAILER_VERSION=4.0.0"
-  - "ACTION_MAILER_VERSION=head"
+  - "ACTION_MAILER_VERSION=3.2"
+  - "ACTION_MAILER_VERSION=4.0"
+  - "ACTION_MAILER_VERSION=master"
 matrix:
   allow_failures:
-    - env: "ACTION_MAILER_VERSION=head"
+    - env: "ACTION_MAILER_VERSION=master"
     - rvm: ruby-head
+    - rvm: rbx-2
