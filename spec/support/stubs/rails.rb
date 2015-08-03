@@ -1,6 +1,14 @@
 module Rails
   extend self
 
+  def root
+    @root ||= Pathname.new(".")
+  end
+
+  def logger
+    @logger = Logger.new(STDOUT)
+  end
+
   module Configuration
     extend self
   end
