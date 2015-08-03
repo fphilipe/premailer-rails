@@ -4,6 +4,7 @@
 
 - `Premailer::Rails::CSSLoaders::NetworkLoader` is more resilient and works even
   if the Rails asset host is set without a URI scheme. (panthomakos)
+- Remove stylesheet links from the HTML that have been processed.
 
 ## v1.8.1
 
