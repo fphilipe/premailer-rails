@@ -11,7 +11,7 @@ class Premailer
         end
 
         def development_env?
-          defined?(::Rails) and ::Rails.env.development?
+          defined?(::Rails) and ::Rails.respond_to?(:env) and ::Rails.env.development?
         end
       end
     end
