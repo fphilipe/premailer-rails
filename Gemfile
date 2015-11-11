@@ -16,3 +16,5 @@ platforms :rbx do
   gem 'rubysl'
   gem 'racc'
 end
+
+gem 'tins', '< 1.7'
