@@ -17,4 +17,4 @@ platforms :rbx do
   gem 'racc'
 end
 
-gem 'tins', '< 1.7'
+gem 'tins', '< 1.7' if RUBY_VERSION.split('.').first.to_i < 2
