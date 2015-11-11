@@ -24,10 +24,6 @@ class Premailer
           end
         end
 
-        def valid_uri?(uri)
-          uri.host.present? && uri.scheme.present?
-        end
-
         def asset_host_present?
           ::Rails.configuration.action_controller.asset_host.present?
         end
