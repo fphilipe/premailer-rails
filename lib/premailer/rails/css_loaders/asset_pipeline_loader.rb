@@ -13,7 +13,7 @@ class Premailer
         end
 
         def asset_pipeline_present?
-          defined?(::Rails) and ::Rails.application.respond_to?(:assets)
+          (defined?(::Rails) and ::Rails.application.respond_to?(:assets) and !::Rails.application.assets.nil?)
         end
 
         def file_name(url)
