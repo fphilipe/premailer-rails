@@ -43,6 +43,17 @@ describe Premailer::Rails::Hook do
     expect(processed_message.parts).to match_array(expected_parts)
   end
 
+  describe 'when the content-transfer-encoding is set' do
+    before { message.content_transfer_encoding = 'quoted-printable' }
+
+    it 'should maintain the value' do
+      expect(processed_message.parts.first.content_transfer_encoding).to \
+        eq 'quoted-printable'
+      expect(processed_message.parts.last.content_transfer_encoding).to \
+        eq 'quoted-printable'
+    end
+  end
+
   it 'generates a text part from the html' do
     expect { run_hook(message) }.to change(message, :text_part)
   end
