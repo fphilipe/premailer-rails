@@ -4,14 +4,22 @@ class Premailer
       module CacheLoader
         extend self
 
+        @cache = {}
+
         def load(url)
-          unless development_env?
-            CSSHelper.cache[url]
-          end
+          @cache[url] unless development_env?
+        end
+
+        def store(url, content)
+          @cache[url] ||= content unless development_env?
+        end
+
+        def clear!
+          @cache = {}
         end
 
         def development_env?
-          defined?(::Rails) and ::Rails.env.development?
+          defined?(::Rails) && ::Rails.env.development?
         end
       end
     end

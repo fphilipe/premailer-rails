@@ -3,11 +3,11 @@ require 'spec_helper'
 describe Premailer::Rails::CSSHelper do
   # Reset the CSS cache:
   after do
-    Premailer::Rails::CSSHelper.send(:instance_variable_set, '@cache', {})
+    Premailer::Rails::CSSLoaders::CacheLoader.clear!
   end
 
-  def load_css(path)
-    Premailer::Rails::CSSHelper.send(:load_css, path)
+  def css_for_url(path)
+    Premailer::Rails::CSSHelper.css_for_url(path)
   end
 
   def css_for_doc(doc)
@@ -28,11 +28,11 @@ describe Premailer::Rails::CSSHelper do
 
       it 'returns the content of both files concatenated' do
         allow(Premailer::Rails::CSSHelper).to \
-          receive(:load_css)
+          receive(:css_for_url)
             .with('http://example.com/stylesheets/base.css')
             .and_return('content of base.css')
         allow(Premailer::Rails::CSSHelper).to \
-          receive(:load_css)
+          receive(:css_for_url)
             .with('http://example.com/stylesheets/font.css')
             .and_return('content of font.css')
 
@@ -41,44 +41,45 @@ describe Premailer::Rails::CSSHelper do
     end
   end
 
-  describe '#load_css' do
+  describe '#css_for_url' do
     context 'when path is a url' do
       it 'loads the CSS at the local path' do
         expect_file('public/stylesheets/base.css')
 
-        load_css('http://example.com/stylesheets/base.css?test')
+        css_for_url('http://example.com/stylesheets/base.css?test')
       end
     end
 
     context 'when path is a relative url' do
       it 'loads the CSS at the local path' do
         expect_file('public/stylesheets/base.css')
-        load_css('/stylesheets/base.css?test')
+        css_for_url('/stylesheets/base.css?test')
       end
     end
 
     context 'when file is cached' do
       it 'returns the cached value' do
-        cache =
-          Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
-        cache['http://example.com/stylesheets/base.css'] = 'content of base.css'
+        Premailer::Rails::CSSLoaders::CacheLoader.store(
+          'http://example.com/stylesheets/base.css',
+          'content of base.css'
+        )
 
-        expect(load_css('http://example.com/stylesheets/base.css')).to \
+        expect(css_for_url('http://example.com/stylesheets/base.css')).to \
           eq('content of base.css')
       end
     end
 
     context 'when in development mode' do
       it 'does not return cached values' do
-        cache =
-          Premailer::Rails::CSSHelper.send(:instance_variable_get, '@cache')
-        cache['http://example.com/stylesheets/base.css'] =
+        Premailer::Rails::CSSLoaders::CacheLoader.store(
+          'http://example.com/stylesheets/base.css',
           'cached content of base.css'
+        )
         content = 'new content of base.css'
         expect_file('public/stylesheets/base.css', content)
         allow(Rails.env).to receive(:development?).and_return(true)
 
-        expect(load_css('http://example.com/stylesheets/base.css')).to eq(content)
+        expect(css_for_url('http://example.com/stylesheets/base.css')).to eq(content)
       end
     end
 
@@ -92,7 +93,7 @@ describe Premailer::Rails::CSSHelper do
           path = '/assets/email-digest.css'
           content = 'read from file'
           expect_file("public#{path}", content)
-          expect(load_css(path)).to eq(content)
+          expect(css_for_url(path)).to eq(content)
         end
       end
 
@@ -102,7 +103,7 @@ describe Premailer::Rails::CSSHelper do
             .with('base.css')
             .and_return(double(to_s: 'content of base.css'))
 
-        expect(load_css('http://example.com/assets/base.css')).to \
+        expect(css_for_url('http://example.com/assets/base.css')).to \
           eq('content of base.css')
       end
 
@@ -112,7 +113,7 @@ describe Premailer::Rails::CSSHelper do
             .with('base.css')
             .and_return(double(to_s: 'content of base.css'))
 
-        expect(load_css(
+        expect(css_for_url(
           'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
         )).to eq('content of base.css')
       end
@@ -137,30 +138,30 @@ describe Premailer::Rails::CSSHelper do
         end
 
         it 'requests the file' do
-          expect(load_css(url)).to eq('content of base.css')
+          expect(css_for_url(url)).to eq('content of base.css')
         end
 
         context 'when file url does not include the host' do
           it 'requests the file using the asset host as host' do
-            expect(load_css(path)).to eq('content of base.css')
+            expect(css_for_url(path)).to eq('content of base.css')
           end
 
           context 'and the asset host uses protocol relative scheme' do
             let(:asset_host) { '//assets.example.com' }
 
             it 'requests the file using http as the scheme' do
-              expect(load_css(path)).to eq('content of base.css')
+              expect(css_for_url(path)).to eq('content of base.css')
             end
           end
         end
-     end
+      end
     end
 
     context 'when static stylesheets are used' do
       it 'returns the content of the static file' do
         content = 'content of base.css'
         expect_file('public/stylesheets/base.css', content)
-        loaded_content = load_css('http://example.com/stylesheets/base.css')
+        loaded_content = css_for_url('http://example.com/stylesheets/base.css')
         expect(loaded_content).to eq(content)
       end
     end
