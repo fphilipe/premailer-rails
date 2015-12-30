@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.9.0
+
+- Improved CSS loading and caching.
+- Fixed incompatibility with newer rails and sprockets versions.
+
 ## v1.8.2
 
 - `Premailer::Rails::CSSLoaders::NetworkLoader` is more resilient and works even
