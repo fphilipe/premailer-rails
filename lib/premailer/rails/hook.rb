@@ -68,15 +68,17 @@ class Premailer
       def generate_html_part
         # Make sure that the text part is generated first. Otherwise the text
         # can end up containing CSS rules.
-        generate_text_part  if generate_text_part?
+        generate_text_part if generate_text_part?
 
         Mail::Part.new(
+          content_transfer_encoding: html_part.content_transfer_encoding,
           content_type: "text/html; charset=#{html_part.charset}",
           body: premailer.to_inline_css)
       end
 
       def generate_text_part
         @text_part ||= Mail::Part.new(
+          content_transfer_encoding: html_part.content_transfer_encoding,
           content_type: "text/plain; charset=#{html_part.charset}",
           body: premailer.to_plain_text)
       end
