@@ -39,6 +39,15 @@ describe Premailer::Rails::CSSHelper do
         expect(css_for_doc(doc)).to eq("content of base.css\ncontent of font.css")
       end
     end
+
+    context 'when HTML contains ignored links' do
+      let(:files) { ['ignore.css', 'data-premailer' => 'ignore'] }
+
+      it 'ignores links' do
+        expect(Premailer::Rails::CSSHelper).to_not receive(:css_for_url)
+        css_for_doc(doc)
+      end
+    end
   end
 
   describe '#css_for_url' do
