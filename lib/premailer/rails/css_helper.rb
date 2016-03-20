@@ -27,7 +27,7 @@ class Premailer
 
       def css_urls_in_doc(doc)
         doc.search('link[@rel="stylesheet"]').map do |link|
-          link.remove
+          link.parent.children.delete(link)
           link.attributes['href'].to_s
         end
       end
