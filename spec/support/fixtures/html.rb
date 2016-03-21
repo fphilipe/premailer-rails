@@ -18,17 +18,21 @@ module Fixtures
 </html>
     HTML
 
-    LINK = <<-LINK
-<link rel='stylesheet' href='%s' />
-    LINK
+    LINK = "<link rel='stylesheet' %s />\n"
 
     def with_css_links(*files)
+      opts = files.last.is_a?(Hash) ? files.pop : {}
       links = []
       files.each do |file|
-        links << LINK % "http://example.com/#{file}"
+        attrs = { href: "http://example.com/#{file}" }.merge(opts)
+        links << LINK % hash_to_attributes(attrs)
       end
 
       TEMPLATE % links.join
+    end
+
+    def hash_to_attributes(attrs)
+      attrs.map { |attr, value| "#{attr}='#{value}'" }.join(' ')
     end
   end
 end
