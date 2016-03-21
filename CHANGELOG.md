@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.9.1
+
+- Respect data-premailer="ignore" on link tags
+- Ensure content-transfer-encoding is maintained
+
 ## v1.9.0
 
 - Improved CSS loading and caching.
