@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Update rails dependency to allow rails 5
+
 ## v1.9.1
 
 - Respect data-premailer="ignore" on link tags

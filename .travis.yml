@@ -12,8 +12,11 @@ env:
     - JRUBY_OPTS="--2.0"
   matrix:
     - ACTION_MAILER_VERSION=4
+    - ACTION_MAILER_VERSION=5.beta
     - ACTION_MAILER_VERSION=master
 matrix:
+  fast_finish: true
   allow_failures:
     - env: ACTION_MAILER_VERSION=master
+    - env: ACTION_MAILER_VERSION=5.beta
     - rvm: ruby-head
