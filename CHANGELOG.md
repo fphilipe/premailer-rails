@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## v1.9.2
 
 - Update rails dependency to allow rails 5
 
