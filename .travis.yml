@@ -1,18 +1,19 @@
 sudo: false
 language: ruby
 cache: bundler
-script: "bundle exec rspec"
+script: bundle exec rspec
 rvm:
-  - 1.9.3
-  - 2.2.2
+  - 2.3.0
   - ruby-head
-  - jruby-19mode
+  - jruby
+  - rbx-2
 env:
-  - "ACTION_MAILER_VERSION=3.2"
-  - "ACTION_MAILER_VERSION=4.0"
-  - "ACTION_MAILER_VERSION=master"
+  global:
+    - JRUBY_OPTS="--2.0"
+  matrix:
+    - ACTION_MAILER_VERSION=4
+    - ACTION_MAILER_VERSION=master
 matrix:
   allow_failures:
-    - env: "ACTION_MAILER_VERSION=master"
+    - env: ACTION_MAILER_VERSION=master
     - rvm: ruby-head
-    - rvm: rbx-2
