@@ -14,7 +14,7 @@ class Premailer
 
           if uri.host.present?
             return uri if uri.scheme.present?
-            URI("http://#{uri.to_s}")
+            URI::HTTP.build([uri.userinfo, uri.host, uri.port, uri.path, uri.query, uri.fragment])
           elsif asset_host_present?
             scheme, host = asset_host.split(%r{:?//})
             scheme, host = host, scheme if host.nil?
