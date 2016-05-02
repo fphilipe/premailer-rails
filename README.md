@@ -121,6 +121,17 @@ If you're using this gem outside of Rails, you'll need to call
 is done ideally in some kind of initializer, depending on the framework you're
 using.
 
+### Configuring Strategies
+
+You can add/remove the load strategies used by premailer-rails using the
+`strategies` option. It can be an Array composed by our default strategies, or
+you can even include your own:
+
+```ruby
+Premailer::Rails.config[:strategies] =
+  [Premailer::Rails::CSSLoaders::FileSystemLoader, MyCSSLoader]
+```
+
 ## Usage
 
 premailer-rails processes all outgoing emails by default. If you wish to skip
