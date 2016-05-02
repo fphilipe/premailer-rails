@@ -11,7 +11,13 @@ class Premailer
   module Rails
     @config = {
       input_encoding: 'UTF-8',
-      generate_text_part: true
+      generate_text_part: true,
+      strategies: [
+        Premailer::Rails::CSSLoaders::CacheLoader,
+        Premailer::Rails::CSSLoaders::FileSystemLoader,
+        Premailer::Rails::CSSLoaders::AssetPipelineLoader,
+        Premailer::Rails::CSSLoaders::NetworkLoader
+      ]
     }
     class << self
       attr_accessor :config

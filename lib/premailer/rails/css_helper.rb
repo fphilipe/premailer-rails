@@ -5,13 +5,6 @@ class Premailer
 
       FileNotFound = Class.new(StandardError)
 
-      STRATEGIES = [
-        CSSLoaders::CacheLoader,
-        CSSLoaders::FileSystemLoader,
-        CSSLoaders::AssetPipelineLoader,
-        CSSLoaders::NetworkLoader
-      ]
-
       # Returns all linked CSS files concatenated as string.
       def css_for_doc(doc)
         css_urls_in_doc(doc).map { |url| css_for_url(url) }.join("\n")
@@ -33,7 +26,7 @@ class Premailer
       end
 
       def load_css(url)
-        STRATEGIES.each do |strategy|
+        Rails.config.fetch(:strategies, []).each do |strategy|
           css = strategy.load(url)
           return css.force_encoding('UTF-8') if css
         end
