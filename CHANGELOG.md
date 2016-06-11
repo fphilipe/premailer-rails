@@ -3,6 +3,7 @@
 ## HEAD
 
 - Add support for rails' `relative_url_root` config
+- Fix link tag removal under Hpricot
 
 ## v1.9.2
 

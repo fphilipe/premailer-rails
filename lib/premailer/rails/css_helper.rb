@@ -27,7 +27,11 @@ class Premailer
 
       def css_urls_in_doc(doc)
         doc.search('link[@rel="stylesheet"]:not([@data-premailer="ignore"])').map do |link|
-          link.remove
+          if link.respond_to?(:remove)
+            link.remove
+          else
+            link.parent.children.delete(link)
+          end
           link.attributes['href'].to_s
         end
       end
