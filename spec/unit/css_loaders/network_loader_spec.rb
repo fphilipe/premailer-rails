@@ -39,9 +39,14 @@ describe Premailer::Rails::CSSLoaders::NetworkLoader do
         it { is_expected.to eq(URI("http://example.com/assets/foo.css")) }
       end
 
-      context 'and a proc as asset host' do
-        let(:asset_host) { ->{ 'example.com' } }
-        it { is_expected.to eq(URI("http://example.com/assets/foo.css")) }
+      context 'and a callable object as asset host' do
+        let(:asset_host) { double }
+
+        it 'calls #call with the asset path as argument' do
+          expect(asset_host).to receive(:call).with(url).and_return(
+            'http://example.com')
+          expect(subject).to eq(URI('http://example.com/assets/foo.css'))
+        end
       end
 
       context 'without an asset host' do
