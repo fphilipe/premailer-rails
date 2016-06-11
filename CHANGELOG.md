@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Pass url to `asset_host` if it responds to `call`
+
 ## v1.9.2
 
 - Update rails dependency to allow rails 5
