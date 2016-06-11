@@ -19,9 +19,14 @@ class Premailer
         end
 
         def file_name(url)
+          prefix = [
+            ::Rails.configuration.relative_url_root,
+            ::Rails.configuration.assets.prefix,
+            '/'
+          ].join
           URI(url).path
-            .sub("#{::Rails.configuration.assets.prefix}/", '')
-            .sub(/-(\h{32}|\h{64})\.css$/, '.css')
+            .sub(/\A#{prefix}/, '')
+            .sub(/-(\h{32}|\h{64})\.css\z/, '.css')
         end
       end
     end

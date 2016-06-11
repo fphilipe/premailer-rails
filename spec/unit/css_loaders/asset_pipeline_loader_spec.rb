@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Premailer::Rails::CSSLoaders::AssetPipelineLoader do
   before do
-    assets = double(prefix: '/assets')
-    config = double(assets: assets)
-    allow(Rails).to receive(:configuration).and_return(config)
+    allow(Rails.configuration)
+      .to receive(:assets).and_return(double(prefix: '/assets'))
+    allow(Rails.configuration).to receive(:relative_url_root).and_return(nil)
   end
 
   describe ".file_name" do
@@ -14,6 +14,16 @@ describe Premailer::Rails::CSSLoaders::AssetPipelineLoader do
 
     context "when asset file path contains prefix" do
       let(:asset) { '/assets/application.css' }
+      it { is_expected.to eq('application.css') }
+    end
+
+    context "when asset file path contains prefix and relative_url_root is set" do
+      before do
+        allow(Rails.configuration)
+          .to receive(:relative_url_root).and_return('/foo')
+      end
+
+      let(:asset) { '/foo/assets/application.css' }
       it { is_expected.to eq('application.css') }
     end
 

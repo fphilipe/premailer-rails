@@ -94,7 +94,10 @@ describe Premailer::Rails::CSSHelper do
 
     context 'when Rails asset pipeline is used' do
       before do
-        allow(Rails.configuration).to receive(:assets).and_return(double(prefix: '/assets'))
+        allow(Rails.configuration)
+          .to receive(:assets).and_return(double(prefix: '/assets'))
+        allow(Rails.configuration)
+          .to receive(:relative_url_root).and_return(nil)
       end
 
       context 'and a precompiled file exists' do
