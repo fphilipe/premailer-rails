@@ -19,7 +19,7 @@ describe Premailer::Rails::CSSHelper do
       end
 
       def expect_file(path, content='file content')
-        allow(File).to receive(:exist?).with(path).and_return(true)
+        allow(File).to receive(:file?).with(path).and_return(true)
         expect(File).to receive(:read).with(path).and_return(content)
       end
 
