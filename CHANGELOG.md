@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.9.5
+
+- Mention license in gemspec
+
 ## v1.9.4
 
 - Improve check for Rails module
