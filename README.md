@@ -141,6 +141,18 @@ even setting `skip_premailer: false` will cause premailer to be skipped. The
 reason for that is that the `skip_premailer` is a simple header and the value is
 transformed into a string, causing `'false'` to become truthy.
 
+Emails are only processed upon delivery, i.e. when calling `#deliver` on the
+email, or when [previewing them in
+rails](http://api.rubyonrails.org/v4.1.0/classes/ActionMailer/Base.html#class-ActionMailer::Base-label-Previewing+emails).
+If you wish to manually trigger the inlining, you can do so by calling the hook:
+
+```ruby
+mail = SomeMailer.some_message(args)
+Premailer::Rails::Hook.perform(mail)
+```
+
+This will modify the email in place, useful e.g. in tests.
+
 ## Small Print
 
 ### Author
