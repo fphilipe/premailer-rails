@@ -121,6 +121,11 @@ If you're using this gem outside of Rails, you'll need to call
 is done ideally in some kind of initializer, depending on the framework you're
 using.
 
+premailer-rails reads all stylesheet `<link>` tags, inlines the linked CSS
+and removes the tags. If you wish to ignore a certain tag, e.g. one that links to
+external fonts such as Google Fonts, you can add a `data-premailer="ignore"`
+attribute.
+
 ## Usage
 
 premailer-rails processes all outgoing emails by default. If you wish to skip
