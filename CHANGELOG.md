@@ -5,6 +5,7 @@
 - Add support for rails' `relative_url_root` config
 - Fix link tag removal under Hpricot
 - Pass url to `asset_host` if it responds to `call`
+- Fixed issue where urls may conflict with folder names.
 
 ## v1.9.2
 

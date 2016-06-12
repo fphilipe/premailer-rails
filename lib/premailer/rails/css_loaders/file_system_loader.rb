@@ -7,7 +7,7 @@ class Premailer
         def load(url)
           path = URI(url).path
           file_path = "public#{path}"
-          File.read(file_path) if File.exist?(file_path)
+          File.read(file_path) if File.file?(file_path)
         end
       end
     end
