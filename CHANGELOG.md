@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Improve check for Rails module
+
 ## v1.9.3
 
 - Add support for rails' `relative_url_root` config

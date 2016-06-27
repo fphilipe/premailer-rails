@@ -25,7 +25,8 @@ class Premailer
         end
 
         def asset_host_present?
-          ::Rails.configuration.action_controller.asset_host.present?
+          ::Rails.respond_to?(:configuration) &&
+            ::Rails.configuration.action_controller.asset_host.present?
         end
 
         def asset_host(url)
