@@ -73,7 +73,7 @@ class Premailer
         Mail::Part.new(
           content_transfer_encoding: html_part.content_transfer_encoding,
           content_type: "text/html; charset=#{html_part.charset}",
-          body: premailer.to_inline_css)
+          body: premailer.to_inline_css).tap { |part| part.body.encoding = html_part.body.encoding }
       end
 
       def generate_text_part
