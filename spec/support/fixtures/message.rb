@@ -114,6 +114,22 @@ nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
       message
     end
 
+    def latin_message
+      base_message.tap do |message|
+        message.body = HTML_PART
+        message.content_type 'text/html; charset=UTF-8'
+        message.ready_to_send!
+      end
+    end
+
+    def non_latin_message
+      base_message.tap do |message|
+        message.body = HTML_PART_WITH_UNICODE
+        message.content_type 'text/html; charset=UTF-8'
+        message.ready_to_send!
+      end
+    end
+
     private
 
     def base_message
