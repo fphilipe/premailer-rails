@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## v1.9.4
 
 - Improve check for Rails module
 - Preserve body encoding to prevent garbled mails
