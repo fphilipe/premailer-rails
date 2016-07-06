@@ -3,6 +3,7 @@
 ## HEAD
 
 - Improve check for Rails module
+- Preserve body encoding to prevent garbled mails
 
 ## v1.9.3
 

@@ -70,17 +70,27 @@ class Premailer
         # can end up containing CSS rules.
         generate_text_part if generate_text_part?
 
-        Mail::Part.new(
-          content_transfer_encoding: html_part.content_transfer_encoding,
-          content_type: "text/html; charset=#{html_part.charset}",
-          body: premailer.to_inline_css)
+        part = html_part
+        html = premailer.to_inline_css
+        Mail::Part.new do
+          content_transfer_encoding part.content_transfer_encoding
+          content_type "text/html; charset=#{part.charset}"
+          body html
+          body_encoding part.body.encoding
+        end
       end
 
       def generate_text_part
-        @text_part ||= Mail::Part.new(
-          content_transfer_encoding: html_part.content_transfer_encoding,
-          content_type: "text/plain; charset=#{html_part.charset}",
-          body: premailer.to_plain_text)
+        @text_part ||= begin
+          part = html_part
+          text = premailer.to_plain_text
+          Mail::Part.new do
+            content_transfer_encoding part.content_transfer_encoding
+            content_type "text/plain; charset=#{part.charset}"
+            body text
+            body_encoding part.body.encoding
+          end
+        end
       end
 
       def premailer

@@ -5,6 +5,10 @@ describe Premailer::Rails::Hook do
     Premailer::Rails::Hook.perform(message)
   end
 
+  def body_content(message)
+    Nokogiri::HTML(message.html_string).at('body').content
+  end
+
   class Mail::Message
     def html_string
       (html_part || self).body.to_s
@@ -52,6 +56,18 @@ describe Premailer::Rails::Hook do
       expect(processed_message.parts.last.content_transfer_encoding).to \
         eq 'quoted-printable'
     end
+  end
+
+  it 'does not screw up the text by maintaining the original body encoding' do
+    raw_msg = Fixtures::Message.latin_message
+    processed_msg = Fixtures::Message.latin_message
+    run_hook(processed_msg)
+    expect(body_content(processed_msg)).to eq(body_content(raw_msg))
+
+    raw_msg = Fixtures::Message.non_latin_message
+    processed_msg = Fixtures::Message.non_latin_message
+    run_hook(processed_msg)
+    expect(body_content(processed_msg)).to eq(body_content(raw_msg))
   end
 
   it 'generates a text part from the html' do
