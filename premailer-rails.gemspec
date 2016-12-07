@@ -6,6 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "premailer-rails"
   s.version     = Premailer::Rails::VERSION
   s.platform    = Gem::Platform::RUBY
+  s.license     = 'MIT'
   s.authors     = ["Philipe Fatio"]
   s.email       = ["philipe.fatio@gmail.com"]
   s.homepage    = "https://github.com/fphilipe/premailer-rails"
