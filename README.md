@@ -87,7 +87,8 @@ gem 'hpricot'
 
 If both gems are loaded for some reason, premailer chooses hpricot.
 
-That's it!
+You can also explicitly configure the apapter as documented
+[here](https://github.com/premailer/premailer#adapters).
 
 ## Configuration
 
