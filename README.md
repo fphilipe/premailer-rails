@@ -1,3 +1,4 @@
+[![Stories in Ready](http://badge.waffle.io/fphilipe/premailer-rails.png)](http://waffle.io/fphilipe/premailer-rails)  
 # premailer-rails
 
 CSS styled emails without the hassle.
