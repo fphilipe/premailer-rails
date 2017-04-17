@@ -5,10 +5,22 @@ class Premailer
         extend self
 
         def load(url)
-          path = URI(url).path
-          file_path = "public#{path}"
-          File.read(file_path) if File.file?(file_path)
+          file = file_name(url)
+          File.read(file) if File.file?(file)
         end
+
+        def file_name(url)
+          'public/' + URI(url).path.sub(/\A#{relative_url_root}/, '')
+        end
+
+        def relative_url_root
+          return '/' unless defined?(::Rails) &&
+                            ::Rails.respond_to?(:configuration) &&
+                            ::Rails.configuration.respond_to?(:relative_url_root)
+
+          [::Rails.configuration.relative_url_root, '/'].join
+        end
+
       end
     end
   end
