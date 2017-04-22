@@ -6,7 +6,6 @@ rvm:
   - 2.4.1
   - ruby-head
   - jruby
-  - rbx-2
 env:
   global:
     - JRUBY_OPTS="--2.0"
