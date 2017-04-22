@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Handle `relative_url_root` in when loading CSS from file system
+
 ## v1.9.5
 
 - Mention license in gemspec

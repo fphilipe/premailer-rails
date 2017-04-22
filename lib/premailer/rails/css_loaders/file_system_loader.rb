@@ -10,17 +10,19 @@ class Premailer
         end
 
         def file_name(url)
-          'public/' + URI(url).path.sub(/\A#{relative_url_root}/, '')
+          path = URI(url).path
+          if relative_url_root
+            path = path.sub(/\A#{relative_url_root.chomp('/')}/, '')
+          end
+          "public#{path}"
         end
 
         def relative_url_root
-          return '/' unless defined?(::Rails) &&
-                            ::Rails.respond_to?(:configuration) &&
-                            ::Rails.configuration.respond_to?(:relative_url_root)
-
-          [::Rails.configuration.relative_url_root, '/'].join
+          defined?(::Rails) &&
+            ::Rails.respond_to?(:configuration) &&
+            ::Rails.configuration.respond_to?(:relative_url_root) &&
+            ::Rails.configuration.relative_url_root
         end
-
       end
     end
   end
