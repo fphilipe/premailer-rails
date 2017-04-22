@@ -11,6 +11,10 @@ if RUBY_ENGINE == 'ruby'
   end
 end
 
+# Temporary fix for missing require. See
+# https://github.com/rails/rails/pull/28835
+require 'active_support/rescuable'
+
 require 'premailer/rails'
 
 require 'support/stubs/action_mailer'
