@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## v1.9.6
 
 - Handle `relative_url_root` in when loading CSS from file system
 
