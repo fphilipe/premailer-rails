@@ -4,11 +4,7 @@ cache: bundler
 script: bundle exec rspec
 rvm:
   - 2.4.1
-  - ruby-head
-  - jruby
 env:
-  global:
-    - JRUBY_OPTS="--2.0"
   matrix:
     - ACTION_MAILER_VERSION=4
     - ACTION_MAILER_VERSION=5
@@ -17,4 +13,3 @@ matrix:
   fast_finish: true
   allow_failures:
     - env: ACTION_MAILER_VERSION=master
-    - rvm: ruby-head
