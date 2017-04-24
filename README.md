@@ -90,6 +90,16 @@ If both gems are loaded for some reason, premailer chooses hpricot.
 You can also explicitly configure the apapter as documented
 [here](https://github.com/premailer/premailer#adapters).
 
+## Adapters
+
+If you want to use a different adapter other than nokogiri, add the following line to `config/initializers/premailer_rails.rb`. 
+
+```ruby
+Premailer::Adapter.use = :nokogiri_fast
+```
+
+For more about adapters, refer to premailer [documentation](https://github.com/premailer/premailer#adapters).
+
 ## Configuration
 
 Premailer itself accepts a number of options. In order for premailer-rails to
