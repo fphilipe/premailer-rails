@@ -18,21 +18,39 @@ class Premailer
       end
 
       def perform
-        if skip_premailer_header_present?
-          remove_skip_premailer_header
-        elsif message_contains_html?
+        if !skip_premailer? && message_contains_html?
           replace_html_part(generate_html_part_replacement)
         end
+
+        remove_extra_headers
       end
 
       private
+
+      def skip_premailer?
+        raise 'Cannot set "skip_premailer" and "run_premailer" headers' if skip_premailer_header_present? && run_premailer_header_present?
+
+        case
+          when skip_premailer_header_present?
+            true
+          when run_premailer_header_present?
+            false
+          else
+            Rails.config[:default_skip_premailer]
+        end
+      end
 
       def skip_premailer_header_present?
         message.header[:skip_premailer]
       end
 
-      def remove_skip_premailer_header
-        message.header[:skip_premailer] = nil
+      def run_premailer_header_present?
+        message.header[:run_premailer]
+      end
+
+      def remove_extra_headers
+        message.header[:skip_premailer] = nil if skip_premailer_header_present?
+        message.header[:run_premailer] = nil if run_premailer_header_present?
       end
 
       def message_contains_html?

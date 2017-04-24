@@ -11,7 +11,8 @@ class Premailer
   module Rails
     @config = {
       input_encoding: 'UTF-8',
-      generate_text_part: true
+      generate_text_part: true,
+      default_skip_premailer: false
     }
     class << self
       attr_accessor :config
