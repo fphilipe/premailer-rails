@@ -14,7 +14,15 @@ class Premailer
           if relative_url_root
             path = path.sub(/\A#{relative_url_root.chomp('/')}/, '')
           end
-          "public#{path}"
+          asset_filename(path)
+        end
+
+        def asset_filename(filename)
+          if defined?(::Rails) && ::Rails.respond_to?(:root)
+            File.join(::Rails.root, 'public', filename)
+          else
+            File.join('public', filename)
+          end
         end
 
         def relative_url_root
