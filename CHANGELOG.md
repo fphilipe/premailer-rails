@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## v1.9.7
 
 - Use `Rails.root` in `FileSystemLoader` (@stanhu, #195)
 
