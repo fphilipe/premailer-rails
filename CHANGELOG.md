@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Use `Rails.root` in `FileSystemLoader` (@stanhu, #195)
+
 ## v1.9.6
 
 - Handle `relative_url_root` in when loading CSS from file system
