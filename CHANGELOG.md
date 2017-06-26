@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.10.2
+
+- Explicitly check for assets_manifest (@derekwheel, #214)
+
 ## v1.10.1
 
 - Catch error when sprockets can't find asset (@kirs, #209)
