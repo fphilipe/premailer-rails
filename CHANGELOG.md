@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.10.1
+
+- Catch error when sprockets can't find asset (@kirs, #209)
+
 ## v1.10.0
 
 - Drop support for hpricot now that premailer-rails also doesn't support it
