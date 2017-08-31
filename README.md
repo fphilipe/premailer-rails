@@ -61,7 +61,7 @@ their order are as follows:
     requesting it from the asset pipeline.
 
 4.  **Network:** As a last resort, the URL is simply requested and the response
-    body is used. This is usefull when the assets are not bundled in the
+    body is used. This is useful when the assets are not bundled in the
     application and only available on a CDN. On Heroku e.g. you can add assets
     to your `.slugignore` causing your assets to not be available to the app
     (and thus resulting in a smaller app) and deploy the assets to a CDN such
