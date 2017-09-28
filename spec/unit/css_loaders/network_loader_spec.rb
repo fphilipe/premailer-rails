@@ -18,7 +18,7 @@ describe Premailer::Rails::CSSLoaders::NetworkLoader do
 
     context 'with a protocol relative URL' do
       let(:url) { '//example.com/test.css' }
-      it { is_expected.to eq(URI("http://#{url}")) }
+      it { is_expected.to eq(URI("http:#{url}")) }
     end
 
     context 'with a file path' do
