@@ -11,14 +11,10 @@ if RUBY_ENGINE == 'ruby'
   end
 end
 
-# Temporary fix for missing require. See
-# https://github.com/rails/rails/pull/28835
-require 'active_support/rescuable'
+# Configure Rails Environment
+ENV["RAILS_ENV"] = "test"
+require File.expand_path("../../spec/rails_app/config/environment.rb", __FILE__)
 
-require 'premailer/rails'
-
-require 'support/stubs/action_mailer'
-require 'support/stubs/rails'
 require 'support/fixtures/message'
 require 'support/fixtures/html'
 
