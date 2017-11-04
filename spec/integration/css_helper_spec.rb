@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Premailer::Rails::CSSHelper do
   # Reset the CSS cache:
   after do
-    Premailer::Rails::CSSLoaders::CacheLoader.clear!
+    Premailer::Rails::CSSHelper.cache = {}
   end
 
   def css_for_url(path)
@@ -67,27 +67,30 @@ describe Premailer::Rails::CSSHelper do
       end
     end
 
-    context 'when file is cached' do
-      it 'returns the cached value' do
-        Premailer::Rails::CSSLoaders::CacheLoader.store(
-          'http://example.com/stylesheets/base.css',
-          'content of base.css'
-        )
+    context 'when cache is enabled' do
+      before do
+        allow(Premailer::Rails::CSSHelper).to receive(:cache_enabled?).and_return(true)
+      end
 
-        expect(css_for_url('http://example.com/stylesheets/base.css')).to \
-          eq('content of base.css')
+      context 'when file is cached' do
+        it 'returns the cached value' do
+          Premailer::Rails::CSSHelper.cache['http://example.com/stylesheets/base.css'] = 'content of base.css'
+
+          expect(css_for_url('http://example.com/stylesheets/base.css')).to \
+            eq('content of base.css')
+        end
       end
     end
 
-    context 'when in development mode' do
+    context 'when cache is disabled' do
+      before do
+        allow(Premailer::Rails::CSSHelper).to receive(:cache_enabled?).and_return(false)
+      end
+
       it 'does not return cached values' do
-        Premailer::Rails::CSSLoaders::CacheLoader.store(
-          'http://example.com/stylesheets/base.css',
-          'cached content of base.css'
-        )
+        Premailer::Rails::CSSHelper.cache['http://example.com/stylesheets/base.css'] = 'cached content'
         content = 'new content of base.css'
         expect_file('public/stylesheets/base.css', content)
-        allow(Rails.env).to receive(:development?).and_return(true)
 
         expect(css_for_url('http://example.com/stylesheets/base.css')).to eq(content)
       end
