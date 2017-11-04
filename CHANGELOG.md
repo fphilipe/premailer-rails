@@ -3,6 +3,7 @@
 ## HEAD
 
 - Drop support for hpricot now that premailer-rails also doesn't support it
+- Introduce `:strategies` config option that allows to control CSS fetching stragies
 
 ## v1.9.7
 
