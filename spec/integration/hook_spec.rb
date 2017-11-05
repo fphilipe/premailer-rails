@@ -91,7 +91,7 @@ describe Premailer::Rails::Hook do
 
     it 'does not replace any message part' do
       expect { run_hook(message) }.to_not \
-        change { message.all_parts.map(&:content_type) }
+        change { message.all_parts.map(&:content_type).sort }
     end
   end
 
