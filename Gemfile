@@ -2,15 +2,19 @@ source 'https://rubygems.org'
 
 gemspec
 
-action_mailer_version = ENV.fetch('ACTION_MAILER_VERSION', '5')
+rails_version = ENV.fetch('ACTION_MAILER_VERSION', '5')
 
-if action_mailer_version == 'master'
+if rails_version == 'master'
   git 'git://github.com/rails/rails.git' do
-    gem 'actionmailer'
+    gem 'rails'
   end
+  gem 'sprockets-rails', github: 'rails/sprockets-rails'
+  gem 'arel', github: 'rails/arel'
 else
-  gem 'actionmailer', "~> #{action_mailer_version}"
+  gem 'rails', "~> #{rails_version}"
 end
+
+gem 'byebug'
 
 platforms :rbx do
   gem 'rubysl'
