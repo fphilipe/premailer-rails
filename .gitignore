@@ -5,3 +5,4 @@ coverage/
 spec/rails_app/tmp/
 spec/rails_app/log/
 .ruby-version
+/.bundle
