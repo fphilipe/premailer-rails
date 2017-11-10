@@ -12,7 +12,6 @@ if rails_version == 'master'
   gem 'arel', github: 'rails/arel'
 else
   gem 'rails', "~> #{rails_version}"
-  gem 'sprockets-rails'
 end
 
 gem 'byebug'
