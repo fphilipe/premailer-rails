@@ -75,20 +75,12 @@ Simply add the gem to your `Gemfile`:
 gem 'premailer-rails'
 ```
 
-premailer-rails requires either [nokogiri] or [hpricot]. It doesn't list them as
-a dependency so you can choose which one to use. Since hpricot is no longer
-maintained, I suggest you to go with nokogiri. Add either one to your `Gemfile`:
-
-```ruby
-gem 'nokogiri'
-# or
-gem 'hpricot'
-```
-
-If both gems are loaded for some reason, premailer chooses hpricot.
-
-You can also explicitly configure the adapter as documented
-[here](https://github.com/premailer/premailer#adapters).
+premailer-rails and premailer require a gem that is used to parse the email's
+HTML. For a list of supported gems and how to select which one to use, please
+refer to the [*Adapter*
+section](https://github.com/premailer/premailer#adapters) of premailer. Note
+that there is no hard dependency from either gem so you should add one yourself.
+Also note that this gem is only tested with [nokogiri].
 
 ## Configuration
 
@@ -185,7 +177,6 @@ premailer-rails is released under the MIT license. See the [license file].
 [premailer]:    https://github.com/premailer/premailer
 [actionmailer]: https://github.com/rails/rails/tree/master/actionmailer
 [nokogiri]:     https://github.com/sparklemotion/nokogiri
-[hpricot]:      https://github.com/hpricot/hpricot
 
 [premailer documentation]: http://rubydoc.info/gems/premailer/1.7.3/Premailer:initialize
 

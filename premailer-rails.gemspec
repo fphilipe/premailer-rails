@@ -26,6 +26,5 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rspec', '~> 3.3'
   s.add_development_dependency 'nokogiri'
-  s.add_development_dependency 'hpricot' unless RUBY_PLATFORM == 'java'
   s.add_development_dependency 'coveralls' if RUBY_ENGINE == 'ruby'
 end

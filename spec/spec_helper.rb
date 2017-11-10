@@ -22,5 +22,4 @@ require 'support/stubs/rails'
 require 'support/fixtures/message'
 require 'support/fixtures/html'
 
-require 'hpricot' unless RUBY_PLATFORM == 'java'
 require 'nokogiri'
