@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Drop support for hpricot now that premailer-rails also doesn't support it
+
 ## v1.9.7
 
 - Use `Rails.root` in `FileSystemLoader` (@stanhu, #195)
