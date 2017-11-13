@@ -4,6 +4,7 @@
 
 - Drop support for hpricot now that premailer-rails also doesn't support it
 - Use `Rails.application.assets_manifest` instead of `Rails.application.assets` in Asset Pipeline loader (@kirs, #201)
+- Introduce `:strategies` config option that allows to control CSS fetching stragies
 
 ## v1.9.7
 

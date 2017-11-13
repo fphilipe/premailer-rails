@@ -5,12 +5,8 @@ class Premailer
 
       FileNotFound = Class.new(StandardError)
 
-      STRATEGIES = [
-        CSSLoaders::CacheLoader,
-        CSSLoaders::FileSystemLoader,
-        CSSLoaders::AssetPipelineLoader,
-        CSSLoaders::NetworkLoader
-      ]
+      attr_accessor :cache
+      self.cache = {}
 
       # Returns all linked CSS files concatenated as string.
       def css_for_doc(doc)
@@ -18,8 +14,10 @@ class Premailer
       end
 
       def css_for_url(url)
-        load_css(url).tap do |content|
-          CSSLoaders::CacheLoader.store(url, content)
+        if cache_enabled?
+          load_css_with_cache(url)
+        else
+          load_css(url)
         end
       end
 
@@ -36,13 +34,34 @@ class Premailer
         end
       end
 
+      def load_css_with_cache(url)
+        self.cache[url] ||= load_css(url)
+      end
+
+      def cache_enabled?
+        defined?(::Rails) && ::Rails.env.production?
+      end
+
       def load_css(url)
-        STRATEGIES.each do |strategy|
-          css = strategy.load(url)
+        Premailer::Rails.config.fetch(:strategies).each do |strategy|
+          css = find_strategy(strategy).load(url)
           return css.force_encoding('UTF-8') if css
         end
 
         raise FileNotFound, %{File with URL "#{url}" could not be loaded by any strategy.}
+      end
+
+      def find_strategy(key)
+        case key
+        when :filesystem
+          CSSLoaders::FileSystemLoader
+        when :asset_pipeline
+          CSSLoaders::AssetPipelineLoader
+        when :network
+          CSSLoaders::NetworkLoader
+        else
+          key
+        end
       end
     end
   end

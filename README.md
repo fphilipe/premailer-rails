@@ -39,33 +39,33 @@ styled emails without having to set anything up.
 Whenever premailer-rails processes an email, it collects the URLs of all linked
 stylesheets (`<link rel="stylesheet" href="css_url">`). Then, for each of these
 URLs, it tries to get the content through a couple of strategies. As long as
-a strategy does not return anything, the next one is used. The strategies and
-their order are as follows:
+a strategy does not return anything, the next one is used. The strategies
+available are:
 
-1.  **Cache:** If there's a file in cache matching that URL, the cache content
-    is returned.  The cache right now is rather rudimentary. Whenever a CSS file
-    is retrieved, it is stored in memory such that subsequent requests to the
-    same file are faster. The caching is disabled inside Rails in the
-    development environment.
-
-2.  **File System:** If there's a file inside `public/` with the same path as in
+-   `:filesystem`: If there's a file inside `public/` with the same path as in
     the URL, it is read from disk. E.g. if the URL is
     `http://cdn.example.com/assets/email.css` the contents of the file located
     at `public/assets/email.css` gets returned if it exists.
 
-3.  **Asset Pipeline:** If Rails is available and the asset pipeline is enabled,
+-   `:asset_pipeline`: If Rails is available and the asset pipeline is enabled,
     the file is retrieved through the asset pipeline. E.g. if the URL is
     `http://cdn.example.com/assets/email-fingerprint123.css`, the file
     `email.css` is requested from the asset pipeline. That is, the fingerprint
     and the prefix (in this case `assets` is the prefix) are stripped before
     requesting it from the asset pipeline.
 
-4.  **Network:** As a last resort, the URL is simply requested and the response
+-   `:network`: As a last resort, the URL is simply requested and the response
     body is used. This is useful when the assets are not bundled in the
     application and only available on a CDN. On Heroku e.g. you can add assets
     to your `.slugignore` causing your assets to not be available to the app
     (and thus resulting in a smaller app) and deploy the assets to a CDN such
     as S3/CloudFront.
+
+You can configure which strategies you want to use as well as specify their
+order. Refer to the *Configuration* section for more on this.
+
+Note that the retrieved CSS is cached when the gem is running with Rails in
+production.
 
 ## Installation
 
@@ -99,7 +99,8 @@ configs are:
 ```ruby
 {
   input_encoding: 'UTF-8',
-  generate_text_part: true
+  generate_text_part: true,
+  strategies: [:filesystem, :asset_pipeline, :network]
 }
 ```
 
