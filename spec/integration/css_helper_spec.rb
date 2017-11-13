@@ -110,21 +110,38 @@ describe Premailer::Rails::CSSHelper do
         end
       end
 
+      context "when find_sources raises Errno::ENOENT" do
+        let(:response) { 'content of base.css' }
+        let(:uri) { URI('http://example.com/assets/base.css') }
+
+        it "falls back to Net::HTTP" do
+          expect(Rails.application.assets_manifest).to \
+            receive(:find_sources)
+              .with('base.css')
+              .and_raise(Errno::ENOENT)
+
+          allow(Net::HTTP).to \
+            receive(:get).with(uri).and_return(response)
+          expect(css_for_url('http://example.com/assets/base.css')).to \
+            eq(response)
+        end
+      end
+
       it 'returns the content of the file compiled by Rails' do
-        expect(Rails.application.assets).to \
-          receive(:find_asset)
+        expect(Rails.application.assets_manifest).to \
+          receive(:find_sources)
             .with('base.css')
-            .and_return(double(to_s: 'content of base.css'))
+            .and_return(['content of base.css'])
 
         expect(css_for_url('http://example.com/assets/base.css')).to \
           eq('content of base.css')
       end
 
       it 'returns same file when path contains file fingerprint' do
-        expect(Rails.application.assets).to \
-          receive(:find_asset)
+        expect(Rails.application.assets_manifest).to \
+          receive(:find_sources)
             .with('base.css')
-            .and_return(double(to_s: 'content of base.css'))
+            .and_return(['content of base.css'])
 
         expect(css_for_url(
           'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
@@ -138,16 +155,15 @@ describe Premailer::Rails::CSSHelper do
         let(:asset_host) { 'http://assets.example.com' }
 
         before do
-          allow(Rails.application.assets).to \
-            receive(:find_asset).and_return(nil)
+          allow(Rails.application.assets_manifest).to \
+            receive(:find_sources).and_return([])
 
           config = double(asset_host: asset_host)
           allow(Rails.configuration).to \
             receive(:action_controller).and_return(config)
 
-          uri_satisfaction = satisfy { |uri| uri.to_s == url }
           allow(Net::HTTP).to \
-            receive(:get).with(uri_satisfaction).and_return(response)
+            receive(:get).with(URI(url)).and_return(response)
         end
 
         it 'requests the file' do

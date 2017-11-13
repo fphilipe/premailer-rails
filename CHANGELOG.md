@@ -3,6 +3,7 @@
 ## HEAD
 
 - Drop support for hpricot now that premailer-rails also doesn't support it
+- Use `Rails.application.assets_manifest` instead of `Rails.application.assets` in Asset Pipeline loader (@kirs, #201)
 
 ## v1.9.7
 

@@ -5,18 +5,11 @@ class Premailer
         extend self
 
         def load(url)
-          if asset_pipeline_present?
-            file = file_name(url)
-            asset = ::Rails.application.assets.find_asset(file)
-            asset.to_s if asset
-          end
-        end
+          return unless asset_pipeline_present?
 
-        def asset_pipeline_present?
-          defined?(::Rails) &&
-            ::Rails.respond_to?(:application) &&
-            ::Rails.application.respond_to?(:assets) &&
-            ::Rails.application.assets
+          file = file_name(url)
+          ::Rails.application.assets_manifest.find_sources(file).first
+        rescue Errno::ENOENT => _error
         end
 
         def file_name(url)
@@ -28,6 +21,10 @@ class Premailer
           URI(url).path
             .sub(/\A#{prefix}/, '')
             .sub(/-(\h{32}|\h{64})\.css\z/, '.css')
+        end
+
+        def asset_pipeline_present?
+          defined?(::Rails) && ::Rails.application && ::Rails.application.assets_manifest
         end
       end
     end
