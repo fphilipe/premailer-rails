@@ -8,7 +8,10 @@ class Premailer
           return unless asset_pipeline_present?
 
           file = file_name(url)
-          ::Rails.application.assets_manifest.find_sources(file).first
+          assets_manifest = ::Rails.application.assets_manifest
+          if assets_manifest.environment.present? || (assets_manifest.environment.nil? && assets_manifest.assets[file])
+            ::Rails.application.assets_manifest.find_sources(file).first
+          end
         rescue Errno::ENOENT => _error
         end
 
