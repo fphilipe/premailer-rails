@@ -113,6 +113,17 @@ describe Premailer::Rails::CSSHelper do
         end
       end
 
+      context 'and an environment is nil and an asset doesnt exist' do
+        it 'returns nil' do
+          allow(Rails.application.assets_manifest).to \
+            receive(:environment)
+              .and_return(nil)
+
+          expect { css_for_url('non_existent_path') }.to \
+            raise_error(Premailer::Rails::CSSHelper::FileNotFound)
+        end
+      end
+
       context "when find_sources raises Errno::ENOENT" do
         let(:response) { 'content of base.css' }
         let(:uri) { URI('http://example.com/assets/base.css') }
