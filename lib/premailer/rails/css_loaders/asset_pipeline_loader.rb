@@ -9,7 +9,7 @@ class Premailer
 
           file = file_name(url)
           ::Rails.application.assets_manifest.find_sources(file).first
-        rescue Errno::ENOENT => _error
+        rescue Errno::ENOENT, TypeError => _error
         end
 
         def file_name(url)

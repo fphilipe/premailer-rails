@@ -113,6 +113,23 @@ describe Premailer::Rails::CSSHelper do
         end
       end
 
+      context "when find_sources raises TypeError" do
+        let(:response) { 'content of base.css' }
+        let(:uri) { URI('http://example.com/assets/base.css') }
+
+        it "falls back to Net::HTTP" do
+          expect(Rails.application.assets_manifest).to \
+            receive(:find_sources)
+              .with('base.css')
+              .and_raise(TypeError)
+
+          allow(Net::HTTP).to \
+            receive(:get).with(uri).and_return(response)
+          expect(css_for_url('http://example.com/assets/base.css')).to \
+            eq(response)
+        end
+      end
+
       context "when find_sources raises Errno::ENOENT" do
         let(:response) { 'content of base.css' }
         let(:uri) { URI('http://example.com/assets/base.css') }
