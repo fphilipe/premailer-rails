@@ -24,7 +24,10 @@ class Premailer
         end
 
         def asset_pipeline_present?
-          defined?(::Rails) && ::Rails.application && ::Rails.application.assets_manifest
+          defined?(::Rails) &&
+            ::Rails.application &&
+            ::Rails.application.respond_to?(:assets_manifest) &&
+            ::Rails.application.assets_manifest
         end
       end
     end
