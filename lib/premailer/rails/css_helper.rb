@@ -39,7 +39,7 @@ class Premailer
       end
 
       def cache_enabled?
-        defined?(::Rails) && ::Rails.env.production?
+        defined?(::Rails.env) && ::Rails.env.production?
       end
 
       def load_css(url)
