@@ -72,6 +72,11 @@ class Premailer
 
         part = html_part
         html = premailer.to_inline_css
+
+        if Rails.config[:drop_inline_style_tags]
+          html = html.gsub(/<style[^>]*>.+?<\/style>/im, "<!-- dropped inline style -->")
+        end
+
         Mail::Part.new do
           content_transfer_encoding part.content_transfer_encoding
           content_type "text/html; charset=#{part.charset}"
