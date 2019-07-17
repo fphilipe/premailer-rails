@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Remove upper version constraint for actionmailer
+
 ## v1.10.2
 
 - Explicitly check for assets_manifest (@derekwheel, #214)
