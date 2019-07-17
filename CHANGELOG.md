@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## v1.10.3
 
 - Remove upper version constraint for actionmailer
 
