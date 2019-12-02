@@ -6,7 +6,7 @@ describe Premailer::Rails::Hook do
   end
 
   def body_content(message)
-    Nokogiri::HTML(message.html_string).at('body').content
+    Nokogiri::HTML(message.html_string).at('body').content.gsub("\r\n", "\n")
   end
 
   class Mail::Message
@@ -47,17 +47,6 @@ describe Premailer::Rails::Hook do
     expect(processed_message.parts).to match_array(expected_parts)
   end
 
-  describe 'when the content-transfer-encoding is set' do
-    before { message.content_transfer_encoding = 'quoted-printable' }
-
-    it 'should maintain the value' do
-      expect(processed_message.parts.first.content_transfer_encoding).to \
-        eq 'quoted-printable'
-      expect(processed_message.parts.last.content_transfer_encoding).to \
-        eq 'quoted-printable'
-    end
-  end
-
   it 'does not screw up the text by maintaining the original body encoding' do
     raw_msg = Fixtures::Message.latin_message
     processed_msg = Fixtures::Message.latin_message
@@ -68,6 +57,42 @@ describe Premailer::Rails::Hook do
     processed_msg = Fixtures::Message.non_latin_message
     run_hook(processed_msg)
     expect(body_content(processed_msg)).to eq(body_content(raw_msg))
+
+    raw_msg = Fixtures::Message.greek_message
+    processed_msg = Fixtures::Message.greek_message
+    run_hook(processed_msg)
+    expect(body_content(processed_msg)).to eq(body_content(raw_msg))
+
+    raw_msg = Fixtures::Message.dash_message
+    processed_msg = Fixtures::Message.dash_message
+    run_hook(processed_msg)
+    expect(body_content(processed_msg)).to eq(body_content(raw_msg))
+  end
+
+  it 'supports US-ASCII output' do
+    Premailer::Rails.config.merge!(output_encoding: 'US-ASCII')
+
+    raw_msg = Fixtures::Message.latin_message
+    processed_msg = Fixtures::Message.latin_message
+    run_hook(processed_msg)
+    expect(body_content(processed_msg)).to eq(body_content(raw_msg))
+
+    raw_msg = Fixtures::Message.non_latin_message
+    processed_msg = Fixtures::Message.non_latin_message
+    run_hook(processed_msg)
+    expect(body_content(processed_msg)).to eq(body_content(raw_msg))
+
+    raw_msg = Fixtures::Message.greek_message
+    processed_msg = Fixtures::Message.greek_message
+    run_hook(processed_msg)
+    expect(body_content(processed_msg)).to eq(body_content(raw_msg))
+
+    raw_msg = Fixtures::Message.dash_message
+    processed_msg = Fixtures::Message.dash_message
+    run_hook(processed_msg)
+    expect(body_content(processed_msg)).to eq(body_content(raw_msg))
+  ensure
+    Premailer::Rails.config.delete(:output_encoding)
   end
 
   it 'generates a text part from the html' do

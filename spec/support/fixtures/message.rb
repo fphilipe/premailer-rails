@@ -35,6 +35,30 @@ module Fixtures
 </html>
     HTML
 
+    HTML_PART_IN_GREEK = <<-HTML.encode(Encoding::ISO_8859_7)
+<html>
+  <head>
+  </head>
+  <body>
+    <p>
+      Αα Ββ Γγ Δδ Εε Ζζ Ηη Θθ Ιι Κκ Λλ Μμ Νν Ξξ Οο Ππ Ρρ Σσ Ττ Υυ Φφ Χχ Ψψ Ωω
+    </p>
+  </body>
+</html>
+    HTML
+
+    HTML_PART_WITH_DASHES = <<-HTML
+<html>
+  <head>
+  </head>
+  <body>
+    <p>
+      Hello there—yes you! What's up with – pardon the interrupion – dashes? I can also do &ndash; and &mdash;.
+    </p>
+  </body>
+</html>
+    HTML
+
     HTML_PART_WITH_CSS = <<-HTML
 <html>
   <head>
@@ -125,6 +149,22 @@ nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     def non_latin_message
       base_message.tap do |message|
         message.body = HTML_PART_WITH_UNICODE
+        message.content_type 'text/html; charset=UTF-8'
+        message.ready_to_send!
+      end
+    end
+
+    def greek_message
+      base_message.tap do |message|
+        message.body = HTML_PART_IN_GREEK
+        message.content_type 'text/html; charset=ISO-8859-7'
+        message.ready_to_send!
+      end
+    end
+
+    def dash_message
+      base_message.tap do |message|
+        message.body = HTML_PART_WITH_DASHES
         message.content_type 'text/html; charset=UTF-8'
         message.ready_to_send!
       end

@@ -73,10 +73,8 @@ class Premailer
         part = html_part
         html = premailer.to_inline_css
         Mail::Part.new do
-          content_transfer_encoding part.content_transfer_encoding
-          content_type "text/html; charset=#{part.charset}"
+          content_type "text/html; charset=#{html.encoding}"
           body html
-          body_encoding part.body.encoding
         end
       end
 
@@ -85,10 +83,8 @@ class Premailer
           part = html_part
           text = premailer.to_plain_text
           Mail::Part.new do
-            content_transfer_encoding part.content_transfer_encoding
-            content_type "text/plain; charset=#{part.charset}"
+            content_type "text/plain; charset=#{text.encoding}"
             body text
-            body_encoding part.body.encoding
           end
         end
       end
