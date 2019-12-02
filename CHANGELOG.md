@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Remove `force_encoding!`
+
 ## v1.10.3
 
 - Remove upper version constraint for actionmailer
