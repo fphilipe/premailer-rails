@@ -4,6 +4,7 @@ cache: bundler
 script: bundle exec rspec
 rvm:
   - 2.6.5
+  - 2.7.0
 env:
   matrix:
     - ACTION_MAILER_VERSION=4
