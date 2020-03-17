@@ -3,7 +3,7 @@ language: ruby
 cache: bundler
 script: bundle exec rspec
 rvm:
-  - 2.6.3
+  - 2.6.5
 env:
   matrix:
     - ACTION_MAILER_VERSION=4
