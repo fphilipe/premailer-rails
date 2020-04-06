@@ -16,6 +16,8 @@ Gem::Specification.new do |s|
                      include a CSS file as you do in a normal HTML document and
                      premailer will inline the included CSS.}
 
+  s.metadata["changelog_uri"] = "https://github.com/fphilipe/premailer-rails/blob/master/CHANGELOG.md"
+
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {example,spec}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
