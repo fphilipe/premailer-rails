@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.11.1
+
+- Check if `Rails.application` is defined (@pabloh, #250)
+
 ## v1.11.0
 
 - Remove `force_encoding!`
