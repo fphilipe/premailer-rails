@@ -27,6 +27,16 @@ describe Premailer::Rails::CSSLoaders::AssetPipelineLoader do
       it { is_expected.to eq('application.css') }
     end
 
+    context "when asset file path contains prefix and relative_url_root is set to root" do
+      before do
+        allow(Rails.configuration)
+          .to receive(:relative_url_root).and_return('/')
+      end
+
+      let(:asset) { '/assets/application.css' }
+      it { is_expected.to eq('application.css') }
+    end
+
     context "when asset file path contains 32 chars fingerprint" do
       let(:asset) { 'application-6776f581a4329e299531e1d52aa59832.css' }
       it { is_expected.to eq('application.css') }
