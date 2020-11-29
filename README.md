@@ -4,7 +4,6 @@ CSS styled emails without the hassle.
 
 [![Build Status][build-image]][build-link]
 [![Gem Version][gem-image]][gem-link]
-[![Dependency Status][deps-image]][deps-link]
 [![Code Climate][gpa-image]][gpa-link]
 [![Coverage Status][cov-image]][cov-link]
 
@@ -166,8 +165,6 @@ premailer-rails is released under the MIT license. See the [license file].
 [build-link]:  https://travis-ci.org/fphilipe/premailer-rails
 [gem-image]:   https://badge.fury.io/rb/premailer-rails.svg
 [gem-link]:    https://rubygems.org/gems/premailer-rails
-[deps-image]:  https://gemnasium.com/fphilipe/premailer-rails.svg
-[deps-link]:   https://gemnasium.com/fphilipe/premailer-rails
 [gpa-image]:   https://codeclimate.com/github/fphilipe/premailer-rails.svg
 [gpa-link]:    https://codeclimate.com/github/fphilipe/premailer-rails
 [cov-image]:   https://coveralls.io/repos/fphilipe/premailer-rails/badge.svg
