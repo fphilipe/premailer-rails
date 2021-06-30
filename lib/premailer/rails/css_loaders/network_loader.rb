@@ -14,6 +14,7 @@ class Premailer
 
           if uri.host.present?
             return uri if uri.scheme.present?
+
             URI("http:#{uri}")
           elsif asset_host_present?
             scheme, host = asset_host(url).split(%r{:?//})
@@ -21,6 +22,8 @@ class Premailer
             scheme = 'http' if scheme.blank?
             path = url
             URI(File.join("#{scheme}://#{host}", path))
+          else
+            URI(File.join(::Rails.application.routes.url_helpers.root_url, url))
           end
         end
 
