@@ -1,6 +1,4 @@
-# -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "premailer/rails/version"
+require_relative "lib/premailer/rails/version"
 
 Gem::Specification.new do |s|
   s.name        = "premailer-rails"
@@ -24,7 +22,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency 'premailer', '~> 1.7', '>= 1.7.9'
-  s.add_dependency 'actionmailer', '>= 3'
+  s.add_dependency 'actionmailer', '>= 5'
 
   s.add_development_dependency 'rspec', '~> 3.3'
   s.add_development_dependency 'nokogiri'
