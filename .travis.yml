@@ -9,7 +9,10 @@ env:
   matrix:
     - ACTION_MAILER_VERSION=5
     - ACTION_MAILER_VERSION=6
-    - ACTION_MAILER_VERSION=master
+    - ACTION_MAILER_VERSION=7 ASSETS_GEM=propshaft
+    - ACTION_MAILER_VERSION=7 ASSETS_GEM=sprockets
+    - ACTION_MAILER_VERSION=master ASSETS_GEM=propshaft
+    - ACTION_MAILER_VERSION=master ASSETS_GEM=sprockets
 matrix:
   fast_finish: true
   allow_failures:
