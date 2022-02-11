@@ -96,116 +96,212 @@ describe Premailer::Rails::CSSHelper do
       end
     end
 
-    context 'when Rails asset pipeline is used' do
-      before do
-        allow(Rails.configuration)
-          .to receive(:assets).and_return(double(prefix: '/assets'))
-        allow(Rails.configuration)
-          .to receive(:relative_url_root).and_return(nil)
-      end
-
-      context 'and a precompiled file exists' do
-        it 'returns that file' do
-          path = '/assets/email-digest.css'
-          content = 'read from file'
-          expect_file("public#{path}", content)
-          expect(css_for_url(path)).to eq(content)
-        end
-      end
-
-      context "when find_sources raises TypeError" do
-        let(:response) { 'content of base.css' }
-        let(:uri) { URI('http://example.com/assets/base.css') }
-
-        it "falls back to Net::HTTP" do
-          expect(Rails.application.assets_manifest).to \
-            receive(:find_sources)
-              .with('base.css')
-              .and_raise(TypeError)
-
-          allow(Net::HTTP).to \
-            receive(:get)
-              .with(uri, { 'Accept' => 'text/css' })
-              .and_return(response)
-          expect(css_for_url('http://example.com/assets/base.css')).to \
-            eq(response)
-        end
-      end
-
-      context "when find_sources raises Errno::ENOENT" do
-        let(:response) { 'content of base.css' }
-        let(:uri) { URI('http://example.com/assets/base.css') }
-
-        it "falls back to Net::HTTP" do
-          expect(Rails.application.assets_manifest).to \
-            receive(:find_sources)
-              .with('base.css')
-              .and_raise(Errno::ENOENT)
-
-          allow(Net::HTTP).to \
-            receive(:get)
-              .with(uri, { 'Accept' => 'text/css' })
-              .and_return(response)
-          expect(css_for_url('http://example.com/assets/base.css')).to \
-            eq(response)
-        end
-      end
-
-      it 'returns the content of the file compiled by Rails' do
-        expect(Rails.application.assets_manifest).to \
-          receive(:find_sources)
-            .with('base.css')
-            .and_return(['content of base.css'])
-
-        expect(css_for_url('http://example.com/assets/base.css')).to \
-          eq('content of base.css')
-      end
-
-      it 'returns same file when path contains file fingerprint' do
-        expect(Rails.application.assets_manifest).to \
-          receive(:find_sources)
-            .with('base.css')
-            .and_return(['content of base.css'])
-
-        expect(css_for_url(
-          'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
-        )).to eq('content of base.css')
-      end
-
-      context 'when asset can not be found' do
-        let(:response) { 'content of base.css' }
-        let(:path) { '/assets/base-089e35bd5d84297b8d31ad552e433275.css' }
-        let(:url) { "http://assets.example.com#{path}" }
-        let(:asset_host) { 'http://assets.example.com' }
-
+    if defined?(::Sprockets)
+      context 'when Rails asset pipeline is used' do
         before do
-          allow(Rails.application.assets_manifest).to \
-            receive(:find_sources).and_return([])
-
-          config = double(asset_host: asset_host)
-          allow(Rails.configuration).to \
-            receive(:action_controller).and_return(config)
-
-          allow(Net::HTTP).to \
-            receive(:get)
-              .with(URI(url), { 'Accept' => 'text/css' })
-              .and_return(response)
+          allow(Rails.configuration)
+            .to receive(:assets).and_return(double(prefix: '/assets'))
+          allow(Rails.configuration)
+            .to receive(:relative_url_root).and_return(nil)
         end
 
-        it 'requests the file' do
-          expect(css_for_url(url)).to eq('content of base.css')
+        context 'and a precompiled file exists' do
+          it 'returns that file' do
+            path = '/assets/email-digest.css'
+            content = 'read from file'
+            expect_file("public#{path}", content)
+            expect(css_for_url(path)).to eq(content)
+          end
         end
 
-        context 'when file url does not include the host' do
-          it 'requests the file using the asset host as host' do
-            expect(css_for_url(path)).to eq('content of base.css')
+        context "when find_sources raises TypeError" do
+          let(:response) { 'content of base.css' }
+          let(:uri) { URI('http://example.com/assets/base.css') }
+
+          it "falls back to Net::HTTP" do
+            expect(Rails.application.assets_manifest).to \
+              receive(:find_sources)
+                .with('base.css')
+                .and_raise(TypeError)
+
+            allow(Net::HTTP).to \
+              receive(:get)
+                .with(uri, { 'Accept' => 'text/css' })
+                .and_return(response)
+            expect(css_for_url('http://example.com/assets/base.css')).to \
+              eq(response)
+          end
+        end
+
+        context "when find_sources raises Errno::ENOENT" do
+          let(:response) { 'content of base.css' }
+          let(:uri) { URI('http://example.com/assets/base.css') }
+
+          it "falls back to Net::HTTP" do
+            expect(Rails.application.assets_manifest).to \
+              receive(:find_sources)
+                .with('base.css')
+                .and_raise(Errno::ENOENT)
+
+            allow(Net::HTTP).to \
+              receive(:get)
+                .with(uri, { 'Accept' => 'text/css' })
+                .and_return(response)
+            expect(css_for_url('http://example.com/assets/base.css')).to \
+              eq(response)
+          end
+        end
+
+        it 'returns the content of the file compiled by Rails' do
+          expect(Rails.application.assets_manifest).to \
+            receive(:find_sources)
+              .with('base.css')
+              .and_return(['content of base.css'])
+
+          expect(css_for_url('http://example.com/assets/base.css')).to \
+            eq('content of base.css')
+        end
+
+        it 'returns same file when path contains file fingerprint' do
+          expect(Rails.application.assets_manifest).to \
+            receive(:find_sources)
+              .with('base.css')
+              .and_return(['content of base.css'])
+
+          expect(css_for_url(
+            'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
+          )).to eq('content of base.css')
+        end
+
+        context 'when asset can not be found' do
+          let(:response) { 'content of base.css' }
+          let(:path) { '/assets/base-089e35bd5d84297b8d31ad552e433275.css' }
+          let(:url) { "http://assets.example.com#{path}" }
+          let(:asset_host) { 'http://assets.example.com' }
+
+          before do
+            allow(Rails.application.assets_manifest).to \
+              receive(:find_sources).and_return([])
+
+            config = double(asset_host: asset_host)
+            allow(Rails.configuration).to \
+              receive(:action_controller).and_return(config)
+
+            allow(Net::HTTP).to \
+              receive(:get)
+                .with(URI(url), { 'Accept' => 'text/css' })
+                .and_return(response)
           end
 
-          context 'and the asset host uses protocol relative scheme' do
-            let(:asset_host) { '//assets.example.com' }
+          it 'requests the file' do
+            expect(css_for_url(url)).to eq('content of base.css')
+          end
 
-            it 'requests the file using http as the scheme' do
+          context 'when file url does not include the host' do
+            it 'requests the file using the asset host as host' do
               expect(css_for_url(path)).to eq('content of base.css')
+            end
+
+            context 'and the asset host uses protocol relative scheme' do
+              let(:asset_host) { '//assets.example.com' }
+
+              it 'requests the file using http as the scheme' do
+                expect(css_for_url(path)).to eq('content of base.css')
+              end
+            end
+          end
+        end
+      end
+    elsif defined?(::Propshaft)
+      context 'when Propshaft is used' do
+        before do
+          allow(Rails.configuration)
+            .to receive(:assets).and_return(double(prefix: '/assets'))
+          allow(Rails.configuration)
+            .to receive(:relative_url_root).and_return(nil)
+        end
+
+        context 'and a precompiled file exists' do
+          it 'returns that file' do
+            path = '/assets/email-digest.css'
+            content = 'read from file'
+            expect_file("public#{path}", content)
+            expect(css_for_url(path)).to eq(content)
+          end
+        end
+
+        it 'returns the content of the file compiled by Propshaft' do
+          asset = double()
+
+          expect(Rails.application.assets.load_path).to \
+            receive(:find)
+              .with('base.css')
+              .and_return(asset)
+
+          expect(Rails.application.assets.compilers).to \
+            receive(:compile)
+              .with(asset)
+              .and_return('content of base.css')
+
+          expect(css_for_url('http://example.com/assets/base.css')).to \
+            eq('content of base.css')
+        end
+
+        it 'returns same file when path contains file fingerprint' do
+          asset = double()
+
+          expect(Rails.application.assets.load_path).to \
+            receive(:find)
+              .with('base.css')
+              .and_return(asset)
+
+          expect(Rails.application.assets.compilers).to \
+            receive(:compile)
+              .with(asset)
+              .and_return('content of base.css')
+
+          expect(css_for_url(
+            'http://example.com/assets/base-089e35bd5d84297b8d31ad552e433275.css'
+          )).to eq('content of base.css')
+        end
+
+        context 'when asset can not be found' do
+          let(:response) { 'content of base.css' }
+          let(:path) { '/assets/base-089e35bd5d84297b8d31ad552e433275.css' }
+          let(:url) { "http://assets.example.com#{path}" }
+          let(:asset_host) { 'http://assets.example.com' }
+
+          before do
+            expect(Rails.application.assets.load_path).to \
+              receive(:find)
+                .with('base.css')
+                .and_return(nil)
+
+            config = double(asset_host: asset_host)
+            allow(Rails.configuration).to \
+              receive(:action_controller).and_return(config)
+
+            allow(Net::HTTP).to \
+              receive(:get)
+                .with(URI(url), { 'Accept' => 'text/css' })
+                .and_return(response)
+          end
+
+          it 'requests the file' do
+            expect(css_for_url(url)).to eq('content of base.css')
+          end
+
+          context 'when file url does not include the host' do
+            it 'requests the file using the asset host as host' do
+              expect(css_for_url(path)).to eq('content of base.css')
+            end
+
+            context 'and the asset host uses protocol relative scheme' do
+              let(:asset_host) { '//assets.example.com' }
+
+              it 'requests the file using http as the scheme' do
+                expect(css_for_url(path)).to eq('content of base.css')
+              end
             end
           end
         end

@@ -154,7 +154,7 @@ This will modify the email in place, useful e.g. in tests.
 
 This gem is tested on Rails versions 5 through 7.
 
-For Rails 7, it only support the classical Sprockets asset pipeline. It does not yet support [Propshaft](https://github.com/rails/propshaft).
+For Rails 7, it support both the classical Sprockets asset pipeline as well as the new [Propshaft](https://github.com/rails/propshaft) gem.
 
 If you're looking to integrate with Webpacker, check out [these instructions](https://github.com/fphilipe/premailer-rails/issues/232#issuecomment-839819705).
 

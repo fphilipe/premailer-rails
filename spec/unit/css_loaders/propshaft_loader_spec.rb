@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-if defined?(::Sprockets)
-  describe Premailer::Rails::CSSLoaders::AssetPipelineLoader do
+if defined?(::Propshaft)
+  describe Premailer::Rails::CSSLoaders::PropshaftLoader do
     before do
-      allow(Rails.configuration)
+      allow(Rails.application)
         .to receive(:assets).and_return(double(prefix: '/assets'))
       allow(Rails.configuration).to receive(:relative_url_root).and_return(nil)
     end
 
     describe ".file_name" do
       subject do
-        Premailer::Rails::CSSLoaders::AssetPipelineLoader.file_name(asset)
+        described_class.file_name(asset)
       end
 
       context "when asset file path contains prefix" do
@@ -38,12 +38,12 @@ if defined?(::Sprockets)
         it { is_expected.to eq('application.css') }
       end
 
-      context "when asset file path contains 32 chars fingerprint" do
-        let(:asset) { 'application-6776f581a4329e299531e1d52aa59832.css' }
+      context "when asset file path contains 7 chars fingerprint" do
+        let(:asset) { 'application-1234567.css' }
         it { is_expected.to eq('application.css') }
       end
 
-      context "when asset file path contains 64 chars fingerprint" do
+      context "when asset file path contains 128 chars fingerprint" do
         let(:asset) { 'application-02275ccb3fd0c11615bbfb11c99ea123ca2287e75045fe7b72cefafb880dad2b.css' }
         it { is_expected.to eq('application.css') }
       end
