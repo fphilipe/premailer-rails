@@ -1,12 +1,11 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
-require 'action_controller/railtie'
-require 'action_mailer/railtie'
-require 'sprockets/railtie'
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "action_view/railtie"
+if ENV.fetch("ASSETS_GEM", "sprockets") == "sprockets"
+  require "sprockets/railtie"
+end
+require "rails/test_unit/railtie"
 
 Bundler.require(*Rails.groups)
-
-module Example
-  class Application < Rails::Application
-  end
-end
