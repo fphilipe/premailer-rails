@@ -12,6 +12,7 @@ class Premailer
     @config = {
       input_encoding: 'UTF-8',
       generate_text_part: true,
+      skip_while_testing: true,
       strategies: [:filesystem, :asset_pipeline, :network]
     }
     class << self
@@ -19,6 +20,8 @@ class Premailer
     end
 
     def self.register_interceptors
+      return if @config['skip_while_testing'] and ::Rails.env.test?
+      
       ActionMailer::Base.register_interceptor(Premailer::Rails::Hook)
 
       if ActionMailer::Base.respond_to?(:register_preview_interceptor)
