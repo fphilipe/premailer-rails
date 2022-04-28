@@ -8,7 +8,8 @@ class Premailer
           return unless propshaft_present?
 
           file = file_name(url)
-          ::Rails.application.assets.load_path.find(file)&.content
+          asset = ::Rails.application.assets.load_path.find(file)
+          ::Rails.application.assets.compilers.compile(asset) if asset
         end
 
         def file_name(url)
