@@ -22,3 +22,7 @@ platforms :rbx do
 end
 
 gem 'tins', '< 1.7' if RUBY_VERSION.split('.').first.to_i < 2
+
+group :development do
+  gem 'rake', '~> 13.0.0'
+end
