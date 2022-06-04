@@ -59,6 +59,8 @@ class Premailer
           CSSLoaders::AssetPipelineLoader
         when :network
           CSSLoaders::NetworkLoader
+        when :ignore
+          CSSLoaders::IgnoreLoader
         else
           key
         end

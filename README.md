@@ -60,6 +60,9 @@ available are:
     (and thus resulting in a smaller app) and deploy the assets to a CDN such
     as S3/CloudFront.
 
+-   `:ignore`: If all of the above fail, you may add `:ignore` at the end of the 
+    loading chain if you wish to silently ignore any failure.
+
 You can configure which strategies you want to use as well as specify their
 order. Refer to the *Configuration* section for more on this.
 
