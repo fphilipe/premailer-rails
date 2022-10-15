@@ -1,17 +1,16 @@
 source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gemspec
 
-rails_version = ENV.fetch('ACTION_MAILER_VERSION', '6')
+rails_version = ENV.fetch('ACTION_MAILER_VERSION', '7')
 
 if rails_version == 'head'
-  git 'git://github.com/rails/rails.git' do
-    gem 'rails'
-  end
+  gem 'rails', github: 'rails/rails'
   gem 'sprockets-rails', github: 'rails/sprockets-rails'
-  gem 'arel', github: 'rails/arel'
 else
   gem 'rails', "~> #{rails_version}"
+  gem 'sprockets-rails', github: 'rails/sprockets-rails' if rails_version >= '7'
 end
 
 gem 'byebug'

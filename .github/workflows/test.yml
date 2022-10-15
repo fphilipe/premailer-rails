@@ -27,6 +27,7 @@ jobs:
         env:
           - ACTION_MAILER_VERSION=5
           - ACTION_MAILER_VERSION=6
+          - ACTION_MAILER_VERSION=7
         experimental:
           - false
         include:
