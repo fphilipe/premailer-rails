@@ -1,0 +1,6 @@
+source 'https://rubygems.org'
+
+gem 'rails', '~> 7.0.4'
+gem 'propshaft'
+gem 'webrick' if RUBY_VERSION >= '3'
+gem 'premailer-rails', path: '../..'
