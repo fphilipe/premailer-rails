@@ -10,7 +10,7 @@ if rails_version == 'head'
   gem 'sprockets-rails', github: 'rails/sprockets-rails'
 else
   gem 'rails', "~> #{rails_version}"
-  gem 'sprockets-rails', github: 'rails/sprockets-rails' if rails_version >= '7'
+  gem 'sprockets-rails' if rails_version >= '7'
 end
 
 gem 'byebug'
