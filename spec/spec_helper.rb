@@ -1,11 +1,5 @@
 if RUBY_ENGINE == 'ruby'
-  if ENV['CI']
-    require 'coveralls'
-    Coveralls::Output.silent = true
-    Coveralls.wear! do
-      add_filter 'spec/'
-    end
-  else
+  unless ENV['CI']
     require 'simplecov'
     SimpleCov.start
   end
