@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'premailer', '~> 1.7', '>= 1.7.9'
   s.add_dependency 'actionmailer', '>= 3'
+  s.add_dependency 'net-smtp' if RUBY_VERSION >= '3'
 
   s.add_development_dependency 'rspec', '~> 3.3'
   s.add_development_dependency 'nokogiri'
