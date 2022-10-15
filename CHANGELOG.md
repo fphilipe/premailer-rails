@@ -1,5 +1,9 @@
 # Changelog
 
+## HEAD
+
+- Lazily load actionmailer (@c960657, #260)
+
 ## v1.11.1
 
 - Check if `Rails.application` is defined (@pabloh, #250)
