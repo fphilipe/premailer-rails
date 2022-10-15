@@ -4,7 +4,7 @@ gemspec
 
 rails_version = ENV.fetch('ACTION_MAILER_VERSION', '5')
 
-if rails_version == 'main'
+if rails_version == 'head'
   git 'git://github.com/rails/rails.git' do
     gem 'rails'
   end
