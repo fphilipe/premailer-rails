@@ -161,8 +161,8 @@ Philipe Fatio ([@fphilipe][fphilipe twitter])
 
 premailer-rails is released under the MIT license. See the [license file].
 
-[build-image]: https://travis-ci.org/fphilipe/premailer-rails.svg
-[build-link]:  https://travis-ci.org/fphilipe/premailer-rails
+[build-image]: https://github.com/fphilipe/premailer-rails/actions/workflows/test.yml/badge.svg
+[build-link]:  https://github.com/fphilipe/premailer-rails/actions/workflows/test.yml
 [gem-image]:   https://badge.fury.io/rb/premailer-rails.svg
 [gem-link]:    https://rubygems.org/gems/premailer-rails
 [gpa-image]:   https://codeclimate.com/github/fphilipe/premailer-rails.svg
