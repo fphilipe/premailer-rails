@@ -23,6 +23,7 @@ jobs:
       matrix:
         ruby:
           - '2.7'
+          - '3.1'
         env:
           - ACTION_MAILER_VERSION=5
           - ACTION_MAILER_VERSION=6
