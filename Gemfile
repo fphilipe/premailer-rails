@@ -15,10 +15,3 @@ else
 end
 
 gem 'byebug'
-
-platforms :rbx do
-  gem 'rubysl'
-  gem 'racc'
-end
-
-gem 'tins', '< 1.7' if RUBY_VERSION.split('.').first.to_i < 2
