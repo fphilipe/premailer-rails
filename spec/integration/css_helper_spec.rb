@@ -124,7 +124,9 @@ describe Premailer::Rails::CSSHelper do
               .and_raise(TypeError)
 
           allow(Net::HTTP).to \
-            receive(:get).with(uri).and_return(response)
+            receive(:get)
+              .with(uri, { 'Accept' => 'text/css' })
+              .and_return(response)
           expect(css_for_url('http://example.com/assets/base.css')).to \
             eq(response)
         end
@@ -141,7 +143,9 @@ describe Premailer::Rails::CSSHelper do
               .and_raise(Errno::ENOENT)
 
           allow(Net::HTTP).to \
-            receive(:get).with(uri).and_return(response)
+            receive(:get)
+              .with(uri, { 'Accept' => 'text/css' })
+              .and_return(response)
           expect(css_for_url('http://example.com/assets/base.css')).to \
             eq(response)
         end
@@ -183,7 +187,9 @@ describe Premailer::Rails::CSSHelper do
             receive(:action_controller).and_return(config)
 
           allow(Net::HTTP).to \
-            receive(:get).with(URI(url)).and_return(response)
+            receive(:get)
+              .with(URI(url), { 'Accept' => 'text/css' })
+              .and_return(response)
         end
 
         it 'requests the file' do
