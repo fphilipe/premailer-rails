@@ -3,7 +3,7 @@ name: Test
 on:
   push:
     branches:
-      - main
+      - "*"
   pull_request:
     branches:
       - "*"
@@ -24,24 +24,25 @@ jobs:
         ruby:
           - '2.7'
           - '3.1'
-        env:
-          - ACTION_MAILER_VERSION=5
-          - ACTION_MAILER_VERSION=6
-          - ACTION_MAILER_VERSION=7
+        action_mailer_version:
+          - 5
+          - 6
+          - 7
         experimental:
           - false
         exclude:
           - ruby: '3.1'
-            env: ACTION_MAILER_VERSION=5
+            action_mailer_version: 5
         include:
           - ruby: head
-            env: ACTION_MAILER_VERSION=head
+            action_mailer_version: head
             experimental: true
     steps:
       - uses: actions/checkout@v3
 
       - name: Set env vars
-        run: echo "${{ matrix.env }}" >> $GITHUB_ENV
+        run: |
+          echo "ACTION_MAILER_VERSION=${{ matrix.action_mailer_version }}" >> $GITHUB_ENV
 
       - uses: ruby/setup-ruby@v1
         with:
