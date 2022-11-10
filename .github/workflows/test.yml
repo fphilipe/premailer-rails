@@ -28,14 +28,26 @@ jobs:
           - 5
           - 6
           - 7
+        propshaft:
+          - false
+          - true
         experimental:
           - false
         exclude:
           - ruby: '3.1'
             action_mailer_version: 5
+          - action_mailer_version: 5
+            propshaft: true
+          - action_mailer_version: 6
+            propshaft: true
         include:
           - ruby: head
             action_mailer_version: head
+            propshaft: false
+            experimental: true
+          - ruby: head
+            action_mailer_version: head
+            propshaft: true
             experimental: true
     steps:
       - uses: actions/checkout@v3
@@ -43,6 +55,7 @@ jobs:
       - name: Set env vars
         run: |
           echo "ACTION_MAILER_VERSION=${{ matrix.action_mailer_version }}" >> $GITHUB_ENV
+          echo "PROPSHAFT=${{ matrix.propshaft }}" >> $GITHUB_ENV
 
       - uses: ruby/setup-ruby@v1
         with:
