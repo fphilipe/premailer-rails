@@ -1,6 +1,6 @@
 # Changelog
 
-## HEAD
+## v1.12.0
 
 - Lazily load actionmailer (@c960657, #260)
 - HTTP request for CSS files now have an `Accept: text/css` header (@ElMassimo, #261)
