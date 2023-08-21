@@ -126,7 +126,6 @@ describe Premailer::Rails::CSSHelper do
 
             allow(Net::HTTP).to \
               receive(:get)
-                .with(uri, { 'Accept' => 'text/css' })
                 .and_return(response)
             expect(css_for_url('http://example.com/assets/base.css')).to \
               eq(response)
@@ -145,7 +144,6 @@ describe Premailer::Rails::CSSHelper do
 
             allow(Net::HTTP).to \
               receive(:get)
-                .with(uri, { 'Accept' => 'text/css' })
                 .and_return(response)
             expect(css_for_url('http://example.com/assets/base.css')).to \
               eq(response)
@@ -189,7 +187,6 @@ describe Premailer::Rails::CSSHelper do
 
             allow(Net::HTTP).to \
               receive(:get)
-                .with(URI(url), { 'Accept' => 'text/css' })
                 .and_return(response)
           end
 
