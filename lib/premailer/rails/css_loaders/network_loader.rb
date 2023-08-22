@@ -6,7 +6,11 @@ class Premailer
 
         def load(url)
           uri = uri_for_url(url)
-          Net::HTTP.get(uri, { 'Accept' => 'text/css' }) if uri
+          if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.0.0")
+            Net::HTTP.get(uri, { 'Accept' => 'text/css' }) if uri
+          else
+            Net::HTTP.get(uri) if uri
+          end
         end
 
         def uri_for_url(url)
