@@ -118,35 +118,78 @@ describe Premailer::Rails::CSSHelper do
           let(:response) { 'content of base.css' }
           let(:uri) { URI('http://example.com/assets/base.css') }
 
-          it "falls back to Net::HTTP" do
-            expect(Rails.application.assets_manifest).to \
-              receive(:find_sources)
-                .with('base.css')
-                .and_raise(TypeError)
+          context "with Ruby version < 3.0" do
+            it "falls back to Net::HTTP" do
+              stub_const('RUBY_VERSION', '2.7.8')
+              expect(Rails.application.assets_manifest).to \
+                receive(:find_sources)
+                  .with('base.css')
+                  .and_raise(TypeError)
 
-            allow(Net::HTTP).to \
-              receive(:get)
-                .and_return(response)
-            expect(css_for_url('http://example.com/assets/base.css')).to \
-              eq(response)
+              allow(Net::HTTP).to \
+                receive(:get)
+                  .with(uri)
+                  .and_return(response)
+              expect(css_for_url('http://example.com/assets/base.css')).to \
+                eq(response)
+            end
           end
+
+          context "with Ruby version >= 3.0" do
+            it "falls back to Net::HTTP" do
+              stub_const('RUBY_VERSION', '3.0.0')
+              expect(Rails.application.assets_manifest).to \
+                receive(:find_sources)
+                  .with('base.css')
+                  .and_raise(TypeError)
+
+              allow(Net::HTTP).to \
+                receive(:get)
+                  .with(uri, { 'Accept' => 'text/css' })
+                  .and_return(response)
+              expect(css_for_url('http://example.com/assets/base.css')).to \
+                eq(response)
+            end
+          end
+
         end
 
         context "when find_sources raises Errno::ENOENT" do
           let(:response) { 'content of base.css' }
           let(:uri) { URI('http://example.com/assets/base.css') }
 
-          it "falls back to Net::HTTP" do
-            expect(Rails.application.assets_manifest).to \
-              receive(:find_sources)
-                .with('base.css')
-                .and_raise(Errno::ENOENT)
+          context "with Ruby version < 3.0" do
+            it "falls back to Net::HTTP" do
+              stub_const('RUBY_VERSION', '2.7.8')
+              expect(Rails.application.assets_manifest).to \
+                receive(:find_sources)
+                  .with('base.css')
+                  .and_raise(Errno::ENOENT)
 
-            allow(Net::HTTP).to \
-              receive(:get)
-                .and_return(response)
-            expect(css_for_url('http://example.com/assets/base.css')).to \
-              eq(response)
+              allow(Net::HTTP).to \
+                receive(:get)
+                  .with(uri)
+                  .and_return(response)
+              expect(css_for_url('http://example.com/assets/base.css')).to \
+                eq(response)
+            end
+          end
+
+          context "with Ruby version >= 3.0" do
+            it "falls back to Net::HTTP" do
+              stub_const('RUBY_VERSION', '3.0.0')
+              expect(Rails.application.assets_manifest).to \
+                receive(:find_sources)
+                  .with('base.css')
+                  .and_raise(Errno::ENOENT)
+
+              allow(Net::HTTP).to \
+                receive(:get)
+                  .with(uri, { 'Accept' => 'text/css' })
+                  .and_return(response)
+              expect(css_for_url('http://example.com/assets/base.css')).to \
+                eq(response)
+            end
           end
         end
 
@@ -177,36 +220,78 @@ describe Premailer::Rails::CSSHelper do
           let(:url) { "http://assets.example.com#{path}" }
           let(:asset_host) { 'http://assets.example.com' }
 
-          before do
-            allow(Rails.application.assets_manifest).to \
-              receive(:find_sources).and_return([])
+          context "with Ruby version < 3.0" do
+            before do
+              stub_const('RUBY_VERSION', '2.7.8')
 
-            config = double(asset_host: asset_host)
-            allow(Rails.configuration).to \
-              receive(:action_controller).and_return(config)
+              allow(Rails.application.assets_manifest).to \
+                receive(:find_sources).and_return([])
 
-            allow(Net::HTTP).to \
-              receive(:get)
-                .and_return(response)
-          end
+              config = double(asset_host: asset_host)
+              allow(Rails.configuration).to \
+                receive(:action_controller).and_return(config)
 
-          it 'requests the file' do
-            expect(css_for_url(url)).to eq('content of base.css')
-          end
-
-          context 'when file url does not include the host' do
-            it 'requests the file using the asset host as host' do
-              expect(css_for_url(path)).to eq('content of base.css')
+              allow(Net::HTTP).to \
+                receive(:get)
+                  .with(URI(url))
+                  .and_return(response)
             end
 
-            context 'and the asset host uses protocol relative scheme' do
-              let(:asset_host) { '//assets.example.com' }
+            it 'requests the file' do
+              expect(css_for_url(url)).to eq('content of base.css')
+            end
 
-              it 'requests the file using http as the scheme' do
+            context 'when file url does not include the host' do
+              it 'requests the file using the asset host as host' do
                 expect(css_for_url(path)).to eq('content of base.css')
+              end
+
+              context 'and the asset host uses protocol relative scheme' do
+                let(:asset_host) { '//assets.example.com' }
+
+                it 'requests the file using http as the scheme' do
+                  expect(css_for_url(path)).to eq('content of base.css')
+                end
               end
             end
           end
+
+          context "with Ruby version >= 3.0" do
+
+            before do
+              stub_const('RUBY_VERSION', '3.0.0')
+              allow(Rails.application.assets_manifest).to \
+                receive(:find_sources).and_return([])
+
+              config = double(asset_host: asset_host)
+              allow(Rails.configuration).to \
+                receive(:action_controller).and_return(config)
+
+              allow(Net::HTTP).to \
+                receive(:get)
+                  .with(URI(url), { 'Accept' => 'text/css' })
+                  .and_return(response)
+            end
+
+            it 'requests the file' do
+              expect(css_for_url(url)).to eq('content of base.css')
+            end
+
+            context 'when file url does not include the host' do
+              it 'requests the file using the asset host as host' do
+                expect(css_for_url(path)).to eq('content of base.css')
+              end
+
+              context 'and the asset host uses protocol relative scheme' do
+                let(:asset_host) { '//assets.example.com' }
+
+                it 'requests the file using http as the scheme' do
+                  expect(css_for_url(path)).to eq('content of base.css')
+                end
+              end
+            end
+          end
+
         end
       end
     elsif defined?(::Propshaft)
@@ -277,11 +362,6 @@ describe Premailer::Rails::CSSHelper do
             config = double(asset_host: asset_host)
             allow(Rails.configuration).to \
               receive(:action_controller).and_return(config)
-
-            allow(Net::HTTP).to \
-              receive(:get)
-                .with(URI(url), { 'Accept' => 'text/css' })
-                .and_return(response)
           end
 
           it 'requests the file' do
