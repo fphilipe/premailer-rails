@@ -9,6 +9,25 @@ class Premailer
           Net::HTTP.get(uri, { 'Accept' => 'text/css' }) if uri
         end
 
+        def load(url)
+          uri = uri_for_url(url)
+
+          return unless uri
+
+          req = Net::HTTP::Get.new(uri.path, { 'Accept' => 'text/css' })
+          res = Net::HTTP.start(
+            uri.host,
+            uri.port, {
+              :use_ssl => uri.scheme == 'https',
+              :verify_mode => Premailer::Rails.config[:verify_ssl] == false ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
+            }
+          ) do |https|
+            https.request(req)
+          end
+
+          res.body
+        end
+
         def uri_for_url(url)
           uri = URI(url)
 

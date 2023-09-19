@@ -12,7 +12,8 @@ class Premailer
     @config = {
       input_encoding: 'UTF-8',
       generate_text_part: true,
-      strategies: [:filesystem, :asset_pipeline, :propshaft, :network]
+      strategies: [:filesystem, :asset_pipeline, :propshaft, :network],
+      verify_ssl: true
     }
     class << self
       attr_accessor :config

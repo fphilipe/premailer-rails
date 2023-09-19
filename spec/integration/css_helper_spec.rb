@@ -52,6 +52,14 @@ describe Premailer::Rails::CSSHelper do
   end
 
   describe '#css_for_url' do
+    let(:req) { double("Net::HTTP::Get") }
+    let(:response) { double("Net::HTTP::Response", body: 'content of base.css') }
+
+    before do
+      allow(Net::HTTP::Get).to receive(:new).and_return(req)
+      allow(Net::HTTP).to receive(:start).and_yield(double("request", request: response))
+    end
+
     context 'when path is a url' do
       it 'loads the CSS at the local path' do
         expect_file('public/stylesheets/base.css')
@@ -115,7 +123,8 @@ describe Premailer::Rails::CSSHelper do
         end
 
         context "when find_sources raises TypeError" do
-          let(:response) { 'content of base.css' }
+          let(:req) { double("Net::HTTP::Get") }
+          let(:response) { double("Net::HTTP::Response", body: 'content of base.css') }
           let(:uri) { URI('http://example.com/assets/base.css') }
 
           it "falls back to Net::HTTP" do
@@ -124,17 +133,17 @@ describe Premailer::Rails::CSSHelper do
                 .with('base.css')
                 .and_raise(TypeError)
 
-            allow(Net::HTTP).to \
-              receive(:get)
-                .with(uri, { 'Accept' => 'text/css' })
-                .and_return(response)
-            expect(css_for_url('http://example.com/assets/base.css')).to \
-              eq(response)
+            expect(Net::HTTP::Get).to receive(:new).with(uri.path, { 'Accept' => 'text/css' }).and_return(req)
+            expect(Net::HTTP).to receive(:start).with(uri.host, uri.port, {
+              :use_ssl => false,
+              :verify_mode => OpenSSL::SSL::VERIFY_PEER
+            }).and_yield(double("request", request: response))
+
+            expect(css_for_url('http://example.com/assets/base.css')).to eq('content of base.css')
           end
         end
 
         context "when find_sources raises Errno::ENOENT" do
-          let(:response) { 'content of base.css' }
           let(:uri) { URI('http://example.com/assets/base.css') }
 
           it "falls back to Net::HTTP" do
@@ -143,12 +152,8 @@ describe Premailer::Rails::CSSHelper do
                 .with('base.css')
                 .and_raise(Errno::ENOENT)
 
-            allow(Net::HTTP).to \
-              receive(:get)
-                .with(uri, { 'Accept' => 'text/css' })
-                .and_return(response)
             expect(css_for_url('http://example.com/assets/base.css')).to \
-              eq(response)
+              eq('content of base.css')
           end
         end
 
@@ -174,7 +179,6 @@ describe Premailer::Rails::CSSHelper do
         end
 
         context 'when asset can not be found' do
-          let(:response) { 'content of base.css' }
           let(:path) { '/assets/base-089e35bd5d84297b8d31ad552e433275.css' }
           let(:url) { "http://assets.example.com#{path}" }
           let(:asset_host) { 'http://assets.example.com' }
@@ -186,11 +190,6 @@ describe Premailer::Rails::CSSHelper do
             config = double(asset_host: asset_host)
             allow(Rails.configuration).to \
               receive(:action_controller).and_return(config)
-
-            allow(Net::HTTP).to \
-              receive(:get)
-                .with(URI(url), { 'Accept' => 'text/css' })
-                .and_return(response)
           end
 
           it 'requests the file' do
