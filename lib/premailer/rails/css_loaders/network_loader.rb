@@ -6,11 +6,6 @@ class Premailer
 
         def load(url)
           uri = uri_for_url(url)
-          Net::HTTP.get(uri, { 'Accept' => 'text/css' }) if uri
-        end
-
-        def load(url)
-          uri = uri_for_url(url)
 
           return unless uri
 
