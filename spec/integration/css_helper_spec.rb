@@ -123,8 +123,6 @@ describe Premailer::Rails::CSSHelper do
         end
 
         context "when find_sources raises TypeError" do
-          let(:req) { double("Net::HTTP::Get") }
-          let(:response) { double("Net::HTTP::Response", body: 'content of base.css') }
           let(:uri) { URI('http://example.com/assets/base.css') }
 
           it "falls back to Net::HTTP" do
