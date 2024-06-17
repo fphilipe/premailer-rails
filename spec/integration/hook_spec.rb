@@ -144,6 +144,14 @@ describe Premailer::Rails::Hook do
         include 'multipart/alternative'
       expect(processed_message.parts.last.content_type).to include 'image/png'
     end
+
+    context 'with content-type "type" set' do
+        before { message.content_type += '; type="text/html"' }
+
+        it 'does not change content-type' do
+            expect(processed_message.content_type).to include 'multipart/mixed'
+        end
+    end
   end
 
   context 'when message has a skip premailer header' do
