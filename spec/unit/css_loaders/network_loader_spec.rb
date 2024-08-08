@@ -55,4 +55,28 @@ describe Premailer::Rails::CSSLoaders::NetworkLoader do
       end
     end
   end
+
+  describe '#load' do
+    subject { described_class.load(url) }
+    let(:url) { 'https://example.com/style.css' }
+
+    context 'when resource exists' do
+      it 'returns the body' do
+        response = Net::HTTPSuccess.new('1.1', 200, nil)
+        allow(response).to receive(:body).and_return('BODY')
+        allow(Net::HTTP).to receive(:get_response).and_return(response)
+
+        expect(subject).to eq('BODY')
+      end
+    end
+
+    context 'when resource is not found' do
+      it 'returns the body' do
+        response = Net::HTTPNotFound.new('1.1', 404, 'Not Found')
+        allow(Net::HTTP).to receive(:get_response).and_return(response)
+
+        expect(subject).to be_nil
+      end
+    end
+  end
 end
