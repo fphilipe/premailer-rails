@@ -18,9 +18,7 @@ Gem::Specification.new do |s|
 
   s.metadata["changelog_uri"] = "https://github.com/fphilipe/premailer-rails/blob/v#{Premailer::Rails::VERSION}/CHANGELOG.md"
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {example,spec}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.files         = `git ls-files lib`.split("\n") + ["CHANGELOG.md", "LICENSE", "README.md"]
   s.require_paths = ["lib"]
 
   s.add_dependency 'premailer', '~> 1.7', '>= 1.7.9'
