@@ -18,8 +18,7 @@ Gem::Specification.new do |s|
 
   s.metadata["changelog_uri"] = "https://github.com/fphilipe/premailer-rails/blob/v#{Premailer::Rails::VERSION}/CHANGELOG.md"
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {example,spec}/*`.split("\n")
+  s.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(\.github|bin|test|spec|examples)/}) }
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
