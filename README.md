@@ -63,7 +63,8 @@ You can configure which strategies you want to use as well as specify their
 order. Refer to the *Configuration* section for more on this.
 
 Note that the retrieved CSS is cached when the gem is running with Rails in
-production.
+production. This can be changed with the `:cache_css` config, refer to the
+*Configuration* section.
 
 ## Installation
 
@@ -98,12 +99,21 @@ configs are:
 {
   input_encoding: 'UTF-8',
   generate_text_part: true,
-  strategies: [:filesystem, :asset_pipeline, :network]
+  strategies: [:filesystem, :asset_pipeline, :propshaft, :network],
+  cache_css: Rails.env.production?
 }
 ```
 
 If you don't want to automatically generate a text part from the html part, set
 the config `:generate_text_part` to false.
+
+The retrieved CSS is cached in memory by default only when running with Rails
+in production. To enable caching in other environments too (e.g. staging), set
+the config `:cache_css`:
+
+```ruby
+Premailer::Rails.config.merge!(cache_css: !Rails.env.development?)
+```
 
 Note that the options `:with_html_string` and `:css_string` are used internally
 by premailer-rails and thus will be overridden.

@@ -69,7 +69,11 @@ describe Premailer::Rails::CSSHelper do
 
     context 'when cache is enabled' do
       before do
-        allow(Premailer::Rails::CSSHelper).to receive(:cache_enabled?).and_return(true)
+        Premailer::Rails.config[:cache_css] = true
+      end
+
+      after do
+        Premailer::Rails.config[:cache_css] = false
       end
 
       context 'when file is cached' do
@@ -84,7 +88,7 @@ describe Premailer::Rails::CSSHelper do
 
     context 'when cache is disabled' do
       before do
-        allow(Premailer::Rails::CSSHelper).to receive(:cache_enabled?).and_return(false)
+        Premailer::Rails.config[:cache_css] = false
       end
 
       it 'does not return cached values' do
@@ -93,6 +97,29 @@ describe Premailer::Rails::CSSHelper do
         expect_file('public/stylesheets/base.css', content)
 
         expect(css_for_url('http://example.com/stylesheets/base.css')).to eq(content)
+      end
+    end
+
+    describe 'cache_css config' do
+      around do |example|
+        original_config = Premailer::Rails.config.dup
+        example.run
+        Premailer::Rails.config = original_config
+      end
+
+      it 'defaults to caching only in production' do
+        expect(Premailer::Rails.config[:cache_css]).to eq(Rails.env.production?)
+      end
+
+      it 'enables the cache when set to true' do
+        Premailer::Rails.config[:cache_css] = true
+
+        expect(Premailer::Rails.config[:cache_css]).to be(true)
+      end
+
+      it 'disables the cache when set to false' do
+        Premailer::Rails.config[:cache_css] = false
+        expect(Premailer::Rails.config[:cache_css]).to be(false)
       end
     end
 

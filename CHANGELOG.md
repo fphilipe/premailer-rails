@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Added `:cache_css` config to control whether loaded CSS is cached (defaults to caching in Rails production only)
+
 ## v1.12.0
 
 - Lazily load actionmailer (@c960657, #260)
