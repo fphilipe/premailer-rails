@@ -33,5 +33,34 @@ describe Premailer::Rails::CSSLoaders::FileSystemLoader do
       let(:asset) { '/foo/assets/application.css' }
       it { is_expected.to eq(File.join(Rails.root, 'public/assets/application.css')) }
     end
+
+    context 'when the path stays inside public after a parent segment' do
+      let(:asset) { '/assets/../stylesheets/application.css' }
+      it { is_expected.to eq(File.join(Rails.root, 'public/assets/../stylesheets/application.css')) }
+    end
+
+    context 'when the path climbs out of public' do
+      let(:asset) { '/assets/../../../../etc/passwd' }
+      it { is_expected.to be_nil }
+    end
+
+    context 'when the path climbs into a sibling of public' do
+      let(:asset) { '/../public_html/application.css' }
+      it { is_expected.to be_nil }
+    end
+  end
+
+  describe '#load' do
+    let(:relative_url_root) { nil }
+
+    before do
+      config = double(relative_url_root: relative_url_root)
+      allow(Rails).to receive(:configuration).and_return(config)
+    end
+
+    it 'does not read a file outside public' do
+      expect(File).not_to receive(:read)
+      expect(described_class.load('/assets/../../../../etc/passwd')).to be_nil
+    end
   end
 end
